@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "name": "FormBuilder",
+  "main": "./FormBuilder.js"
+ }
