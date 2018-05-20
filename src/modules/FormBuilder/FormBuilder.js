@@ -16,6 +16,10 @@ export default class FormBuilder extends PureComponent {
     withForm: PropTypes.bool,
   };
 
+  static defaultProps = {
+    fieldsConfig: [],
+  };
+
   state = {
     stateValues: {},
     values: {},

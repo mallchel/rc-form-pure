@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import TestForm from './testForm';
+import TestForm from './test';
 class App extends Component {
   render() {
     return (
