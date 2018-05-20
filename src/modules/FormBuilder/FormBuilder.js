@@ -77,6 +77,7 @@ export default class FormBuilder extends PureComponent {
     const {
       withForm,
       renderForm = withForm ? Form : ({ children }) => children,
+      submitComponent,
     } = this.props;
 
     return renderForm({
@@ -99,7 +100,7 @@ export default class FormBuilder extends PureComponent {
             );
           })}
 
-          {this.props.submitComponent(this.onSubmit)}
+          {submitComponent && submitComponent(this.onSubmit)}
         </React.Fragment>
       ),
     });
