@@ -86,14 +86,14 @@ export default class FormBuilder extends PureComponent {
         <React.Fragment>
           {this.props.fieldsConfig.map(({ type, ...config }) => {
             const value = this.state.stateValues[type];
-            const valid = !this.state.errors[type];
+            const error = this.state.errors[type];
 
             return (
               <FormItem
                 key={type}
                 type={type}
                 {...config}
-                valid={valid}
+                error={error}
                 value={value}
                 onChange={this.onChange}
               />

@@ -5,13 +5,42 @@ const checkRequired = (value = '') => {
   return !!value;
 };
 
+const getRulesFromProps = ({ rules }) => {
+  const { required, message } = rules.find(rule => 'required' in rule) || {};
+  const { type } = rules.find(rule => 'type' in rule) || {};
+
+  return {
+    required: required ? { message } : undefined,
+    type,
+  };
+};
+
 export default class FormItem extends React.PureComponent {
   static propTypes = {
     type: PropTypes.string,
     validate: PropTypes.func,
-    valid: PropTypes.bool,
-    required: PropTypes.bool,
+    error: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    rules: PropTypes.array,
     onChange: PropTypes.func,
+  };
+
+  static defaultProps = {
+    rules: [],
+  };
+
+  componentDidMount() {
+    const rules = getRulesFromProps(this.props);
+
+    this.setState({
+      rules,
+    });
+  }
+
+  state = {
+    rules: {
+      required: {},
+      type: {},
+    },
   };
 
   onChange = ({ value, type }) => {
@@ -20,8 +49,10 @@ export default class FormItem extends React.PureComponent {
       type,
     };
 
-    if (this.props.required && !checkRequired(value)) {
-      updates.error = { [type]: true };
+    const { rules } = this.state;
+
+    if (rules.required && !checkRequired(value)) {
+      updates.error = { [type]: rules.required.message };
     }
 
     // TODO: add validation logic here

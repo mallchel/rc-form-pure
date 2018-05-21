@@ -3,8 +3,8 @@ import FormBuilder from '../modules/FormBuilder';
 
 class TextField extends React.PureComponent {
   render() {
-    const { value, type, valid, onChange } = this.props;
-
+    const { value, type, error, onChange } = this.props;
+    console.log(value, type, error);
     return (
       <input
         key={type}
@@ -19,11 +19,11 @@ export default class TestFrom extends Component {
   state = {
     initialValues: {
       // data from server
-      firstName: 'initial firstName',
-      lastName: 'initial lastName',
+      firstName: 'initial',
+      lastName: 'initial',
     },
-    values: { lastName: 'Введите фамилию' },
-    errors: { lastName: 'Такая фамилия уже существует' },
+    values: { lastName: 'lastName' },
+    errors: { lastName: 'This lastName is already exists' },
     fieldsConfig: [],
   };
 
@@ -32,12 +32,11 @@ export default class TestFrom extends Component {
       fieldsConfig: this.state.fieldsConfig.concat(
         {
           type: 'firstName',
-          required: true,
+          rules: [{ required: true, message: 'Please fill in this field' }],
           children: props => <TextField {...props} />,
         },
         {
           type: 'lastName',
-          required: true,
           children: props => <TextField {...props} />,
         }
       ),
