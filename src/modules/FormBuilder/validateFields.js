@@ -7,4 +7,6 @@ const validateByType = {
   email,
 };
 
-export default validateByType;
+export default ({ type, value }) => {
+  return validateByType[type] ? validateByType[type](value) : value;
+};

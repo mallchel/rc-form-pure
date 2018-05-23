@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import validateFields from './validateFields';
+
 const checkRequired = (value = '') => {
   return !!value;
 };
 
-const getRulesFromProps = ({ rules }) => {
+const computeRulesFromProps = ({ rules }) => {
   const { required, message } = rules.find(rule => 'required' in rule) || {};
   const { type } = rules.find(rule => 'type' in rule) || {};
 
@@ -26,14 +28,26 @@ export default class FormItem extends React.PureComponent {
 
   static defaultProps = {
     rules: [],
+    mirroredRules: [],
   };
 
   componentDidMount() {
-    const rules = getRulesFromProps(this.props);
+    const rules = computeRulesFromProps(this.props);
 
     this.setState({
       rules,
     });
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.rules !== prevState.mirroredRules) {
+      return {
+        mirroredRules: nextProps.rules,
+        rules: computeRulesFromProps(nextProps),
+      };
+    }
+
+    return null;
   }
 
   state = {
@@ -56,6 +70,7 @@ export default class FormItem extends React.PureComponent {
     }
 
     // TODO: add validation logic here
+    // updates.error = rules.type && validateFields({ type, value });
     // validate
     //   ? validate({ type, value, required })
     //   : validateField({ type, value, required });
