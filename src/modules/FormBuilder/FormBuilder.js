@@ -24,6 +24,7 @@ export default class FormBuilder extends PureComponent {
     stateValues: {},
     values: {},
     errors: {},
+    isFieldsTouched: false,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -36,6 +37,7 @@ export default class FormBuilder extends PureComponent {
         ...prevState.stateValues,
         ...nextProps.values,
       };
+      newState.isFieldsTouched = false;
     }
 
     if (nextProps.errors !== prevState.errors) {
@@ -60,6 +62,7 @@ export default class FormBuilder extends PureComponent {
         [type]: value,
       },
       errors: newErrors,
+      isFieldsTouched: true,
     });
   };
 
@@ -100,7 +103,11 @@ export default class FormBuilder extends PureComponent {
             );
           })}
 
-          {submitComponent && submitComponent(this.onSubmit)}
+          {submitComponent &&
+            submitComponent({
+              onSubmit: this.onSubmit,
+              isFieldsTouched: this.state.isFieldsTouched,
+            })}
         </React.Fragment>
       ),
     });

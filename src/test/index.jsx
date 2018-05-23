@@ -24,24 +24,18 @@ export default class TestFrom extends Component {
     },
     values: { lastName: 'lastName' },
     errors: { lastName: 'This lastName is already exists' },
-    fieldsConfig: [],
+    fieldsConfig: [
+      {
+        type: 'firstName',
+        rules: [{ required: true, message: 'Please fill in this field' }],
+        children: props => <TextField {...props} />,
+      },
+      {
+        type: 'lastName',
+        children: props => <TextField {...props} />,
+      },
+    ],
   };
-
-  componentDidMount() {
-    this.setState({
-      fieldsConfig: this.state.fieldsConfig.concat(
-        {
-          type: 'firstName',
-          rules: [{ required: true, message: 'Please fill in this field' }],
-          children: props => <TextField {...props} />,
-        },
-        {
-          type: 'lastName',
-          children: props => <TextField {...props} />,
-        }
-      ),
-    });
-  }
 
   onSubmit = formData => {
     console.log('onSubmit', formData);
@@ -51,8 +45,12 @@ export default class TestFrom extends Component {
     return <form onSubmit={onSubmit}>{children}</form>;
   };
 
-  renderSubmitComponent = onSubmit => {
-    return <button onClick={onSubmit}>Submit :)</button>;
+  renderSubmitComponent = ({ onSubmit, isFieldsTouched }) => {
+    return (
+      <button disabled={!isFieldsTouched} onClick={onSubmit}>
+        Submit :)
+      </button>
+    );
   };
 
   onClickError = () => {
