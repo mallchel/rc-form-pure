@@ -5,7 +5,9 @@ library for creating forms that allows you to make your components pure
 [![npm](https://img.shields.io/npm/v/rc-form-pure.svg?style=flat-square)](https://www.npmjs.com/package/rc-form-pure)
 
 ## Install
-npm i rc-form-pure
+```
+  npm i rc-form-pure
+```
 
 ## Usage
 ```js
