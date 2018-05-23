@@ -73,4 +73,4 @@ const TextField = ({ value, type, valid, onChange }) => {
 | errors | You can specify errors | object | - |
 | renderForm | You can specify a function that can return a custom form tag | Function({ onSubmit, children }) => ReactNode | Function({ children }) => children |
 | withForm | Specifies whether the form tag in the DOM | boolean | Function({ onSubmit, children }) => <form onSubmit={onSubmit}>{children}</form>
-| submitComponent | You can specify a function that can return a component for submitting your form | Function(onSubmit) => ReactNode | - |
+| submitComponent | You can specify a function that can return a component for submitting your form | Function({ onSubmit, isFieldsTouched }) => ReactNode | - |
