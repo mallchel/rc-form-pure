@@ -38,8 +38,12 @@ class TestFrom extends React.Component {
     console.log('onSubmit', formData);
   };
 
-  renderSubmitComponent = onSubmit => {
-    return <button onClick={onSubmit}>Submit your form :)</button>;
+  renderSubmitComponent = ({ onSubmit, isFieldsTouched }) => {
+    return (
+      <button disabled={!isFieldsTouched} onClick={onSubmit}>
+        Submit :)
+      </button>
+    );
   };
 
   render() {
