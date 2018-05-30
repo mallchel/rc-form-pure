@@ -1,10 +1,10 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import Form from './Form';
 import FormItem from './FormItem';
 
-export default class FormBuilder extends PureComponent {
+export default class FormBuilder extends React.Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     submitComponent: PropTypes.func,
@@ -18,11 +18,12 @@ export default class FormBuilder extends PureComponent {
 
   static defaultProps = {
     fieldsConfig: [],
+    errors: {},
   };
 
   state = {
     stateValues: {},
-    values: {},
+    mirroredValues: {},
     errors: {},
     isFieldsTouched: false,
   };
@@ -30,8 +31,8 @@ export default class FormBuilder extends PureComponent {
   static getDerivedStateFromProps(nextProps, prevState) {
     const newState = {};
 
-    if (nextProps.values !== prevState.values) {
-      newState.values = nextProps.values;
+    if (nextProps.values !== prevState.mirroredValues) {
+      newState.mirroredValues = nextProps.values;
       newState.stateValues = {
         ...nextProps.initialValues,
         ...prevState.stateValues,

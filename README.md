@@ -56,7 +56,7 @@ const TextField = ({ value, type, valid, onChange }) => {
     <input
       key={type}
       value={value}
-      onChange={e => onChange({ type, value: e.target.value })}
+      onChange={e => onChange(e.target.value)}
     />
   );
 };

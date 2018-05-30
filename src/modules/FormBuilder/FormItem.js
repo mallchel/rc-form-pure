@@ -57,7 +57,8 @@ export default class FormItem extends React.PureComponent {
     return null;
   }
 
-  onChange = ({ value, type }) => {
+  onChange = value => {
+    const { type } = this.props;
     const updates = {
       value,
       type,

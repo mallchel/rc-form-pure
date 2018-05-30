@@ -9,7 +9,7 @@ class TextField extends React.PureComponent {
       <input
         key={type}
         value={value}
-        onChange={e => onChange({ type, value: e.target.value })}
+        onChange={e => onChange(e.target.value)}
       />
     );
   }
@@ -79,6 +79,12 @@ export default class TestFrom extends Component {
           renderForm={this.renderForm}
           withForm={true}
           submitComponent={this.renderSubmitComponent}
+          // layout={[
+          //   {
+          //     container: children => <div>{children}</div>,
+          //     items: ['firstName', 'lastName'],
+          //   },
+          // ]}
         />
         <button onClick={this.onClickError}>get new Errors from server</button>
         <button onClick={this.onClickValues}>get new values</button>
