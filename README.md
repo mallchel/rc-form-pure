@@ -15,7 +15,7 @@ library for creating forms that allows you to make your components pure
 ```js
 import FormBuilder from 'rc-form-pure';
 
-class TestFrom extends React.Component {export default class TestFrom extends Component {
+class TestFrom extends Component {
   state = {
     initialValues: {
       // data from server
@@ -60,24 +60,24 @@ class TestFrom extends React.Component {export default class TestFrom extends Co
 
   render() {
     return (
-        <FormBuilder
-          onSubmit={this.onSubmit}
-          fieldsConfig={this.state.fieldsConfig}
-          initialValues={this.state.initialValues}
-          errors={this.state.errors}
-          // Optional
-          renderForm={this.renderForm}
-          // by default return form html
-          withForm={true}
-          submitComponent={this.renderSubmitComponent}
-          // Optional, you can group your fields
-          layout={[
-            {
-              container: this.renderContainer,
-              items: ['firstName'],
-            },
-          ]}
-        />
+      <FormBuilder
+        onSubmit={this.onSubmit}
+        fieldsConfig={this.state.fieldsConfig}
+        initialValues={this.state.initialValues}
+        errors={this.state.errors}
+        // Optional
+        renderForm={this.renderForm}
+        // by default return form html
+        withForm={true}
+        submitComponent={this.renderSubmitComponent}
+        // Optional, you can group your fields
+        layout={[
+          {
+            container: this.renderContainer,
+            items: ['firstName'],
+          },
+        ]}
+      />
     );
   }
 }
