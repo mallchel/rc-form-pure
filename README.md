@@ -15,29 +15,35 @@ library for creating forms that allows you to make your components pure
 ```js
 import FormBuilder from 'rc-form-pure';
 
-class TestFrom extends React.Component {
+class TestFrom extends React.Component {export default class TestFrom extends Component {
   state = {
     initialValues: {
-      firstName: 'initial firstName',
-      lastName: 'initial lastName',
+      // data from server
+      firstName: 'initial',
+      lastName: 'initial',
     },
-    errors: { lastName: 'something error text' },
-    fieldsConfig: [
-      {
-        type: 'firstName',
-        required: true,
+    values: { lastName: 'lastName' },
+    errors: { lastName: 'This lastName is already exists' },
+    fieldsConfig: {
+      firstName: {
+        // ... something props for your fields
+        rules: [{ required: true, message: 'Please fill in this field' }],
         children: props => <TextField {...props} />,
       },
-      {
-        type: 'lastName',
-        required: true,
+      lastName: {
+        // ... something props for your fields
         children: props => <TextField {...props} />,
       },
-    ],
+    },
   };
 
   onSubmit = formData => {
     console.log('onSubmit', formData);
+  };
+
+  // Optional
+  renderForm = ({ onSubmit, children }) => {
+    return <form onSubmit={onSubmit}>{children}</form>;
   };
 
   renderSubmitComponent = ({ onSubmit, isFieldsTouched }) => {
@@ -54,21 +60,24 @@ class TestFrom extends React.Component {
 
   render() {
     return (
-      <FormBuilder
-        onSubmit={this.onSubmit}
-        fieldsConfig={this.state.fieldsConfig}
-        initialValues={this.state.initialValues}
-        errors={this.state.errors}
-        withForm={true}
-        submitComponent={this.renderSubmitComponent}
-        // you can group your fields
-        layout={[
-          {
-            container: this.renderContainer,
-            items: ['firstName'],
-          },
-        ]}
-      />
+        <FormBuilder
+          onSubmit={this.onSubmit}
+          fieldsConfig={this.state.fieldsConfig}
+          initialValues={this.state.initialValues}
+          errors={this.state.errors}
+          // Optional
+          renderForm={this.renderForm}
+          // by default return form html
+          withForm={true}
+          submitComponent={this.renderSubmitComponent}
+          // Optional, you can group your fields
+          layout={[
+            {
+              container: this.renderContainer,
+              items: ['firstName'],
+            },
+          ]}
+        />
     );
   }
 }
