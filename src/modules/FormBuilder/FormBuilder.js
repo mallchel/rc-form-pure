@@ -1,28 +1,31 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import Form from './Form';
 import FormItem from './FormItem';
 
-export default class FormBuilder extends PureComponent {
+export default class FormBuilder extends React.Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
     submitComponent: PropTypes.func,
-    fieldsConfig: PropTypes.array,
+    fieldsConfig: PropTypes.object,
     initialValues: PropTypes.object,
     values: PropTypes.object,
     errors: PropTypes.object,
     renderForm: PropTypes.func,
     withForm: PropTypes.bool,
+    layout: PropTypes.array,
   };
 
   static defaultProps = {
-    fieldsConfig: [],
+    fieldsConfig: {},
+    layout: [],
+    errors: {},
   };
 
   state = {
     stateValues: {},
-    values: {},
+    mirroredValues: {},
     errors: {},
     isFieldsTouched: false,
   };
@@ -30,8 +33,8 @@ export default class FormBuilder extends PureComponent {
   static getDerivedStateFromProps(nextProps, prevState) {
     const newState = {};
 
-    if (nextProps.values !== prevState.values) {
-      newState.values = nextProps.values;
+    if (nextProps.values !== prevState.mirroredValues) {
+      newState.mirroredValues = nextProps.values;
       newState.stateValues = {
         ...nextProps.initialValues,
         ...prevState.stateValues,
@@ -76,33 +79,82 @@ export default class FormBuilder extends PureComponent {
     });
   };
 
+  mapperConfig = (key, config, values, errors) => {
+    const value = values[key];
+    const error = errors[key];
+
+    return (
+      <FormItem
+        key={key}
+        type={key}
+        {...config}
+        error={error}
+        value={value}
+        onChange={this.onChange}
+      />
+    );
+  };
+
+  renderLayout = (restConfigs, layout, ...args) => {
+    let _restConfigs = restConfigs;
+
+    const contentInLayout = layout.map(
+      (
+        { container: Container = ({ children }) => children, items = [] },
+        index
+      ) => {
+        return (
+          <Container
+            key={index}
+            children={items.map(key => {
+              const { [key]: currentConfig, ...configs } = _restConfigs;
+              _restConfigs = configs;
+
+              return this.mapperConfig(key, currentConfig, ...args);
+            })}
+          />
+        );
+      }
+    );
+
+    const itemsWithoutLayout = Object.keys(_restConfigs);
+    let otherContent = null;
+
+    if (itemsWithoutLayout.length) {
+      otherContent = itemsWithoutLayout.map(key => {
+        return this.mapperConfig(key, _restConfigs[key], ...args);
+      });
+    }
+
+    return (
+      <React.Fragment>
+        {contentInLayout}
+        {otherContent}
+      </React.Fragment>
+    );
+  };
+
   render() {
     const {
       withForm,
       renderForm = withForm ? Form : ({ children }) => children,
       submitComponent,
+      fieldsConfig,
+      layout,
     } = this.props;
+
+    const content = this.renderLayout(
+      fieldsConfig,
+      layout,
+      this.state.stateValues,
+      this.state.errors
+    );
 
     return renderForm({
       onSubmit: this.onSubmit,
       children: (
         <React.Fragment>
-          {this.props.fieldsConfig.map(({ type, ...config }) => {
-            const value = this.state.stateValues[type];
-            const error = this.state.errors[type];
-
-            return (
-              <FormItem
-                key={type}
-                type={type}
-                {...config}
-                error={error}
-                value={value}
-                onChange={this.onChange}
-              />
-            );
-          })}
-
+          {content}
           {submitComponent &&
             submitComponent({
               onSubmit: this.onSubmit,

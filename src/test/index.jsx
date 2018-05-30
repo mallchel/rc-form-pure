@@ -9,7 +9,7 @@ class TextField extends React.PureComponent {
       <input
         key={type}
         value={value}
-        onChange={e => onChange({ type, value: e.target.value })}
+        onChange={e => onChange(e.target.value)}
       />
     );
   }
@@ -24,17 +24,17 @@ export default class TestFrom extends Component {
     },
     values: { lastName: 'lastName' },
     errors: { lastName: 'This lastName is already exists' },
-    fieldsConfig: [
-      {
-        type: 'firstName',
+    fieldsConfig: {
+      firstName: {
+        // type: 'firstName',
         rules: [{ required: true, message: 'Please fill in this field' }],
         children: props => <TextField {...props} />,
       },
-      {
-        type: 'lastName',
+      lastName: {
+        // type: 'lastName',
         children: props => <TextField {...props} />,
       },
-    ],
+    },
   };
 
   onSubmit = formData => {
@@ -67,6 +67,10 @@ export default class TestFrom extends Component {
     });
   };
 
+  renderContainer = ({ children }) => {
+    return <div>{children}</div>;
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -79,6 +83,12 @@ export default class TestFrom extends Component {
           renderForm={this.renderForm}
           withForm={true}
           submitComponent={this.renderSubmitComponent}
+          layout={[
+            {
+              container: this.renderContainer,
+              items: ['firstName'],
+            },
+          ]}
         />
         <button onClick={this.onClickError}>get new Errors from server</button>
         <button onClick={this.onClickValues}>get new values</button>

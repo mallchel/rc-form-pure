@@ -28,7 +28,14 @@ export default class FormItem extends React.PureComponent {
 
   static defaultProps = {
     rules: [],
+  };
+
+  state = {
     mirroredRules: [],
+    rules: {
+      required: {},
+      type: {},
+    },
   };
 
   componentDidMount() {
@@ -50,14 +57,8 @@ export default class FormItem extends React.PureComponent {
     return null;
   }
 
-  state = {
-    rules: {
-      required: {},
-      type: {},
-    },
-  };
-
-  onChange = ({ value, type }) => {
+  onChange = value => {
+    const { type } = this.props;
     const updates = {
       value,
       type,
