@@ -15,6 +15,10 @@ const builtInRules = {
     message,
     validator,
   }),
+  len: ({ len, message }) => ({
+    length: len,
+    message,
+  }),
   validator: ({ validator = i => i }) => {
     if (!(typeof validator === 'function')) {
       console.error(new Error('validator must be a function'));
@@ -81,6 +85,10 @@ export default class FormItem extends React.PureComponent {
     let error = '';
     if (rules.type && !rules.type.validator(rules.type, value)) {
       error = rules.type.message;
+    }
+
+    if (rules.len && !validateByType['len'](rules.len.length, value)) {
+      error = rules.len.message;
     }
 
     if (rules.validator) rules.validator(rules, value, callback);

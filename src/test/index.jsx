@@ -56,7 +56,7 @@ export default class TestFrom extends Component {
       password: {
         rules: [
           { required: true, message: 'Please fill in this field' },
-          { type: 'len', len: 10, message: 'string length must be equal 10' },
+          { len: 10, message: 'string length must be equal 10' },
         ],
         children: props => <TextField {...props} />,
       },
