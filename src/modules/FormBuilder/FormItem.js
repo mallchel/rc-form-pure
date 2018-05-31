@@ -1,29 +1,27 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import validateFields, { validateByType } from "./validateFields";
+import validateFields, { validateByType } from './validateFields';
 
 const builtInRules = {
   required: ({ message }) => ({
-    message
+    message,
   }),
   type: ({
     type: typeField,
     message,
     validator = validateFields(typeField), // if provide custom validator
-    ...other
   }) => ({
     message,
     validator,
-    ...other
   }),
   validator: ({ validator = i => i }) => {
-    if (!(typeof validator === "function")) {
-      console.error(new Error("validator must be a function"));
+    if (!(typeof validator === 'function')) {
+      console.error(new Error('validator must be a function'));
     }
 
     return validator;
-  }
+  },
 };
 
 const findBuiltInRules = rules => {
@@ -48,11 +46,11 @@ export default class FormItem extends React.PureComponent {
     validate: PropTypes.func,
     error: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     rules: PropTypes.array,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
   };
 
   static defaultProps = {
-    rules: []
+    rules: [],
   };
 
   state = {
@@ -76,11 +74,11 @@ export default class FormItem extends React.PureComponent {
   }
 
   validateItem = ({ rules, type, value, callback }) => {
-    if (rules.required && !validateByType["required"](value)) {
+    if (rules.required && !validateByType['required'](value)) {
       return rules.required.message;
     }
 
-    let error = "";
+    let error = '';
     if (rules.type && !rules.type.validator(rules.type, value)) {
       error = rules.type.message;
     }
@@ -92,7 +90,7 @@ export default class FormItem extends React.PureComponent {
   validatorCallback = error => {
     this.props.onChange({
       type: this.props.type,
-      error
+      error,
     });
   };
 
@@ -101,15 +99,15 @@ export default class FormItem extends React.PureComponent {
     const { rules } = this.state;
     const updates = {
       value,
-      type
+      type,
     };
 
     updates.error = this.validateItem({
-        rules,
-        type,
-        value,
-        callback: this.validatorCallback
-      });
+      rules,
+      type,
+      value,
+      callback: this.validatorCallback,
+    });
 
     this.props.onChange(updates);
   };

@@ -52,14 +52,13 @@ export default class FormBuilder extends React.Component {
     return newState;
   }
 
-  onChange = ({type, value = this.state.stateValues[type], error }) => {
-    
+  onChange = ({ type, value = this.state.stateValues[type], error }) => {
     let newErrors;
     if (!error) {
       const { [type]: deletingError, ...restErrors } = this.state.errors;
       newErrors = restErrors;
     } else {
-      newErrors = { ...this.state.errors, [type]:error };
+      newErrors = { ...this.state.errors, [type]: error };
     }
 
     this.setState({

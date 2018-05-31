@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import FormBuilder from "../modules/FormBuilder";
+import React, { Component } from 'react';
+import FormBuilder from '../modules/FormBuilder';
 
 class TextField extends React.PureComponent {
   render() {
@@ -22,49 +22,49 @@ export default class TestFrom extends Component {
   state = {
     initialValues: {
       // data from server
-      firstName: "initial",
-      lastName: "initial",
-      email: "",
-      password: ""
+      firstName: 'initial',
+      lastName: 'initial',
+      email: '',
+      password: '',
     },
-    values: { lastName: "lastName" },
-    errors: { lastName: "This lastName is already exists" },
+    values: { lastName: 'lastName' },
+    errors: { lastName: 'This lastName is already exists' },
     fieldsConfig: {
       firstName: {
         rules: [
-          { required: true, message: "Please fill in this field" },
+          { required: true, message: 'Please fill in this field' },
           {
             validator: (rules, value, callback) => {
               setTimeout(() => {
-                callback("Error validator!!");
+                callback('Error validator!!');
               }, 2000);
-            }
-          }
+            },
+          },
         ],
-        children: props => <TextField {...props} />
+        children: props => <TextField {...props} />,
       },
       lastName: {
-        children: props => <TextField {...props} />
+        children: props => <TextField {...props} />,
       },
       email: {
         rules: [
-          { required: true, message: "Please fill in this field" },
-          { type: "email", message: "incorrect email" }
+          { required: true, message: 'Please fill in this field' },
+          { type: 'email', message: 'incorrect email' },
         ],
-        children: props => <TextField {...props} />
+        children: props => <TextField {...props} />,
       },
       password: {
         rules: [
-          { required: true, message: "Please fill in this field" },
-          { type: "len", len: 10, message: "string length must be equal 10" }
+          { required: true, message: 'Please fill in this field' },
+          { type: 'len', len: 10, message: 'string length must be equal 10' },
         ],
-        children: props => <TextField {...props} />
-      }
-    }
+        children: props => <TextField {...props} />,
+      },
+    },
   };
 
   onSubmit = formData => {
-    console.log("onSubmit", formData);
+    console.log('onSubmit', formData);
   };
 
   renderForm = ({ onSubmit, children }) => {
@@ -81,15 +81,15 @@ export default class TestFrom extends Component {
 
   onClickError = () => {
     this.setState({
-      errors: { firstName: "test" }
+      errors: { firstName: 'test' },
     });
   };
 
   onClickValues = () => {
     this.setState({
       values: {
-        firstName: "Новые данные"
-      }
+        firstName: 'Новые данные',
+      },
     });
   };
 
@@ -112,8 +112,8 @@ export default class TestFrom extends Component {
           layout={[
             {
               container: this.renderContainer,
-              items: ["firstName"]
-            }
+              items: ['firstName'],
+            },
           ]}
         />
         <button onClick={this.onClickError}>get new Errors from server</button>
