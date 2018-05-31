@@ -3,14 +3,17 @@ import FormBuilder from '../modules/FormBuilder';
 
 class TextField extends React.PureComponent {
   render() {
-    const { value, type, error, onChange } = this.props;
-    console.log(value, type, error);
+    const { value, type, error, onChange, required } = this.props;
+    console.log(value, type, error, required);
     return (
-      <input
-        key={type}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-      />
+      <div>
+        <input
+          key={type}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+        />
+        {error}
+      </div>
     );
   }
 }
@@ -21,17 +24,40 @@ export default class TestFrom extends Component {
       // data from server
       firstName: 'initial',
       lastName: 'initial',
+      email: '',
+      password: '',
     },
     values: { lastName: 'lastName' },
     errors: { lastName: 'This lastName is already exists' },
     fieldsConfig: {
       firstName: {
-        // type: 'firstName',
-        rules: [{ required: true, message: 'Please fill in this field' }],
+        rules: [
+          { required: true, message: 'Please fill in this field' },
+          {
+            validator: (rules, value, callback) => {
+              setTimeout(() => {
+                callback('Error validator!!');
+              }, 2000);
+            },
+          },
+        ],
         children: props => <TextField {...props} />,
       },
       lastName: {
-        // type: 'lastName',
+        children: props => <TextField {...props} />,
+      },
+      email: {
+        rules: [
+          { required: true, message: 'Please fill in this field' },
+          { type: 'email', message: 'incorrect email' },
+        ],
+        children: props => <TextField {...props} />,
+      },
+      password: {
+        rules: [
+          { required: true, message: 'Please fill in this field' },
+          { type: 'len', len: 10, message: 'string length must be equal 10' },
+        ],
         children: props => <TextField {...props} />,
       },
     },

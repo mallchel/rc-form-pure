@@ -2,38 +2,48 @@
 
 library for creating forms that allows you to make your components pure
 
+[![npm](https://img.shields.io/npm/v/rc-form-pure.svg?style=flat-square)](https://www.npmjs.com/package/rc-form-pure)
+
 ## Install
 
-npm i rc-form-pure
+```
+  npm i rc-form-pure
+```
 
 ## Usage
 
 ```js
 import FormBuilder from 'rc-form-pure';
 
-class TestFrom extends React.Component {
+class TestFrom extends Component {
   state = {
     initialValues: {
-      firstName: 'initial firstName',
-      lastName: 'initial lastName',
+      // data from server
+      firstName: 'initial',
+      lastName: 'initial',
     },
-    errors: { lastName: 'something error text' },
-    fieldsConfig: [
-      {
-        type: 'firstName',
-        required: true,
+    values: { lastName: 'lastName' },
+    errors: { lastName: 'This lastName is already exists' },
+    fieldsConfig: {
+      firstName: {
+        // ... something props for your fields
+        rules: [{ required: true, message: 'Please fill in this field' }],
         children: props => <TextField {...props} />,
       },
-      {
-        type: 'lastName',
-        required: true,
+      lastName: {
+        // ... something props for your fields
         children: props => <TextField {...props} />,
       },
-    ],
+    },
   };
 
   onSubmit = formData => {
     console.log('onSubmit', formData);
+  };
+
+  // Optional
+  renderForm = ({ onSubmit, children }) => {
+    return <form onSubmit={onSubmit}>{children}</form>;
   };
 
   renderSubmitComponent = ({ onSubmit, isFieldsTouched }) => {
@@ -55,9 +65,12 @@ class TestFrom extends React.Component {
         fieldsConfig={this.state.fieldsConfig}
         initialValues={this.state.initialValues}
         errors={this.state.errors}
+        // Optional
+        renderForm={this.renderForm}
+        // by default return form html
         withForm={true}
         submitComponent={this.renderSubmitComponent}
-        // you can group your fields
+        // Optional, you can group your fields
         layout={[
           {
             container: this.renderContainer,
@@ -69,7 +82,7 @@ class TestFrom extends React.Component {
   }
 }
 
-const TextField = ({ value, type, valid, onChange }) => {
+const TextField = ({ value, type, valid, onChange, required }) => {
   return (
     <input key={type} value={value} onChange={e => onChange(e.target.value)} />
   );
@@ -88,3 +101,4 @@ const TextField = ({ value, type, valid, onChange }) => {
 | renderForm      | You can specify a function that can return a custom form tag                      | Function({ onSubmit, children }) => ReactNode        | Function({ children }) => children                                              |
 | withForm        | Specifies whether the form tag in the DOM                                         | boolean                                              | Function({ onSubmit, children }) => <form onSubmit={onSubmit}>{children}</form> |
 | submitComponent | You can specify a function that can return a component for submitting your form   | Function({ onSubmit, isFieldsTouched }) => ReactNode | -                                                                               |
+| layout          | You can group your fields                                                         | object[]                                             | []                                                                              |
