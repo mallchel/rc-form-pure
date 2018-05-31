@@ -26,6 +26,7 @@ export default class FormBuilder extends React.Component {
   state = {
     stateValues: {},
     mirroredValues: {},
+    mirroredErrors: {},
     errors: {},
     isFieldsTouched: false,
   };
@@ -43,20 +44,21 @@ export default class FormBuilder extends React.Component {
       newState.isFieldsTouched = false;
     }
 
-    if (nextProps.errors !== prevState.errors) {
+    if (nextProps.errors !== prevState.mirroredErrors) {
+      newState.mirroredErrors = nextProps.errors;
       newState.errors = nextProps.errors;
     }
 
     return newState;
   }
 
-  onChange = ({ value, type, error }) => {
+  onChange = ({ type, value = this.state.stateValues[type], error }) => {
     let newErrors;
     if (!error) {
       const { [type]: deletingError, ...restErrors } = this.state.errors;
       newErrors = restErrors;
     } else {
-      newErrors = { ...this.state.errors, ...error };
+      newErrors = { ...this.state.errors, [type]: error };
     }
 
     this.setState({
