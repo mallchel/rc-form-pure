@@ -82,7 +82,7 @@ class TestFrom extends Component {
   }
 }
 
-const TextField = ({ value, type, valid, onChange }) => {
+const TextField = ({ value, type, valid, onChange, required }) => {
   return (
     <input key={type} value={value} onChange={e => onChange(e.target.value)} />
   );
@@ -101,3 +101,4 @@ const TextField = ({ value, type, valid, onChange }) => {
 | renderForm      | You can specify a function that can return a custom form tag                      | Function({ onSubmit, children }) => ReactNode        | Function({ children }) => children                                              |
 | withForm        | Specifies whether the form tag in the DOM                                         | boolean                                              | Function({ onSubmit, children }) => <form onSubmit={onSubmit}>{children}</form> |
 | submitComponent | You can specify a function that can return a component for submitting your form   | Function({ onSubmit, isFieldsTouched }) => ReactNode | -                                                                               |
+| layout          | You can group your fields                                                         | object[]                                             | []                                                                              |
