@@ -5,15 +5,15 @@ import validateFields, { validateByType } from './validateFields';
 
 const builtInRules = {
   required: ({ message }) => ({
-    message
+    message,
   }),
   type: ({
     type: typeField,
     message,
-    validator = validateFields(typeField) // if provide custom validator
+    validator = validateFields(typeField), // if provide custom validator
   }) => ({
     message,
-    validator
+    validator,
   }),
   validator: ({ validator = i => i }) => {
     if (!(typeof validator === 'function')) {
@@ -88,10 +88,12 @@ export default class FormItem extends React.PureComponent {
   };
 
   validatorCallback = error => {
-    Promise.resolve().then(()=>this.props.onChange({
-      type: this.props.type,
-      error,
-    }));
+    Promise.resolve().then(() =>
+      this.props.onChange({
+        type: this.props.type,
+        error,
+      })
+    );
   };
 
   onChange = value => {
