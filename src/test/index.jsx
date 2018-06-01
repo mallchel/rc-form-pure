@@ -37,7 +37,7 @@ export default class TestFrom extends Component {
             validator: (rules, value, callback) => {
               setTimeout(() => {
                 callback('Error validator!!');
-              }, 2000);
+              }, 500);
             },
           },
         ],
