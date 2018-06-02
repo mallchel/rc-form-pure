@@ -102,3 +102,11 @@ const TextField = ({ value, type, valid, onChange, required }) => {
 | withForm        | Specifies whether the form tag in the DOM                                         | boolean                                              | Function({ onSubmit, children }) => <form onSubmit={onSubmit}>{children}</form> |
 | submitComponent | You can specify a function that can return a component for submitting your form   | Function({ onSubmit, isFieldsTouched }) => ReactNode | -                                                                               |
 | layout          | You can group your fields                                                         | object[]                                             | []                                                                              |
+
+## Validation Rules
+
+| Property  | Description                                  | Type                            | Default |
+| --------- | -------------------------------------------- | ------------------------------- | ------- |
+| len       | validate an exact length of a field          | number                          | -       |
+| type      | built-in validation type ('email', 'number') | string                          | -       |
+| validator | custom validate function                     | function(rule, value, callback) | -       |
