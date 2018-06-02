@@ -1,7 +1,7 @@
 import validateFields, { validateByType } from './validateFields';
 
-const check = (value, message, validator, cb) => {
-  if (!validator(value)) {
+const check = (value, message, validator, cb, ...args) => {
+  if (!validator(value, ...args)) {
     return cb(message);
   }
   return cb(null);
@@ -36,6 +36,9 @@ const builtInRules = [
     get: ({ len, message }) => ({
       length: len,
       message,
+      validator: ({ value, callback }) => {
+        check(value, message, validateByType['len'], callback, len);
+      },
     }),
   },
   {

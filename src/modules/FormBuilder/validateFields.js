@@ -1,6 +1,6 @@
 const required = value => !!value;
 
-const email = (rule, value) => {
+const email = value => {
   const regexpEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return (
     typeof value === 'string' &&
@@ -9,14 +9,14 @@ const email = (rule, value) => {
   );
 };
 
-const number = (rule, value) => {
+const number = value => {
   if (isNaN(value)) {
     return false;
   }
   return typeof value === 'number';
 };
 
-const len = (length, value) =>
+const len = (value, length) =>
   typeof length === 'number' && value.length === length;
 
 export const validateByType = {
@@ -26,6 +26,6 @@ export const validateByType = {
   len,
 };
 
-export default type => (rule, value) => {
-  return validateByType[type] ? validateByType[type](rule, value) : value;
+export default type => (value, ...args) => {
+  return validateByType[type] ? validateByType[type](value, ...args) : value;
 };
