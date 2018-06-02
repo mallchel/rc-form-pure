@@ -51,7 +51,7 @@ const validateItem = ({
       type,
       error: requiredError
         ? { type: 'required', message: requiredError }
-        : { type: 'required', message: newError },
+        : { type: 'type', message: newError },
     });
   }
 };
