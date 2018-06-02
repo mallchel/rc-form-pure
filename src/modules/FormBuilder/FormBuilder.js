@@ -52,7 +52,7 @@ export default class FormBuilder extends React.Component {
     return newState;
   }
 
-  onChange = ({ type, value = this.state.stateValues[type], error }) => {
+  onChangeError = ({ type, error }) => {
     let newErrors;
     if (!error) {
       const { [type]: deletingError, ...restErrors } = this.state.errors;
@@ -60,13 +60,17 @@ export default class FormBuilder extends React.Component {
     } else {
       newErrors = { ...this.state.errors, [type]: error };
     }
+    this.setState({
+      errors: newErrors,
+    });
+  };
 
+  onChange = ({ type, value = this.state.stateValues[type] }) => {
     this.setState({
       stateValues: {
         ...this.state.stateValues,
         [type]: value,
       },
-      errors: newErrors,
       isFieldsTouched: true,
     });
   };
@@ -93,6 +97,7 @@ export default class FormBuilder extends React.Component {
         error={error}
         value={value}
         onChange={this.onChange}
+        onChangeError={this.onChangeError}
       />
     );
   };
