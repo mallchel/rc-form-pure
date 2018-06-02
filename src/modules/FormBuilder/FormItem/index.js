@@ -2,19 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import builtInRules from './builtInRules';
+import validateItem from './validateItem';
 
 const findBuiltInRules = rules => {
   const newRulesToState = [];
 
-  // save only to those with the highest priority
-  builtInRules.find(({ builtInType }, index) => {
-    const foundRule = rules.find(rule => !!rule[builtInType]);
-
-    if (foundRule) {
-      newRulesToState.push(builtInRules[index].get(foundRule));
-      return true;
+  rules.forEach(rule => {
+    for (let key in rule) {
+      builtInRules[key] && newRulesToState.push(builtInRules[key].get(rule));
     }
-    return false;
   });
 
   return newRulesToState;
@@ -58,12 +54,6 @@ export default class FormItem extends React.PureComponent {
     return null;
   }
 
-  validateItem = ({ rules, type, value, callback }) => {
-    // get the rule with the highest priority
-    rules[0] &&
-      rules[0].validator({ rule: this.state.mirroredRules, value, callback });
-  };
-
   validatorCallback = ({ type }, error) => {
     Promise.resolve().then(() =>
       this.props.onChangeError({
@@ -74,29 +64,38 @@ export default class FormItem extends React.PureComponent {
   };
 
   onChange = value => {
-    const { type } = this.props;
-    const { rules } = this.state;
+    const { type, error } = this.props;
+    const { rules, mirroredRules } = this.state;
     const updates = {
       value,
       type,
     };
 
     this.props.onChange(updates);
-    this.validateItem({
+    validateItem({
       value,
       type,
       rules,
       callback: (...args) => this.validatorCallback({ type }, ...args),
+      mirroredRules,
+      error,
+      onChangeError: this.props.onChangeError,
     });
   };
 
   render() {
-    const { children, onChangeError, ...props } = this.props;
+    const {
+      children,
+      onChangeError,
+      error: { message } = {},
+      ...props
+    } = this.props;
 
     return children({
       ...props,
       onChange: this.onChange,
       required: this.state.required,
+      error: message,
     });
   }
 }
