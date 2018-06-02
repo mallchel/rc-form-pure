@@ -27,7 +27,16 @@ class TestFrom extends Component {
     fieldsConfig: {
       firstName: {
         // ... something props for your fields
-        rules: [{ required: true, message: 'Please fill in this field' }],
+        rules: [
+          { required: true, message: 'Please fill in this field' },
+          {
+            validator: (rules, value, callback) => {
+              setTimeout(() => {
+                callback('Error validator!!');
+              }, 500);
+            },
+          },
+        ],
         children: props => <TextField {...props} />,
       },
       lastName: {
