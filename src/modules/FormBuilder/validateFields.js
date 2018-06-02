@@ -16,8 +16,8 @@ const number = (rule, value) => {
   return typeof value === 'number';
 };
 
-const len = (rule, value) =>
-  typeof rule.len === 'number' && value.length === rule.len;
+const len = (length, value) =>
+  typeof length === 'number' && value.length === length;
 
 export const validateByType = {
   required,

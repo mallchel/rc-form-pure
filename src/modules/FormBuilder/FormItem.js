@@ -35,6 +35,13 @@ const builtInRules = [
     }),
   },
   {
+    builtInType: 'len',
+    validator: ({ len, message }) => ({
+      length: len,
+      message,
+    }),
+  },
+  {
     builtInType: 'required',
     get: ({ message, validator = validateByType['required'] }) => ({
       message,
