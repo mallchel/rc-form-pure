@@ -85,7 +85,7 @@ export default class FormItem extends React.PureComponent {
 
   render() {
     const {
-      children,
+      children = i => i,
       onChangeError,
       error: { message } = {},
       ...props
@@ -95,7 +95,7 @@ export default class FormItem extends React.PureComponent {
       ...props,
       onChange: this.onChange,
       required: this.state.required,
-      error: message,
+      error: message || this.props.error, // user's errors (without right structure)
     });
   }
 }
