@@ -55,7 +55,7 @@ class TestFrom extends Component {
     return <form onSubmit={onSubmit}>{children}</form>;
   };
 
-  renderSubmitComponent = ({ onSubmit, isFieldsTouched }) => {
+  renderSubmitComponent = ({ onSubmit, isFieldsTouched, values, errors }) => {
     return (
       <button disabled={!isFieldsTouched} onClick={onSubmit}>
         Submit :)
