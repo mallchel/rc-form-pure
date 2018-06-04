@@ -91,10 +91,21 @@ class TestFrom extends Component {
   }
 }
 
-const TextField = ({ value, type, valid, onChange, required }) => {
-  return (
-    <input key={type} value={value} onChange={e => onChange(e.target.value)} />
-  );
+class TextField extends React.PureComponent {
+  render() {
+    const { value, type, error, onChange, required } = this.props;
+    console.log(value, type, error, required);
+    return (
+      <div>
+        <input
+          key={type}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+        />
+        {error}
+      </div>
+    );
+  }
 };
 ```
 
