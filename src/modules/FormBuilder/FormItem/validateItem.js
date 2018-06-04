@@ -12,7 +12,7 @@ const validateItem = ({
   let requiredError = null;
   let userValidatorExist = false;
 
-  if (rules.lenght) {
+  if (rules.length) {
     rules.forEach(({ builtInType, validator }) => {
       switch (builtInType) {
         case 'required':
