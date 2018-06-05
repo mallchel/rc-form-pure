@@ -27,7 +27,16 @@ class TestFrom extends Component {
     fieldsConfig: {
       firstName: {
         // ... something props for your fields
-        rules: [{ required: true, message: 'Please fill in this field' }],
+        rules: [
+          { required: true, message: 'Please fill in this field' },
+          {
+            validator: (rules, value, callback) => {
+              setTimeout(() => {
+                callback('Error validator!!');
+              }, 500);
+            },
+          },
+        ],
         children: props => <TextField {...props} />,
       },
       lastName: {
@@ -82,10 +91,21 @@ class TestFrom extends Component {
   }
 }
 
-const TextField = ({ value, type, valid, onChange, required }) => {
-  return (
-    <input key={type} value={value} onChange={e => onChange(e.target.value)} />
-  );
+class TextField extends React.PureComponent {
+  render() {
+    const { value, type, error, onChange, required } = this.props;
+    console.log(value, type, error, required);
+    return (
+      <div>
+        <input
+          key={type}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+        />
+        {error}
+      </div>
+    );
+  }
 };
 ```
 
