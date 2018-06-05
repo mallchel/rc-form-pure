@@ -12,6 +12,8 @@ library for creating forms that allows you to make your components pure
 
 ## Usage
 
+### Simple
+
 ```js
 import FormBuilder from 'rc-form-pure';
 
@@ -22,6 +24,76 @@ class TestFrom extends Component {
       firstName: 'initial',
       lastName: 'initial',
     },
+    values: { lastName: 'lastName' },
+    errors: { lastName: 'This lastName is already exists' },
+    fieldsConfig: {
+      firstName: {
+        // ... something props for your fields
+        rules: [{ required: true, message: 'Please fill in this field' }],
+        children: props => <TextField {...props} />,
+      },
+      lastName: {
+        // ... something props for your fields
+        children: props => <TextField {...props} />,
+      },
+    },
+  };
+
+  onSubmit = formData => {
+    console.log('onSubmit', formData);
+  };
+
+  renderSubmitComponent = ({ onSubmit, isFieldsTouched }) => {
+    return (
+      <button disabled={!isFieldsTouched} onClick={onSubmit}>
+        Submit :)
+      </button>
+    );
+  };
+
+  render() {
+    return (
+      <FormBuilder
+        onSubmit={this.onSubmit}
+        fieldsConfig={this.state.fieldsConfig}
+        initialValues={this.state.initialValues}
+        errors={this.state.errors}
+        submitComponent={this.renderSubmitComponent}
+      />
+    );
+  }
+}
+
+class TextField extends React.PureComponent {
+  render() {
+    const { value, type, error, onChange, required } = this.props;
+    return (
+      <div>
+        <input
+          key={type}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+        />
+        {error}
+      </div>
+    );
+  }
+};
+```
+
+### Advanced
+
+```js
+import FormBuilder from 'rc-form-pure';
+
+class TestFrom extends Component {
+  state = {
+    initialValues: {
+      // data from server
+      firstName: 'initial',
+      lastName: 'initial',
+    },
+    // new values
     values: { lastName: 'lastName' },
     errors: { lastName: 'This lastName is already exists' },
     fieldsConfig: {
@@ -73,6 +145,8 @@ class TestFrom extends Component {
         onSubmit={this.onSubmit}
         fieldsConfig={this.state.fieldsConfig}
         initialValues={this.state.initialValues}
+        // Optional, reset isFieldsTouched
+        values={this.state.values}
         errors={this.state.errors}
         // Optional
         renderForm={this.renderForm}
@@ -94,7 +168,6 @@ class TestFrom extends Component {
 class TextField extends React.PureComponent {
   render() {
     const { value, type, error, onChange, required } = this.props;
-    console.log(value, type, error, required);
     return (
       <div>
         <input
