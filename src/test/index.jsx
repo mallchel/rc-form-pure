@@ -67,7 +67,7 @@ export default class TestFrom extends Component {
     console.log('onSubmit', formData);
   };
 
-  renderForm = ({ onSubmit, children }) => {
+  renderForm = ({ onSubmit, children, values, errors, isFieldsTouched }) => {
     return <form onSubmit={onSubmit}>{children}</form>;
   };
 

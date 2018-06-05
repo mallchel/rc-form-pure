@@ -149,25 +149,29 @@ export default class FormBuilder extends React.Component {
       fieldsConfig,
       layout,
     } = this.props;
+    const { isFieldsTouched, stateValues, errors } = this.state;
 
     const content = this.renderLayout(
       fieldsConfig,
       layout,
-      this.state.stateValues,
-      this.state.errors
+      stateValues,
+      errors
     );
 
     return renderForm({
       onSubmit: this.onSubmit,
+      isFieldsTouched,
+      errors,
+      values: stateValues,
       children: (
         <React.Fragment>
           {content}
           {submitComponent &&
             submitComponent({
               onSubmit: this.onSubmit,
-              isFieldsTouched: this.state.isFieldsTouched,
-              values: this.state.stateValues,
-              errors: this.state.errors,
+              isFieldsTouched,
+              values: stateValues,
+              errors,
             })}
         </React.Fragment>
       ),

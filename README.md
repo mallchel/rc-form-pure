@@ -42,7 +42,7 @@ class TestFrom extends Component {
   };
 
   // Optional
-  renderForm = ({ onSubmit, children }) => {
+  renderForm = ({ onSubmit, children, values, errors, isFieldsTouched }) => {
     return <form onSubmit={onSubmit}>{children}</form>;
   };
 

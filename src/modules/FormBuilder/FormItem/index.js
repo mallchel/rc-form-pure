@@ -85,7 +85,7 @@ export default class FormItem extends React.PureComponent {
 
   render() {
     const {
-      children = i => i,
+      children = i => console.error('children must be is function', i) || null,
       onChangeError,
       error: { message } = {},
       ...props
