@@ -9,7 +9,7 @@ const check = (value, message, validator, ...args) => {
 
 const builtInRules = {
   validator: {
-    get: ({ validator = i => i }) => {
+    get: ({ validator = i => i, message }) => {
       if (!(typeof validator === 'function')) {
         console.error(new Error('validator must be a function'));
       }
@@ -17,6 +17,7 @@ const builtInRules = {
       return {
         builtInType: 'validator',
         validator,
+        message,
       };
     },
   },

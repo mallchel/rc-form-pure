@@ -13,14 +13,14 @@ const validateItem = ({
   let userValidatorExist = false;
 
   if (rules.length) {
-    rules.forEach(({ builtInType, validator }) => {
+    rules.forEach(({ builtInType, validator, message }) => {
       switch (builtInType) {
         case 'required':
           requiredError = validator({ value });
           break;
 
         case 'validator':
-          validator(mirroredRules, value, message =>
+          validator({ message }, value, message =>
             callback({ type: 'validator', message })
           ); // user's validator
           userValidatorExist = true;

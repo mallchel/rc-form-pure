@@ -54,7 +54,7 @@ export default class FormBuilder extends React.Component {
 
   onChangeError = ({ type, error }) => {
     let newErrors;
-    if (!error) {
+    if (!error.message) {
       const { [type]: deletingError, ...restErrors } = this.state.errors;
       newErrors = restErrors;
     } else {
