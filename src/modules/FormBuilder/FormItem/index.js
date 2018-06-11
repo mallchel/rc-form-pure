@@ -23,7 +23,6 @@ const computeRulesFromProps = rules => {
 export default class FormItem extends React.PureComponent {
   static propTypes = {
     type: PropTypes.string,
-    validate: PropTypes.func,
     error: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     rules: PropTypes.array,
     onChange: PropTypes.func,

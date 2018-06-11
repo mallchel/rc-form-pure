@@ -78,7 +78,7 @@ export default class FormBuilder extends React.Component {
   onSubmit = event => {
     event && event.preventDefault();
 
-    this.props.onSubmit({
+    return this.props.onSubmit({
       values: this.state.stateValues,
       errors:
         Object.keys(this.state.errors).length === 0 ? null : this.state.errors,
