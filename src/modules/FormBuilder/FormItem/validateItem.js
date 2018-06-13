@@ -7,15 +7,33 @@ const validateItem = ({
   onChangeError,
 }) => {
   // in order of increasing priority
-  let newError = null;
+  let builtInTypeError = null;
   let requiredError = null;
   let userValidatorExist = false;
+
+  // validation only the required fields if it is empty or if the value exists
+  if (!value) {
+    const requiredRule = rules.find(rule => rule.builtInType === 'required');
+    requiredRule &&
+      requiredRule.validator(
+        { message: requiredRule.message },
+        value,
+        message => (requiredError = message)
+      );
+
+    return onChangeError({
+      type,
+      error: requiredError
+        ? { type: 'required', message: requiredError }
+        : null,
+    });
+  }
 
   if (rules.length) {
     rules.forEach(({ builtInType, validator, message }) => {
       switch (builtInType) {
         case 'required':
-          requiredError = validator({ value });
+          validator({ message }, value, message => (requiredError = message));
           break;
 
         case 'validator':
@@ -29,19 +47,17 @@ const validateItem = ({
           break;
 
         default:
-          newError = validator({ value });
+          validator(
+            { message },
+            value,
+            message => (builtInTypeError = message)
+          );
           break;
       }
     });
 
     if (userValidatorExist) {
-      // validate only required field
-      if (requiredError) {
-        onChangeError({
-          type,
-          error: { type: 'required', message: requiredError },
-        });
-      } else if (error && error.type === 'required') {
+      if (!requiredError && error && error.type === 'required') {
         // clear error
         onChangeError({
           type,
@@ -54,8 +70,8 @@ const validateItem = ({
         type,
         error: requiredError
           ? { type: 'required', message: requiredError }
-          : newError
-            ? { type: 'type', message: newError }
+          : builtInTypeError
+            ? { type: 'type', message: builtInTypeError }
             : null,
       });
     }
