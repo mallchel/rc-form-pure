@@ -3,7 +3,6 @@ const validateItem = ({
   type,
   value,
   callback,
-  mirroredRules,
   error,
   onChangeError,
 }) => {
@@ -21,7 +20,10 @@ const validateItem = ({
 
         case 'validator':
           validator({ message }, value, message =>
-            callback({ type: 'validator', message })
+            callback({
+              type,
+              error: message ? { type: 'validator', message } : null,
+            })
           ); // user's validator
           userValidatorExist = true;
           break;

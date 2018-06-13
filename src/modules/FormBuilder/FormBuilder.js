@@ -31,6 +31,8 @@ export default class FormBuilder extends React.Component {
     isFieldsTouched: false,
   };
 
+  refsValidateItem = {};
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const newState = {};
 
@@ -52,16 +54,21 @@ export default class FormBuilder extends React.Component {
     return newState;
   }
 
-  onChangeError = ({ type, error }) => {
+  onCheckError = ({ type, error, errors }) => {
     let newErrors;
-    if (!error.message) {
-      const { [type]: deletingError, ...restErrors } = this.state.errors;
+    if (!error) {
+      const { [type]: deletingError, ...restErrors } = errors;
       newErrors = restErrors;
     } else {
-      newErrors = { ...this.state.errors, [type]: error };
+      newErrors = { ...errors, [type]: error };
     }
+
+    return newErrors;
+  };
+
+  onChangeErrorToState = props => {
     this.setState({
-      errors: newErrors,
+      errors: this.onCheckError({ ...props, errors: this.state.errors }),
     });
   };
 
@@ -78,11 +85,36 @@ export default class FormBuilder extends React.Component {
   onSubmit = event => {
     event && event.preventDefault();
 
+    const { fieldsConfig } = this.props;
+    const { errors, stateValues } = this.state;
+    let newErrors = { ...errors };
+
+    const onErrorCb = result => {
+      newErrors = this.onCheckError({ ...result, errors: newErrors });
+    };
+
+    Object.keys(fieldsConfig).forEach(type => {
+      if (!([type] in errors)) {
+        this.refsValidateItem[type]({
+          value: stateValues[type],
+          onChangeError: onErrorCb,
+          callback: onErrorCb,
+        });
+      }
+    });
+
+    this.setState({
+      errors: newErrors,
+    });
+
     return this.props.onSubmit({
       values: this.state.stateValues,
-      errors:
-        Object.keys(this.state.errors).length === 0 ? null : this.state.errors,
+      errors: Object.keys(newErrors).length === 0 ? null : newErrors,
     });
+  };
+
+  saveRefValidateItem = ({ type, onValidateItem }) => {
+    this.refsValidateItem[type] = onValidateItem;
   };
 
   mapperConfig = (key, config, values, errors) => {
@@ -91,13 +123,14 @@ export default class FormBuilder extends React.Component {
 
     return (
       <FormItem
+        saveRefValidateItem={this.saveRefValidateItem}
         key={key}
         type={key}
         {...config}
         error={error}
         value={value}
         onChange={this.onChange}
-        onChangeError={this.onChangeError}
+        onChangeError={this.onChangeErrorToState}
       />
     );
   };

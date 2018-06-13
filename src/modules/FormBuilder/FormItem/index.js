@@ -23,6 +23,7 @@ const computeRulesFromProps = rules => {
 export default class FormItem extends React.PureComponent {
   static propTypes = {
     type: PropTypes.string,
+    saveRefValidateItem: PropTypes.func,
     error: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     rules: PropTypes.array,
     onChange: PropTypes.func,
@@ -53,33 +54,39 @@ export default class FormItem extends React.PureComponent {
     return null;
   }
 
-  validatorCallback = ({ type }, error) => {
-    Promise.resolve().then(() =>
-      this.props.onChangeError({
-        type,
-        error,
-      })
-    );
+  componentDidMount() {
+    this.props.saveRefValidateItem({
+      type: this.props.type,
+      onValidateItem: this.onValidateItem,
+    });
+  }
+
+  validatorCallback = params => {
+    Promise.resolve().then(() => this.props.onChangeError(params));
+  };
+
+  onValidateItem = props => {
+    const { rules } = this.state;
+    const { error, type } = this.props;
+
+    validateItem({
+      type,
+      rules,
+      callback: this.validatorCallback,
+      error,
+      ...props,
+    });
   };
 
   onChange = value => {
-    const { type, error } = this.props;
-    const { rules, mirroredRules } = this.state;
+    const { type } = this.props;
     const updates = {
       value,
       type,
     };
 
     this.props.onChange(updates);
-    validateItem({
-      value,
-      type,
-      rules,
-      callback: (...args) => this.validatorCallback({ type }, ...args),
-      mirroredRules,
-      error,
-      onChangeError: this.props.onChangeError,
-    });
+    this.onValidateItem({ value, onChangeError: this.props.onChangeError });
   };
 
   render() {
