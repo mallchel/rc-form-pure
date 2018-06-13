@@ -1,14 +1,47 @@
 import validateFields, { validateByType } from './validateFields';
 
-const check = (value, message, validator, ...args) => {
+const check = ({ message }, value, callback, validator, ...args) => {
   if (!validator(value, ...args)) {
-    return message;
+    return callback(message);
   }
   return null;
 };
 
-const builtInRules = {
-  validator: {
+// in order of decreasing priority
+const builtInRules = [
+  {
+    builtInType: 'required',
+    get: ({
+      validator = (...args) => check(...args, validateByType['required']),
+      message,
+    }) => ({
+      builtInType: 'required',
+      validator,
+      message,
+    }),
+  },
+  {
+    builtInType: 'type',
+    get: ({
+      type: typeField,
+      message,
+      validator = (...args) => check(...args, validateFields(typeField)), // if provide custom validator
+    }) => ({
+      builtInType: 'type',
+      validator,
+      message,
+    }),
+  },
+  {
+    builtInType: 'len',
+    get: ({ len, message }) => ({
+      builtInType: 'len',
+      validator: (...args) => check(...args, validateByType['len'], len),
+      message,
+    }),
+  },
+  {
+    builtInType: 'validator',
     get: ({ validator = i => i, message }) => {
       if (!(typeof validator === 'function')) {
         console.error(new Error('validator must be a function'));
@@ -21,29 +54,6 @@ const builtInRules = {
       };
     },
   },
-  type: {
-    get: ({
-      type: typeField,
-      message,
-      validator = validateFields(typeField), // if provide custom validator
-    }) => ({
-      builtInType: 'type',
-      validator: ({ value }) => check(value, message, validator),
-    }),
-  },
-  len: {
-    get: ({ len, message }) => ({
-      builtInType: 'len',
-      validator: ({ value }) =>
-        check(value, message, validateByType['len'], len),
-    }),
-  },
-  required: {
-    get: ({ message, validator = validateByType['required'] }) => ({
-      builtInType: 'required',
-      validator: ({ value }) => check(value, message, validator),
-    }),
-  },
-};
+];
 
 export default builtInRules;

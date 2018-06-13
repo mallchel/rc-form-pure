@@ -8,9 +8,13 @@ const findBuiltInRules = rules => {
   const newRulesToState = [];
 
   rules.forEach(rule => {
-    for (let key in rule) {
-      builtInRules[key] && newRulesToState.push(builtInRules[key].get(rule));
-    }
+    builtInRules.find(({ builtInType }, index) => {
+      if (rule[builtInType]) {
+        newRulesToState.push(builtInRules[index].get(rule));
+        return true;
+      }
+      return false;
+    });
   });
 
   return newRulesToState;
