@@ -72,7 +72,7 @@ export default class FormBuilder extends React.Component {
     });
   };
 
-  onChange = ({ type, value = this.state.stateValues[type] }) => {
+  onChange = ({ type, value }) => {
     this.setState({
       stateValues: {
         ...this.state.stateValues,
