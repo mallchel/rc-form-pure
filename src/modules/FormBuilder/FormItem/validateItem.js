@@ -37,12 +37,8 @@ const validateItem = ({
           break;
 
         case 'validator':
-          validator({ message }, value, message =>
-            callback({
-              type,
-              error: message ? { type: 'validator', message } : null,
-            })
-          ); // user's validator
+          // user's validator
+          validator({ message }, value, message => callback(message), error);
           userValidatorExist = true;
           break;
 
@@ -75,6 +71,12 @@ const validateItem = ({
             : null,
       });
     }
+    // if not rules, but error exist, remove error
+  } else if (error) {
+    onChangeError({
+      type,
+      error: null,
+    });
   }
 };
 

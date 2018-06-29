@@ -3,8 +3,9 @@ import FormBuilder from '../modules/FormBuilder';
 
 class TextField extends React.PureComponent {
   render() {
-    const { value, type, error, onChange, required } = this.props;
-    console.log(value, type, error, required);
+    const { value, type, error, onChange, required, validator } = this.props;
+    console.log(value, type, error, required, validator);
+
     return (
       <div>
         <input

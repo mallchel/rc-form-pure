@@ -28,7 +28,11 @@ export default class FormItem extends React.PureComponent {
   static propTypes = {
     type: PropTypes.string,
     saveRefValidateItem: PropTypes.func,
-    error: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+    error: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.array,
+      PropTypes.string,
+    ]),
     rules: PropTypes.array,
     onChange: PropTypes.func,
     onChangeError: PropTypes.func,
@@ -65,8 +69,10 @@ export default class FormItem extends React.PureComponent {
     });
   }
 
-  validatorCallback = params => {
-    Promise.resolve().then(() => this.props.onChangeError(params));
+  validatorCallback = message => {
+    Promise.resolve().then(() =>
+      this.props.onChangeError({ type: this.props.type, error: message })
+    );
   };
 
   onValidateItem = props => {
@@ -106,6 +112,7 @@ export default class FormItem extends React.PureComponent {
       onChange: this.onChange,
       required: this.state.required,
       error: message || this.props.error, // user's errors (without right structure)
+      validator: this.validatorCallback,
     });
   }
 }
