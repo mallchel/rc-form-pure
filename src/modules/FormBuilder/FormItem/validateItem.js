@@ -11,7 +11,7 @@ const validateItem = ({
   let requiredError = null;
   let userValidatorExist = false;
 
-  // validation only the required fields if it is empty or if the value exists
+  // validation only the required fields if it is empty
   if (!value) {
     const requiredRule = rules.find(rule => rule.builtInType === 'required');
     requiredRule &&
@@ -71,12 +71,6 @@ const validateItem = ({
             : null,
       });
     }
-    // if not rules, but error exist, remove error
-  } else if (error) {
-    onChangeError({
-      type,
-      error: null,
-    });
   }
 };
 
