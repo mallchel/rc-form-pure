@@ -82,7 +82,7 @@ export default class TestFrom extends Component {
 
   onClickError = () => {
     this.setState({
-      errors: { firstName: 'test' },
+      errors: { firstName: 'testError', email: 'testError' },
     });
   };
 

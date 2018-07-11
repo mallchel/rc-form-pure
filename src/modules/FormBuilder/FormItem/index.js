@@ -104,6 +104,7 @@ export default class FormItem extends React.PureComponent {
       children = i => console.error('children must be a function', i) || null,
       onChangeError,
       error: { message } = {},
+      saveRefValidateItem,
       ...props
     } = this.props;
 
