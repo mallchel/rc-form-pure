@@ -20,12 +20,13 @@ export default class FormBuilder extends React.Component {
   static defaultProps = {
     fieldsConfig: {},
     layout: [],
+    initialValues: {},
     errors: {},
   };
 
   state = {
-    stateValues: {},
-    mirroredValues: {},
+    stateValues: { ...this.props.initialValues, ...this.props.values },
+    mirroredValues: this.props.values,
     mirroredErrors: {},
     errors: {},
     isFieldsTouched: false,
@@ -38,11 +39,7 @@ export default class FormBuilder extends React.Component {
 
     if (nextProps.values !== prevState.mirroredValues) {
       newState.mirroredValues = nextProps.values;
-      newState.stateValues = {
-        ...nextProps.initialValues,
-        ...prevState.stateValues,
-        ...nextProps.values,
-      };
+      newState.stateValues = nextProps.values;
       newState.isFieldsTouched = false;
     }
 
@@ -126,8 +123,8 @@ export default class FormBuilder extends React.Component {
     this.refsValidateItem[type] = onValidateItem;
   };
 
-  mapperConfig = (key, config, values, errors) => {
-    const value = values[key];
+  mapperConfig = (key, config, values, initialValues, errors) => {
+    const value = values[key] || initialValues[key]; // to maintain control over the component
     const error = errors[key];
 
     return (
@@ -190,6 +187,7 @@ export default class FormBuilder extends React.Component {
       submitComponent,
       fieldsConfig,
       layout,
+      initialValues,
     } = this.props;
     const { isFieldsTouched, stateValues, errors } = this.state;
 
@@ -197,6 +195,7 @@ export default class FormBuilder extends React.Component {
       fieldsConfig,
       layout,
       stateValues,
+      initialValues,
       errors
     );
 
