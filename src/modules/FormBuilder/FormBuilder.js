@@ -125,7 +125,7 @@ export default class FormBuilder extends React.Component {
 
   mapperConfig = (key, config, values, initialValues, errors) => {
     const value = values[key] || initialValues[key]; // to maintain control over the component
-    const error = errors[key];
+    const error = errors ? errors[key] : undefined;
 
     return (
       <FormItem
