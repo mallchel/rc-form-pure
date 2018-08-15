@@ -21,6 +21,7 @@ export default class FormBuilder extends React.Component {
     fieldsConfig: {},
     layout: [],
     initialValues: {},
+    values: {},
     errors: {},
   };
 
