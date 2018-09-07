@@ -98,10 +98,15 @@ export default class TestFrom extends Component {
     return <div>{children}</div>;
   };
 
+  onClickSetValue = () => {
+    this.FormBuilder.setFieldValue({ type: 'firstName', value: '11111' });
+  };
+
   render() {
     return (
       <React.Fragment>
         <FormBuilder
+          ref={node => (this.FormBuilder = node)}
           onSubmit={this.onSubmit}
           fieldsConfig={this.state.fieldsConfig}
           initialValues={this.state.initialValues}
@@ -119,6 +124,9 @@ export default class TestFrom extends Component {
         />
         <button onClick={this.onClickError}>get new Errors from server</button>
         <button onClick={this.onClickValues}>get new values</button>
+        <button onClick={this.onClickSetValue}>
+          set new value for firstName
+        </button>
       </React.Fragment>
     );
   }

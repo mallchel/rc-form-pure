@@ -14,19 +14,20 @@ const validateItem = ({
   // validation only the required fields if it is empty
   if (!value) {
     const requiredRule = rules.find(rule => rule.builtInType === 'required');
-    requiredRule &&
+    if (requiredRule) {
       requiredRule.validator(
         { message: requiredRule.message },
         value,
         message => (requiredError = message)
       );
 
-    return onChangeError({
-      type,
-      error: requiredError
-        ? { type: 'required', message: requiredError }
-        : null,
-    });
+      return onChangeError({
+        type,
+        error: requiredError
+          ? { type: 'required', message: requiredError }
+          : null,
+      });
+    }
   }
 
   if (rules.length) {

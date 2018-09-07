@@ -22,41 +22,46 @@ export default class FormBuilder extends React.Component {
     layout: [],
     initialValues: {},
     values: {},
-    errors: {},
+    errors: null,
   };
 
   state = {
     stateValues: { ...this.props.initialValues, ...this.props.values },
     mirroredValues: this.props.values,
-    mirroredErrors: {},
-    errors: {},
+    mirroredErrors: null,
+    errors: null,
     isFieldsTouched: false,
   };
 
   refsValidateItem = {};
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const newState = {};
+    let newState = null;
 
     if (nextProps.values !== prevState.mirroredValues) {
-      newState.mirroredValues = nextProps.values;
-      newState.stateValues = nextProps.values;
-      newState.isFieldsTouched = false;
+      newState = {
+        mirroredValues: nextProps.values,
+        stateValues: nextProps.values,
+        isFieldsTouched: false,
+      };
     }
 
     if (nextProps.errors !== prevState.mirroredErrors) {
-      newState.mirroredErrors = nextProps.errors;
-      newState.errors = nextProps.errors;
+      newState = {
+        ...newState,
+        mirroredErrors: nextProps.errors,
+        errors: nextProps.errors,
+      };
     }
 
     return newState;
   }
 
   onCheckError = ({ type, error, errors }) => {
-    let newErrors;
+    let newErrors = null;
     if (!error) {
-      const { [type]: deletingError, ...restErrors } = errors;
-      newErrors = restErrors;
+      const { [type]: deletingError, ...restErrors } = errors || {};
+      newErrors = Object.keys(restErrors).length ? restErrors : null;
     } else {
       newErrors = { ...errors, [type]: error };
     }
@@ -70,30 +75,26 @@ export default class FormBuilder extends React.Component {
     });
   };
 
-  setFieldValue = ({ type, value }) => {
-    this.setState({
-      stateValues: {
-        ...this.state.stateValues,
-        [type]: value,
-      },
-    });
+  setFieldValue = args => {
+    // save current isFieldsTouched
+    this.onChange({ ...args, isFieldsTouched: this.state.isFieldsTouched });
   };
 
-  onChange = ({ type, value }) => {
-    this.setState({
+  onChange = ({ type, value, isFieldsTouched = true }) => {
+    this.setState(state => ({
       stateValues: {
-        ...this.state.stateValues,
+        ...state.stateValues,
         [type]: value,
       },
-      isFieldsTouched: true,
-    });
+      isFieldsTouched,
+    }));
   };
 
   onSubmit = event => {
     event && event.preventDefault();
 
     const { fieldsConfig } = this.props;
-    const { errors, stateValues } = this.state;
+    const { errors = {}, stateValues } = this.state;
     let newErrors = { ...errors };
 
     const onErrorCb = result => {
@@ -101,7 +102,7 @@ export default class FormBuilder extends React.Component {
     };
 
     Object.keys(fieldsConfig).forEach(type => {
-      if (!([type] in errors)) {
+      if (!([type] in (errors || {}))) {
         this.refsValidateItem[type]({
           value: stateValues[type],
           onChangeError: onErrorCb,
@@ -116,7 +117,7 @@ export default class FormBuilder extends React.Component {
 
     return this.props.onSubmit({
       values: this.state.stateValues,
-      errors: Object.keys(newErrors).length === 0 ? null : newErrors,
+      errors: newErrors,
     });
   };
 
@@ -124,7 +125,7 @@ export default class FormBuilder extends React.Component {
     this.refsValidateItem[type] = onValidateItem;
   };
 
-  mapperConfig = (key, config, values, initialValues, errors) => {
+  mapperConfig = (key, config, values, errors) => {
     const value = values[key];
     const error = errors ? errors[key] : undefined;
 
@@ -188,7 +189,6 @@ export default class FormBuilder extends React.Component {
       submitComponent,
       fieldsConfig,
       layout,
-      initialValues,
     } = this.props;
     const { isFieldsTouched, stateValues, errors } = this.state;
 
@@ -196,7 +196,6 @@ export default class FormBuilder extends React.Component {
       fieldsConfig,
       layout,
       stateValues,
-      initialValues,
       errors
     );
 
