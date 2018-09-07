@@ -2,11 +2,11 @@ const required = value => !!value;
 
 const email = value => {
   const regexpEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return (
-    typeof value === 'string' &&
-    !!value.match(regexpEmail) &&
-    value.length < 255
-  );
+  return value
+    ? typeof value === 'string' &&
+        !!value.match(regexpEmail) &&
+        value.length < 255
+    : true;
 };
 
 const number = value => {
