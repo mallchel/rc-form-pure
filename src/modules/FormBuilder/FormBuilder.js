@@ -94,7 +94,7 @@ export default class FormBuilder extends React.Component {
     event && event.preventDefault();
 
     const { fieldsConfig } = this.props;
-    const { errors = {}, stateValues } = this.state;
+    const { errors, stateValues } = this.state;
     let newErrors = { ...errors };
 
     const onErrorCb = result => {
@@ -110,6 +110,8 @@ export default class FormBuilder extends React.Component {
         });
       }
     });
+
+    newErrors = Object.keys(newErrors).length ? newErrors : null;
 
     this.setState({
       errors: newErrors,
