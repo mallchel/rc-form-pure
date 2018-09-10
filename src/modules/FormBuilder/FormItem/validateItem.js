@@ -20,14 +20,14 @@ const validateItem = ({
         value,
         message => (requiredError = message)
       );
-
-      return onChangeError({
-        type,
-        error: requiredError
-          ? { type: 'required', message: requiredError }
-          : null,
-      });
     }
+
+    return onChangeError({
+      type,
+      error: requiredError
+        ? { type: 'required', message: requiredError }
+        : null,
+    });
   }
 
   if (rules.length) {
