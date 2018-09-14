@@ -43,6 +43,7 @@ export default class FormBuilder extends React.Component {
         mirroredValues: nextProps.values,
         stateValues: nextProps.values,
         isFieldsTouched: false,
+        errors: null, // remove errors, when received new values
       };
     }
 
@@ -91,7 +92,7 @@ export default class FormBuilder extends React.Component {
   };
 
   onSubmit = event => {
-    event && event.preventDefault();
+    event && event.preventDefault && event.preventDefault();
 
     const { fieldsConfig } = this.props;
     const { errors, stateValues } = this.state;
@@ -102,7 +103,7 @@ export default class FormBuilder extends React.Component {
     };
 
     Object.keys(fieldsConfig).forEach(type => {
-      if (!([type] in (errors || {}))) {
+      if (!([type] in (newErrors || {}))) {
         this.refsValidateItem[type]({
           value: stateValues[type],
           onChangeError: onErrorCb,
@@ -111,7 +112,7 @@ export default class FormBuilder extends React.Component {
       }
     });
 
-    newErrors = Object.keys(newErrors).length ? newErrors : null;
+    newErrors = newErrors && Object.keys(newErrors).length ? newErrors : null;
 
     this.setState({
       errors: newErrors,
@@ -188,7 +189,7 @@ export default class FormBuilder extends React.Component {
     const {
       withForm,
       renderForm = withForm ? Form : ({ children }) => children,
-      submitComponent,
+      submitComponent: SubmitComponent,
       fieldsConfig,
       layout,
     } = this.props;
@@ -209,13 +210,14 @@ export default class FormBuilder extends React.Component {
       children: (
         <React.Fragment>
           {content}
-          {submitComponent &&
-            submitComponent({
-              onSubmit: this.onSubmit,
-              isFieldsTouched,
-              values: stateValues,
-              errors,
-            })}
+          {SubmitComponent && (
+            <SubmitComponent
+              onSubmit={this.onSubmit}
+              isFieldsTouched={isFieldsTouched}
+              values={stateValues}
+              errors={errors}
+            />
+          )}
         </React.Fragment>
       ),
     });
