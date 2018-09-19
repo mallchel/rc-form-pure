@@ -91,8 +91,7 @@ export default class FormItem extends React.PureComponent {
   onChange = value => {
     const { type } = this.props;
     const updates = {
-      value,
-      type,
+      values: { [type]: value },
     };
 
     this.props.onChange(updates);
@@ -101,7 +100,7 @@ export default class FormItem extends React.PureComponent {
 
   render() {
     const {
-      children = i => console.error('children must be a function', i) || null,
+      children = () => null,
       onChangeError,
       error: { message } = {},
       saveRefValidateItem,

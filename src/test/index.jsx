@@ -99,7 +99,7 @@ export default class TestFrom extends Component {
   };
 
   onClickSetValue = () => {
-    this.FormBuilder.setFieldValue({ type: 'firstName', value: '11111' });
+    this.FormBuilder.setFieldsValue({ firstName: '11111', lastName: '312312' });
   };
 
   render() {
