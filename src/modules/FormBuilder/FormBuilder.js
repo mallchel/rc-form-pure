@@ -76,16 +76,19 @@ export default class FormBuilder extends React.Component {
     });
   };
 
-  setFieldValue = args => {
+  setFieldsValue = values => {
     // save current isFieldsTouched
-    this.onChange({ ...args, isFieldsTouched: this.state.isFieldsTouched });
+    this.onChange({
+      values,
+      isFieldsTouched: this.state.isFieldsTouched,
+    });
   };
 
-  onChange = ({ type, value, isFieldsTouched = true }) => {
+  onChange = ({ values, isFieldsTouched = true }) => {
     this.setState(state => ({
       stateValues: {
         ...state.stateValues,
-        [type]: value,
+        ...values,
       },
       isFieldsTouched,
     }));
