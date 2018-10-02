@@ -100,19 +100,21 @@ export default class FormItem extends React.PureComponent {
 
   render() {
     const {
-      children = () => null,
+      children: Component = () => null,
       onChangeError,
       error: { message } = {},
       saveRefValidateItem,
       ...props
     } = this.props;
 
-    return children({
-      ...props,
-      onChange: this.onChange,
-      required: this.state.required,
-      error: message || this.props.error, // user's errors (without right structure)
-      validator: this.validatorCallback,
-    });
+    return (
+      <Component
+        {...props}
+        onChange={this.onChange}
+        required={this.state.required}
+        error={message || this.props.error} // user's errors (without right structure)
+        validator={this.validatorCallback}
+      />
+    );
   }
 }
