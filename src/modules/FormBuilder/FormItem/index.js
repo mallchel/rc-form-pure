@@ -90,11 +90,9 @@ export default class FormItem extends React.PureComponent {
 
   onChange = value => {
     const { type } = this.props;
-    const updates = {
-      values: { [type]: value },
-    };
+    const updates = { [type]: value };
 
-    this.props.onChange(updates);
+    this.props.onChange({ updates });
     this.onValidateItem({ value, onChangeError: this.props.onChangeError });
   };
 

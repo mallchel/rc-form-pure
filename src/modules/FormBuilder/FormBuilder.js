@@ -15,6 +15,7 @@ export default class FormBuilder extends React.Component {
     renderForm: PropTypes.func,
     withForm: PropTypes.bool,
     layout: PropTypes.array,
+    onChangeFields: PropTypes.func,
   };
 
   static defaultProps = {
@@ -23,6 +24,7 @@ export default class FormBuilder extends React.Component {
     initialValues: {},
     values: {},
     errors: null,
+    onChangeFields: () => {},
   };
 
   state = {
@@ -76,10 +78,10 @@ export default class FormBuilder extends React.Component {
     });
   };
 
-  setFieldsValue = values => {
+  setFieldsValue = updates => {
     // save current isFieldsTouched
     this.onChange({
-      values,
+      updates,
       isFieldsTouched: this.state.isFieldsTouched,
     });
   };
@@ -88,14 +90,17 @@ export default class FormBuilder extends React.Component {
     return this.state.stateValues;
   };
 
-  onChange = ({ values, isFieldsTouched = true }) => {
-    this.setState(state => ({
-      stateValues: {
-        ...state.stateValues,
-        ...values,
-      },
-      isFieldsTouched,
-    }));
+  onChange = ({ updates, isFieldsTouched = true }) => {
+    this.setState(
+      state => ({
+        stateValues: {
+          ...state.stateValues,
+          ...updates,
+        },
+        isFieldsTouched,
+      }),
+      () => this.props.onChangeFields(updates, this.state.stateValues)
+    );
   };
 
   onSubmit = event => {

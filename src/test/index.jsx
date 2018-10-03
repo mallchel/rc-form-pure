@@ -102,6 +102,10 @@ export default class TestFrom extends Component {
     this.FormBuilder.setFieldsValue({ firstName: '11111', lastName: '312312' });
   };
 
+  onChangeFields = (updates, fieldsValue) => {
+    console.log(updates, fieldsValue);
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -115,6 +119,7 @@ export default class TestFrom extends Component {
           renderForm={this.renderForm}
           withForm={true}
           submitComponent={this.renderSubmitComponent}
+          onChangeFields={this.onChangeFields}
           layout={[
             {
               container: this.renderContainer,
