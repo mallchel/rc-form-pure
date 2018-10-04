@@ -33,7 +33,7 @@ export default class TestFrom extends Component {
     fieldsConfig: {
       firstName: {
         rules: [
-          { required: true, message: 'Please fill in this field' },
+          { required: true, message: 'Please fill this field' },
           {
             validator: (rules, value, callback) => {
               setTimeout(() => {
@@ -49,14 +49,14 @@ export default class TestFrom extends Component {
       },
       email: {
         rules: [
-          { required: true, message: 'Please fill in this field' },
+          { required: true, message: 'Please fill this field' },
           { type: 'email', message: 'incorrect email' },
         ],
         children: props => <TextField {...props} />,
       },
       password: {
         rules: [
-          { required: true, message: 'Please fill in this field' },
+          { required: true, message: 'Please fill this field' },
           { len: 10, message: 'string length must be equal 10' },
         ],
         children: props => <TextField {...props} />,

@@ -43,6 +43,7 @@
     "babel-preset-react": "^6.24.1",
     "husky": "next",
     "prettier": "^1.13.3",
-    "pretty-quick": "^1.6.0"
+    "pretty-quick": "^1.6.0",
+    "react-test-renderer": "^16.5.2"
   }
 }
