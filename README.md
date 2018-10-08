@@ -29,7 +29,7 @@ class TestFrom extends Component {
     fieldsConfig: {
       firstName: {
         // ... something props for your fields
-        rules: [{ required: true, message: 'Please fill in this field' }],
+        rules: [{ required: true, message: 'Please fill this field' }],
         children: props => <TextField {...props} />,
       },
       lastName: {
@@ -78,7 +78,7 @@ class TextField extends React.PureComponent {
       </div>
     );
   }
-};
+}
 ```
 
 ### Advanced
@@ -100,7 +100,7 @@ class TestFrom extends Component {
       firstName: {
         // ... something props for your fields
         rules: [
-          { required: true, message: 'Please fill in this field' },
+          { required: true, message: 'Please fill this field' },
           {
             validator: (rules, value, callback) => {
               setTimeout(() => {
@@ -139,6 +139,10 @@ class TestFrom extends Component {
     return <div>{children}</div>;
   };
 
+  onChangeFields = (updates, allValues) => {
+    console.log(updates, allValues);
+  };
+
   render() {
     return (
       <FormBuilder
@@ -153,6 +157,7 @@ class TestFrom extends Component {
         // by default return form html
         withForm={true}
         submitComponent={this.renderSubmitComponent}
+        onChangeFields={this.onChangeFields}
         // Optional, you can group your fields
         layout={[
           {
@@ -179,7 +184,7 @@ class TextField extends React.PureComponent {
       </div>
     );
   }
-};
+}
 ```
 
 ## API

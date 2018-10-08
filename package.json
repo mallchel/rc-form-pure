@@ -31,7 +31,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "lib": "babel src/modules --out-dir lib --copy-files",
+    "lib": "babel src/modules --out-dir lib --ignore */_tests/* --copy-files",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
@@ -41,8 +41,11 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
     "husky": "next",
     "prettier": "^1.13.3",
-    "pretty-quick": "^1.6.0"
+    "pretty-quick": "^1.6.0",
+    "react-test-renderer": "^16.5.2"
   }
 }

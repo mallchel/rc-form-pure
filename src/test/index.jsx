@@ -33,7 +33,7 @@ export default class TestFrom extends Component {
     fieldsConfig: {
       firstName: {
         rules: [
-          { required: true, message: 'Please fill in this field' },
+          { required: true, message: 'Please fill this field' },
           {
             validator: (rules, value, callback) => {
               setTimeout(() => {
@@ -49,14 +49,22 @@ export default class TestFrom extends Component {
       },
       email: {
         rules: [
-          { required: true, message: 'Please fill in this field' },
-          { type: 'email', message: 'incorrect email' },
+          { required: true, message: 'Please fill in your email' },
+          { type: 'email', message: 'Email incorrect' },
+          {
+            validator: (rules, value, callback) => {
+              if (Number(value)) {
+                callback(rules.message);
+              }
+            },
+            message: 'Value must be a string',
+          },
         ],
         children: props => <TextField {...props} />,
       },
       password: {
         rules: [
-          { required: true, message: 'Please fill in this field' },
+          { required: true, message: 'Please fill this field' },
           { len: 10, message: 'string length must be equal 10' },
         ],
         children: props => <TextField {...props} />,
@@ -102,6 +110,10 @@ export default class TestFrom extends Component {
     this.FormBuilder.setFieldsValue({ firstName: '11111', lastName: '312312' });
   };
 
+  onChangeFields = (updates, fieldsValue) => {
+    console.log(updates, fieldsValue);
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -115,6 +127,7 @@ export default class TestFrom extends Component {
           renderForm={this.renderForm}
           withForm={true}
           submitComponent={this.renderSubmitComponent}
+          onChangeFields={this.onChangeFields}
           layout={[
             {
               container: this.renderContainer,

@@ -1,28 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import builtInRules from './builtInRules';
+import parseRules from './parseRules';
 import validateItem from './validateItem';
-
-const findBuiltInRules = rules => {
-  const newRulesToState = [];
-
-  rules.forEach(rule => {
-    builtInRules.find(({ builtInType }, index) => {
-      if (rule[builtInType]) {
-        newRulesToState.push(builtInRules[index].get(rule));
-        return true;
-      }
-      return false;
-    });
-  });
-
-  return newRulesToState;
-};
-
-const computeRulesFromProps = rules => {
-  return findBuiltInRules(rules);
-};
 
 export default class FormItem extends React.PureComponent {
   static propTypes = {
@@ -52,7 +32,7 @@ export default class FormItem extends React.PureComponent {
     if (nextProps.rules !== prevState.mirroredRules) {
       return {
         mirroredRules: nextProps.rules,
-        rules: computeRulesFromProps(nextProps.rules),
+        rules: parseRules(nextProps.rules),
         required: nextProps.rules.find(({ required }) => !!required)
           ? true
           : false,
@@ -90,11 +70,9 @@ export default class FormItem extends React.PureComponent {
 
   onChange = value => {
     const { type } = this.props;
-    const updates = {
-      values: { [type]: value },
-    };
+    const updates = { [type]: value };
 
-    this.props.onChange(updates);
+    this.props.onChange({ updates });
     this.onValidateItem({ value, onChangeError: this.props.onChangeError });
   };
 
