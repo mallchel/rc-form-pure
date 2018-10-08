@@ -49,8 +49,16 @@ export default class TestFrom extends Component {
       },
       email: {
         rules: [
-          { required: true, message: 'Please fill this field' },
-          { type: 'email', message: 'incorrect email' },
+          { required: true, message: 'Please fill in your email' },
+          { type: 'email', message: 'Email incorrect' },
+          {
+            validator: (rules, value, callback) => {
+              if (Number(value)) {
+                callback(rules.message);
+              }
+            },
+            message: 'Value must be a string',
+          },
         ],
         children: props => <TextField {...props} />,
       },

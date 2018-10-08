@@ -216,9 +216,6 @@ export default class FormBuilder extends React.Component {
 
     return renderForm({
       onSubmit: this.onSubmit,
-      isFieldsTouched,
-      errors,
-      values: stateValues,
       children: (
         <React.Fragment>
           {content}

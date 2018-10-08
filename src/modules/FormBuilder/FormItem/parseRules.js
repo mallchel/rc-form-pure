@@ -4,7 +4,7 @@ const check = ({ message }, value, callback, validator, ...args) => {
   if (!validator(value, ...args)) {
     return callback(message);
   }
-  return null;
+  return callback(null);
 };
 
 // in order of decreasing priority
@@ -56,4 +56,19 @@ const builtInRules = [
   },
 ];
 
-export default builtInRules;
+export default (rules = []) => {
+  const newRulesToState = [];
+
+  // right sequence
+  rules.forEach(rule => {
+    builtInRules.find(({ builtInType }, index) => {
+      if (rule[builtInType]) {
+        newRulesToState.push(builtInRules[index].get(rule));
+        return true;
+      }
+      return false;
+    });
+  });
+
+  return newRulesToState;
+};

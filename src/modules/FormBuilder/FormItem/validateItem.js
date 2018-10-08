@@ -9,7 +9,6 @@ const validateItem = ({
   // in order of increasing priority
   let builtInTypeError = null;
   let requiredError = null;
-  let userValidatorExist = false;
 
   // validation only the required fields if it is empty
   if (!value) {
@@ -24,9 +23,7 @@ const validateItem = ({
 
     return onChangeError({
       type,
-      error: requiredError
-        ? { type: 'required', message: requiredError }
-        : null,
+      error: requiredError,
     });
   }
 
@@ -39,8 +36,7 @@ const validateItem = ({
 
         case 'validator':
           // user's validator
-          validator({ message }, value, message => callback(message), error);
-          userValidatorExist = true;
+          validator({ message }, value, message => callback(message));
           break;
 
         default:
@@ -53,25 +49,12 @@ const validateItem = ({
       }
     });
 
-    if (userValidatorExist) {
-      if (!requiredError && error && error.type === 'required') {
-        // clear error
-        onChangeError({
-          type,
-          error: null,
-        });
-      }
-    } else {
-      // validate all rules
-      onChangeError({
-        type,
-        error: requiredError
-          ? { type: 'required', message: requiredError }
-          : builtInTypeError
-            ? { type: 'type', message: builtInTypeError }
-            : null,
-      });
-    }
+    // validate all rules
+    // priority by required rules
+    onChangeError({
+      type,
+      error: requiredError || builtInTypeError,
+    });
   } else {
     return onChangeError({
       type,

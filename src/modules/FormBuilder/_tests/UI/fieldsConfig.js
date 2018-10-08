@@ -20,12 +20,10 @@ class TextField extends React.PureComponent {
 export default {
   firstName: {
     rules: [
-      { required: true, message: 'Please fill this field' },
+      { required: true, message: 'Please fill firstName' },
       {
         validator: (rules, value, callback) => {
-          setTimeout(() => {
-            callback('Error validator!!');
-          }, 500);
+          callback('Error validator!!');
         },
       },
     ],
@@ -36,14 +34,14 @@ export default {
   },
   email: {
     rules: [
-      { required: true, message: 'Please fill this field' },
+      { required: true, message: 'Please fill email' },
       { type: 'email', message: 'incorrect email' },
     ],
     children: props => <TextField {...props} />,
   },
   password: {
     rules: [
-      { required: true, message: 'Please fill this field' },
+      { required: true, message: 'Please fill password' },
       { len: 10, message: 'string length must be equal 10' },
     ],
     children: props => <TextField {...props} />,
