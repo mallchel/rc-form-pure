@@ -114,6 +114,12 @@ export default class TestFrom extends Component {
     console.log(updates, fieldsValue);
   };
 
+  onCleanErrors = () => {
+    this.setState({
+      errors: null,
+    });
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -140,6 +146,7 @@ export default class TestFrom extends Component {
         <button onClick={this.onClickSetValue}>
           set new value for firstName
         </button>
+        <button onClick={this.onCleanErrors}>clean errors</button>
       </React.Fragment>
     );
   }

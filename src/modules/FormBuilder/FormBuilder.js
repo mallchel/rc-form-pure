@@ -51,17 +51,16 @@ export default class FormBuilder extends React.Component {
 
     if (nextProps.errors !== prevState.mirroredErrors) {
       let errorCount = 0;
-      const nextErrors = Object.keys(nextProps.fieldsConfig).reduce(
-        (acc, fieldKey) => {
+      const nextErrors =
+        nextProps.errors &&
+        Object.keys(nextProps.fieldsConfig).reduce((acc, fieldKey) => {
           if (nextProps.errors[fieldKey]) {
             errorCount++;
             acc[fieldKey] = nextProps.errors[fieldKey];
           }
 
           return acc;
-        },
-        {}
-      );
+        }, {});
 
       newState = {
         ...newState,
