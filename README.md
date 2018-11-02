@@ -113,6 +113,9 @@ class TestFrom extends Component {
       },
       lastName: {
         // ... something props for your fields
+        // you can customize a specific field (or all fields by passing this props to FormBuilder)
+        // if the validateOnBlur is true, then your children will get an onBlur handler
+        validateOnBlur: false,
         children: props => <TextField {...props} />,
       },
     },
@@ -143,9 +146,16 @@ class TestFrom extends Component {
     console.log(updates, allValues);
   };
 
+  onClickSetValues = () => {
+    this.FormBuilder.setFieldsValue({ firstName: 'Joe', lastName: 'Smith' });
+  };
+
   render() {
     return (
       <FormBuilder
+        ref={node => (this.FormBuilder = node)}
+        // validate all field's rules on onblur
+        validateOnBlur={true}
         onSubmit={this.onSubmit}
         fieldsConfig={this.state.fieldsConfig}
         initialValues={this.state.initialValues}

@@ -3,12 +3,20 @@ import FormBuilder from '../modules/FormBuilder';
 
 class TextField extends React.PureComponent {
   render() {
-    const { value, type, error, onChange, required, validator } = this.props;
-    console.log(value, type, error, required, validator);
+    const {
+      value,
+      type,
+      error,
+      onChange,
+      required,
+      validator,
+      ...props
+    } = this.props;
 
     return (
       <div>
         <input
+          {...props}
           key={type}
           value={value}
           onChange={e => onChange(e.target.value)}
@@ -28,8 +36,8 @@ export default class TestFrom extends Component {
       email: '',
       password: '',
     },
-    values: { lastName: 'lastName' },
-    errors: { lastName: 'This lastName is already exists' },
+    values: { lastName: '' },
+    // errors: { lastName: 'This lastName is already exists' },
     fieldsConfig: {
       firstName: {
         rules: [
@@ -60,6 +68,7 @@ export default class TestFrom extends Component {
             message: 'Value must be a string',
           },
         ],
+        validateOnBlur: false,
         children: props => <TextField {...props} />,
       },
       password: {
@@ -124,6 +133,7 @@ export default class TestFrom extends Component {
     return (
       <React.Fragment>
         <FormBuilder
+          validateOnBlur={true}
           ref={node => (this.FormBuilder = node)}
           onSubmit={this.onSubmit}
           fieldsConfig={this.state.fieldsConfig}

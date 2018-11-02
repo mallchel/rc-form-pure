@@ -16,6 +16,7 @@ export default class FormBuilder extends React.Component {
     withForm: PropTypes.bool,
     layout: PropTypes.array,
     onChangeFields: PropTypes.func,
+    validateOnBlur: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -25,6 +26,7 @@ export default class FormBuilder extends React.Component {
     values: {},
     errors: null,
     onChangeFields: () => {},
+    validateOnBlur: false,
   };
 
   state = {
@@ -152,7 +154,7 @@ export default class FormBuilder extends React.Component {
     this.refsValidateItem[type] = onValidateItem;
   };
 
-  mapperConfig = (key, config, values, errors) => {
+  mapperConfig = (key, config, values, errors, validateOnBlur) => {
     const value = values[key];
     const error = errors ? errors[key] : undefined;
 
@@ -161,6 +163,8 @@ export default class FormBuilder extends React.Component {
         saveRefValidateItem={this.saveRefValidateItem}
         key={key}
         type={key}
+        validateOnBlur={validateOnBlur}
+        // validateOnBlur prop may be in the config and may be override with it
         {...config}
         error={error}
         value={value}
@@ -216,6 +220,7 @@ export default class FormBuilder extends React.Component {
       submitComponent: SubmitComponent,
       fieldsConfig,
       layout,
+      validateOnBlur,
     } = this.props;
     const { isFieldsTouched, stateValues, errors } = this.state;
 
@@ -223,7 +228,8 @@ export default class FormBuilder extends React.Component {
       fieldsConfig,
       layout,
       stateValues,
-      errors
+      errors,
+      validateOnBlur
     );
 
     return renderForm({

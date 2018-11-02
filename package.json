@@ -3,10 +3,11 @@
   "main": "lib",
   "version": "1.2.1",
   "keywords": [
-    "react",
     "react-component",
     "react-form",
-    "form"
+    "form",
+    "rc-form",
+    "rc-form-pure"
   ],
   "homepage": "https://github.com/mallchel/rc-form-pure",
   "author": "sebastianalfabc@gmail.com",
@@ -21,7 +22,7 @@
     "prop-types": "^15.6.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
-    "react-scripts": "1.1.4"
+    "react-scripts": "^2.1.1"
   },
   "husky": {
     "hooks": {
@@ -47,5 +48,11 @@
     "prettier": "^1.13.3",
     "pretty-quick": "^1.6.0",
     "react-test-renderer": "^16.5.2"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

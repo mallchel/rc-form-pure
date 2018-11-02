@@ -16,10 +16,12 @@ export default class FormItem extends React.PureComponent {
     rules: PropTypes.array,
     onChange: PropTypes.func,
     onChangeError: PropTypes.func,
+    validateOnBlur: PropTypes.bool,
   };
 
   static defaultProps = {
     rules: [],
+    validateOnBlur: false,
   };
 
   state = {
@@ -69,10 +71,21 @@ export default class FormItem extends React.PureComponent {
   };
 
   onChange = value => {
-    const { type } = this.props;
+    const { type, validateOnBlur, error } = this.props;
     const updates = { [type]: value };
 
     this.props.onChange({ updates });
+
+    if (!validateOnBlur) {
+      this.onValidateItem({ value, onChangeError: this.props.onChangeError });
+      // if validateOnBlur is true and it has error
+    } else if (error) {
+      this.validatorCallback(null);
+    }
+  };
+
+  onBlur = () => {
+    const { value } = this.props;
     this.onValidateItem({ value, onChangeError: this.props.onChangeError });
   };
 
@@ -82,6 +95,7 @@ export default class FormItem extends React.PureComponent {
       onChangeError,
       error: { message } = {},
       saveRefValidateItem,
+      validateOnBlur,
       ...props
     } = this.props;
 
@@ -92,6 +106,7 @@ export default class FormItem extends React.PureComponent {
         required={this.state.required}
         error={message || this.props.error} // user's errors (without right structure)
         validator={this.validatorCallback}
+        onBlur={validateOnBlur ? this.onBlur : undefined}
       />
     );
   }
