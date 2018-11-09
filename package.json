@@ -9,6 +9,9 @@
     "rc-form",
     "rc-form-pure"
   ],
+  "files": [
+    "lib"
+  ],
   "homepage": "https://github.com/mallchel/rc-form-pure",
   "author": "sebastianalfabc@gmail.com",
   "repository": {

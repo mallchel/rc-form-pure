@@ -210,6 +210,7 @@ class TextField extends React.PureComponent {
 | withForm        | Specifies whether the form tag in the DOM                                         | boolean                                              | Function({ onSubmit, children }) => <form onSubmit={onSubmit}>{children}</form> |
 | submitComponent | You can specify a function that can return a component for submitting your form   | Function({ onSubmit, isFieldsTouched }) => ReactNode | -                                                                               |
 | layout          | You can group your fields                                                         | object[]                                             | []                                                                              |
+| onChangeFields  | Specify a function that will be called when the value of the field gets changed.  | Function(updates, allValues)                         | -                                                                               |
 
 ## Validation Rules
 
