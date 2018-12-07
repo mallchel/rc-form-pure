@@ -130,11 +130,12 @@ export default class FormBuilder extends React.Component {
 
     Object.keys(fieldsConfig).forEach(type => {
       if (!([type] in (newErrors || {}))) {
-        this.refsValidateItem[type]({
-          value: stateValues[type],
-          onChangeError: onErrorCb,
-          callback: onErrorCb,
-        });
+        this.refsValidateItem[type] &&
+          this.refsValidateItem[type]({
+            value: stateValues[type],
+            onChangeError: onErrorCb,
+            callback: onErrorCb,
+          });
       }
     });
 
