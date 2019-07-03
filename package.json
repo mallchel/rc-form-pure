@@ -43,14 +43,14 @@
     "babel-preset-react": "^6.24.1",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
-    "husky": "next",
+    "husky": "^3.0.0",
     "prettier": "^1.13.3",
     "pretty-quick": "^1.6.0",
-    "react-test-renderer": "^16.5.2",
     "prop-types": "^15.6.1",
     "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "react-scripts": "^2.1.1"
+    "react-dom": "^16.8.6",
+    "react-scripts": "^3.0.1",
+    "react-test-renderer": "^16.5.2"
   },
   "browserslist": [
     ">0.2%",
