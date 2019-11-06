@@ -32,7 +32,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "lib": "babel src/modules/ --out-dir lib --extensions .ts,.tsx --ignore src/**/_tests/*",
+    "lib:types": "tsc --project ./lib-tsconfig.json",
+    "lib": "rm -rf lib && npm run lib:types && babel src/modules/ --out-dir lib --extensions \".ts,.tsx\" --ignore src/**/_tests/*",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "prepublishOnly": "yarn lib"
@@ -67,7 +68,7 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-plugin-prettier": "^2.0.1",
     "tslint-react": "^4.1.0",
-    "typescript": "3.5.3"
+    "typescript": "^3.7.2"
   },
   "browserslist": {
     "production": [

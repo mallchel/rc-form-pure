@@ -29,7 +29,7 @@ const WrapperItem = (props: PropTypes) => {
   return (
     <FormItemMemo
       {...props}
-      field={fields[props.name] || { value: props.value }}
+      field={fields[props.name] || ({ value: props.value } as IField)}
       onChange={onChange}
       registerField={registerField}
     />
