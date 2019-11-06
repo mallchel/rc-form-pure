@@ -15,202 +15,67 @@ library for creating forms that allows you to make your components pure
 ### Simple
 
 ```js
-import FormBuilder from 'rc-form-pure';
+import { FormBuilder, ButtonSubmit } from 'rc-form-pure';
 
-class TestFrom extends Component {
-  state = {
-    initialValues: {
-      // data from server
-      firstName: 'initial',
-      lastName: 'initial',
-    },
-    values: { lastName: 'lastName' },
-    errors: { lastName: 'This lastName is already exists' },
-    fieldsConfig: {
-      firstName: {
-        // ... something props for your fields
-        rules: [{ required: true, message: 'Please fill this field' }],
-        children: props => <TextField {...props} />,
-      },
-      lastName: {
-        // ... something props for your fields
-        children: props => <TextField {...props} />,
-      },
-    },
-  };
+const TextField = props => {
+  const { error, onChange } = props;
 
-  onSubmit = formData => {
-    console.log('onSubmit', formData);
-  };
+  return (
+    <div>
+      <input {...props} onChange={e => onChange(e.target.value)} />
+      {error}
+    </div>
+  );
+};
 
-  renderSubmitComponent = ({ onSubmit, isFieldsTouched, values, errors }) => {
-    return (
-      <button disabled={!isFieldsTouched} onClick={onSubmit}>
-        Submit :)
-      </button>
-    );
-  };
-
-  render() {
-    return (
+const TestFrom = () => {
+  return (
+    <React.Fragment>
       <FormBuilder
-        onSubmit={this.onSubmit}
-        fieldsConfig={this.state.fieldsConfig}
-        initialValues={this.state.initialValues}
-        errors={this.state.errors}
-        submitComponent={this.renderSubmitComponent}
-      />
-    );
-  }
-}
-
-class TextField extends React.PureComponent {
-  render() {
-    const { value, type, error, onChange, required } = this.props;
-    return (
-      <div>
-        <input
-          key={type}
-          value={value}
-          onChange={e => onChange(e.target.value)}
-        />
-        {error}
-      </div>
-    );
-  }
-}
-```
-
-### Advanced
-
-```js
-import FormBuilder from 'rc-form-pure';
-
-class TestFrom extends Component {
-  state = {
-    initialValues: {
-      // data from server
-      firstName: 'initial',
-      lastName: 'initial',
-    },
-    // new values
-    values: { lastName: 'lastName' },
-    errors: { lastName: 'This lastName is already exists' },
-    fieldsConfig: {
-      firstName: {
-        // ... something props for your fields
-        rules: [
-          { required: true, message: 'Please fill this field' },
-          {
-            validator: (rules, value, callback) => {
-              setTimeout(() => {
-                callback('Error validator!!');
-              }, 500);
-            },
-          },
-        ],
-        children: props => <TextField {...props} />,
-      },
-      lastName: {
-        // ... something props for your fields
-        // you can customize a specific field (or all fields by passing this props to FormBuilder)
-        // if the validateOnBlur is true, then your children will get an onBlur handler
-        validateOnBlur: false,
-        children: props => <TextField {...props} />,
-      },
-    },
-  };
-
-  onSubmit = formData => {
-    console.log('onSubmit', formData);
-  };
-
-  // Optional
-  renderForm = ({ onSubmit, children, values, errors, isFieldsTouched }) => {
-    return <form onSubmit={onSubmit}>{children}</form>;
-  };
-
-  renderSubmitComponent = ({ onSubmit, isFieldsTouched, values, errors }) => {
-    return (
-      <button disabled={!isFieldsTouched} onClick={onSubmit}>
-        Submit :)
-      </button>
-    );
-  };
-
-  renderContainer = ({ children }) => {
-    return <div>{children}</div>;
-  };
-
-  onChangeFields = (updates, allValues) => {
-    console.log(updates, allValues);
-  };
-
-  onClickSetValues = () => {
-    this.FormBuilder.setFieldsValue({ firstName: 'Joe', lastName: 'Smith' });
-  };
-
-  render() {
-    return (
-      <FormBuilder
-        ref={node => (this.FormBuilder = node)}
-        // validate all field's rules on onblur
         validateOnBlur={true}
-        onSubmit={this.onSubmit}
-        fieldsConfig={this.state.fieldsConfig}
-        initialValues={this.state.initialValues}
-        // Optional, reset isFieldsTouched
-        values={this.state.values}
-        errors={this.state.errors}
-        // Optional
-        renderForm={this.renderForm}
-        // by default return form html
+        // ref={node => (this.FormBuilder = node)}
+        onSubmit={onSubmit}
+        errors={state.errors}
+        renderForm={renderForm}
         withForm={true}
-        submitComponent={this.renderSubmitComponent}
-        onChangeFields={this.onChangeFields}
-        // Optional, you can group your fields
-        layout={[
-          {
-            container: this.renderContainer,
-            items: ['firstName'],
-          },
-        ]}
-      />
-    );
-  }
-}
-
-class TextField extends React.PureComponent {
-  render() {
-    const { value, type, error, onChange, required } = this.props;
-    return (
-      <div>
-        <input
-          key={type}
-          value={value}
-          onChange={e => onChange(e.target.value)}
+        onChangeFields={onChangeFields}
+      >
+        <FormItem
+          name={'firstName'}
+          component={TextField}
+          validate={Validators.required}
+          errorMessage={'Please fill this field'}
+          formatter={newValue => newValue.toUpperCase()}
+          value={123}
         />
-        {error}
-      </div>
-    );
-  }
-}
+
+        <FormItem name={'lastName'} component={TextField} validate={Validators.required} />
+        <FormItem
+          name={'my-profile-group.age'}
+          component={TextField}
+          validate={useValidators([Validators.required, Validators.min(18)])}
+          validateOnBlur={true}
+          errorMessage={['Field is required', 'Value is not valid']}
+        />
+        <FormItem name={'my-profile-group.someField'} component={TextField} />
+
+        <button>onSubmit</button>
+        <ButtonSubmit>Button submit without form tag</ButtonSubmit>
+      </FormBuilder>
+    </React.Fragment>
+  );
+};
 ```
 
 ## API
 
-| Property        | Description                                                                       | Type                                                 | Default                                                                         |
-| --------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------- |
-| onSubmit        | Called when the form is submitted                                                 | Function({ values, errors }))                        | -                                                                               |
-| fieldsConfig    | Includes config for fields. { { type:{ children: function(props) => ReactNode } } | object{}                                             | []                                                                              |
-| initialValues   | You can specify initial values                                                    | object                                               | -                                                                               |
-| values          | You can replace values at any times                                               | object                                               | -                                                                               |
-| errors          | You can specify errors                                                            | object                                               | -                                                                               |
-| renderForm      | You can specify a function that can return a custom form tag                      | Function({ onSubmit, children }) => ReactNode        | Function({ children }) => children                                              |
-| withForm        | Specifies whether the form tag in the DOM                                         | boolean                                              | Function({ onSubmit, children }) => <form onSubmit={onSubmit}>{children}</form> |
-| submitComponent | You can specify a function that can return a component for submitting your form   | Function({ onSubmit, isFieldsTouched }) => ReactNode | -                                                                               |
-| layout          | You can group your fields                                                         | object[]                                             | []                                                                              |
-| onChangeFields  | Specify a function that will be called when the value of the field gets changed.  | Function(updates, allValues)                         | -                                                                               |
+| Property       | Description                                                                      | Type                                                  | Default                                                                         |
+| -------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------- |
+| onSubmit       | Called when the form is submitted                                                | Function(formValues)                                  | -                                                                               |
+| errors         | You can specify errors                                                           | object                                                | -                                                                               |
+| renderForm     | You can specify a function that can return a custom form tag                     | Function({ onSubmit, children }) => ReactNode         | Function({ children }) => children                                              |
+| withForm       | Specifies whether the form tag in the DOM                                        | boolean                                               | Function({ onSubmit, children }) => <form onSubmit={onSubmit}>{children}</form> |
+| onChangeFields | Specify a function that will be called when the value of the field gets changed. | Function(updates) or { [nameField]: (updates) => {} } | -                                                                               |
 
 ## Validation Rules
 

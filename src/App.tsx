@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
-import TestForm from './test';
+import TestForm from './Test';
+
 class App extends Component {
-  render() {
+  render(): React.ReactElement {
     return (
       <div className="App">
         <TestForm />
