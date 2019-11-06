@@ -1,4 +1,8 @@
 {
-  "presets": [["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]],
-  "plugins": ["@babel/plugin-proposal-object-rest-spread"]
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-react",
+    ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
+  ],
+  "plugins": ["transform-class-properties", "@babel/plugin-proposal-object-rest-spread"]
 }
