@@ -17,7 +17,7 @@ Bundle size (and comparison with similar other) - https://bundlephobia.com/resul
 ### Simple
 
 ```js
-import { FormBuilder, ButtonSubmit } from 'rc-form-pure';
+import { FormBuilder, FormItem, Validators, useValidators, ButtonSubmit } from 'rc-form-pure';
 
 const TextField = props => {
   const { error, onChange } = props;
