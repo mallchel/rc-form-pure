@@ -6,6 +6,8 @@ library for creating forms that allows you to make your components pure
 
 Bundle size (and comparison with similar other) - https://bundlephobia.com/result?p=rc-form-pure@next
 
+## [Demo](https://codesandbox.io/s/wonderful-cloud-l1utr)
+
 ## Install
 
 ```
@@ -30,36 +32,46 @@ const TextField = props => {
   );
 };
 
+const onSubmit = values => {
+  console.log("onSubmit", values);
+};
+const onChangeFields = updates => {
+  console.log("onChangeFields", updates);
+};
+
 const TestFrom = () => {
+  const [errors, setErrors] = useState(null);
+
   return (
     <React.Fragment>
       <FormBuilder
-        validateOnBlur={true}
-        // ref={node => (this.FormBuilder = node)}
         onSubmit={onSubmit}
-        errors={state.errors}
-        renderForm={renderForm}
+        errors={errors}
         withForm={true}
         onChangeFields={onChangeFields}
       >
         <FormItem
-          name={'firstName'}
+          name={"firstName"}
           component={TextField}
           validate={Validators.required}
-          errorMessage={'Please fill this field'}
+          errorMessage={"Please fill this field"}
           formatter={newValue => newValue.toUpperCase()}
           value={123}
         />
 
-        <FormItem name={'lastName'} component={TextField} validate={Validators.required} />
         <FormItem
-          name={'my-profile-group.age'}
+          name={"lastName"}
+          component={TextField}
+          validate={Validators.required}
+        />
+        <FormItem
+          name={"my-profile-group.age"}
           component={TextField}
           validate={useValidators([Validators.required, Validators.min(18)])}
           validateOnBlur={true}
-          errorMessage={['Field is required', 'Value is not valid']}
+          errorMessage={["Field is required", "Value is not valid"]}
         />
-        <FormItem name={'my-profile-group.someField'} component={TextField} />
+        <FormItem name={"my-profile-group.someField"} component={TextField} />
 
         <button>onSubmit</button>
         <ButtonSubmit>Button submit without form tag</ButtonSubmit>
