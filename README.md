@@ -5,7 +5,7 @@ library for creating forms that allows you to make your components pure
 ## Try new alpha version with a [new API](https://github.com/mallchel/rc-form-pure/tree/feature/alpha-version)
 
 ```
-npm i rc-form-pure@next
+npm i rc-form-pure
 ```
 
 [![npm](https://img.shields.io/npm/v/rc-form-pure.svg?style=flat-square)](https://www.npmjs.com/package/rc-form-pure)
