@@ -33,10 +33,10 @@ const TextField = props => {
 };
 
 const onSubmit = values => {
-  console.log("onSubmit", values);
+  console.log('onSubmit', values);
 };
 const onChangeFields = updates => {
-  console.log("onChangeFields", updates);
+  console.log('onChangeFields', updates);
 };
 
 const TestFrom = () => {
@@ -44,34 +44,25 @@ const TestFrom = () => {
 
   return (
     <React.Fragment>
-      <FormBuilder
-        onSubmit={onSubmit}
-        errors={errors}
-        withForm={true}
-        onChangeFields={onChangeFields}
-      >
+      <FormBuilder onSubmit={onSubmit} errors={errors} withForm={true} onChangeFields={onChangeFields}>
         <FormItem
-          name={"firstName"}
+          name={'firstName'}
           component={TextField}
           validate={Validators.required}
-          errorMessage={"Please fill this field"}
+          errorMessage={'Please fill this field'}
           formatter={newValue => newValue.toUpperCase()}
           value={123}
         />
 
+        <FormItem name={'lastName'} component={TextField} validate={Validators.required} placeholder={'Last Name'} />
         <FormItem
-          name={"lastName"}
-          component={TextField}
-          validate={Validators.required}
-        />
-        <FormItem
-          name={"my-profile-group.age"}
+          name={'my-profile-group.age'}
           component={TextField}
           validate={useValidators([Validators.required, Validators.min(18)])}
           validateOnBlur={true}
-          errorMessage={["Field is required", "Value is not valid"]}
+          errorMessage={['Field is required', 'Value is not valid']}
         />
-        <FormItem name={"my-profile-group.someField"} component={TextField} />
+        <FormItem name={'my-profile-group.someField'} component={TextField} />
 
         <button>onSubmit</button>
         <ButtonSubmit>Button submit without form tag</ButtonSubmit>

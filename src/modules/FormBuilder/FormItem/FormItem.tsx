@@ -37,28 +37,29 @@ const WrapperItem = (props: PropTypes) => {
 };
 
 const FormItem = (props: PropTypesFormItem) => {
-  const { registerField, onChange: onChangeFromContext, field } = props;
+  const {
+    component: Component,
+    formatter,
+    validate,
+    validateOnBlur,
+    registerField,
+    onChange: onChangeFromContext,
+    field,
+    errorMessage,
+    name,
+    value,
+    ...nonServiceProps
+  } = props;
 
   useEffect(() => {
     registerField({
-      name: props.name,
-      value: props.value,
-      validate: props.validate,
-      errorMessage: props.errorMessage,
+      name,
+      value,
+      validate,
+      errorMessage,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const {
-    component: Component = () => {
-      throw new Error('Component is required');
-    },
-    validate,
-    formatter,
-    name,
-    errorMessage,
-    validateOnBlur,
-  } = props;
 
   const onChange = useCallback(
     (newValue: any, onBlurCall: boolean = false) => {
@@ -84,6 +85,7 @@ const FormItem = (props: PropTypesFormItem) => {
 
   return (
     <Component
+      {...nonServiceProps}
       name={name}
       value={field.value || ''}
       onChange={onChange}
@@ -94,6 +96,9 @@ const FormItem = (props: PropTypesFormItem) => {
 };
 
 FormItem.defaultProps = {
+  component: () => {
+    throw new Error('Component is required');
+  },
   validate: () => undefined,
   formatter: (i: any) => i,
 };
