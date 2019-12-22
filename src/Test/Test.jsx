@@ -59,7 +59,7 @@ const TestFrom = () => {
           value={123}
         />
 
-        <FormItem name={'lastName'} component={TextField} validate={Validators.required} />
+        <FormItem name={'lastName'} component={TextField} validate={Validators.required} placeholder={'Last Name'} />
         <FormItem
           name={'my-profile-group.age'}
           component={TextField}
