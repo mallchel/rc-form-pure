@@ -1,5 +1,5 @@
 import { IFields, IFieldsToSubmit } from './types';
-import Validators, { ValidatorType } from './Validators';
+import Validators, { ValidatorType, ReturnTypeValidator } from './Validators';
 
 export const checkUnTouchedFields = (fields: IFields) => {
   const fieldsToSubmit: IFieldsToSubmit = {};
@@ -12,9 +12,10 @@ export const checkUnTouchedFields = (fields: IFields) => {
     fieldsToSubmit[name] = field.value;
 
     if (!field.touched) {
-      const error = callValidateFunctions(field.validate, field.value, field.errorMessage);
+      const { validate, value, errorMessage } = field;
+      const error = callValidateFunctions({ validate, value, errorMessage });
 
-      if (error) {
+      if (invalidField(error)) {
         validForm = false;
         fieldsWithError[name] = {
           ...field,
@@ -29,6 +30,16 @@ export const checkUnTouchedFields = (fields: IFields) => {
   return { fieldsToSubmit, fieldsWithError, validFormAfterValidateUntouchedFields: validForm };
 };
 
+const invalidField = (error: any) => {
+  // errorMessage prop isn't requirable
+  // so it can be empty string
+  if (error !== null) {
+    return true;
+  }
+
+  return false;
+};
+
 export const checkValidFieldsAndForm = (
   nextFields: IFields,
   invalidFields: Set<string>
@@ -36,7 +47,7 @@ export const checkValidFieldsAndForm = (
   const nextInvalidFields = new Set(invalidFields);
 
   Object.keys(nextFields).forEach(name => {
-    if (nextFields[name].error) {
+    if (invalidField(nextFields[name].error)) {
       return nextInvalidFields.add(name);
     }
 
@@ -49,11 +60,20 @@ export const checkValidFieldsAndForm = (
   };
 };
 
-export function callValidateFunctions(
-  validate: ValidatorType<any> | Array<ValidatorType<any>>,
-  value: any,
-  errorMessage: string | string[]
-) {
+type CallValidateFunctionsType = {
+  value: any;
+  errorMessage?: string | string[];
+  validate?: ValidatorType<any> | Array<ValidatorType<any>>;
+};
+export function callValidateFunctions({
+  value,
+  errorMessage = '',
+  validate,
+}: CallValidateFunctionsType): ReturnTypeValidator {
+  if (!validate) {
+    return null;
+  }
+
   if (Array.isArray(validate)) {
     return Validators.composeValidators(validate)(value, errorMessage);
   }

@@ -1,7 +1,7 @@
-import parseRules from '../../FormItem/parseRules';
-import validateItem from '../../FormItem/validateItem';
+// import parseRules from '../../FormItem/parseRules';
+// import validateItem from '../../FormItem/validateItem';
 
-test('test required field with validator', (...args) => {
+test('test required field with validator', () => {
   // const name = 'firstName';
   // const rules = [
   //   { required: true, message: 'Please fill firstName' },
@@ -51,7 +51,5 @@ test('test required field with validator', (...args) => {
   //   error: null,
   //   onChangeError: error => (nextError = error),
   // });
-  // return callback.then(errorMessage =>
-  //   expect(errorMessage).toBe(validatorMessage)
-  // );
+  // return callback.then(errorMessage => expect(errorMessage).toBe(validatorMessage));
 });

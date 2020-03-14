@@ -23,13 +23,26 @@ Bundle size (and comparison with similar other) - https://bundlephobia.com/resul
 ### Simple
 
 ```js
-import { FormBuilder, FormItem, Validators, useValidators, ButtonSubmit } from 'rc-form-pure';
+import {
+  FormBuilder,
+  FormItem,
+  Validators,
+  useValidators,
+  ButtonSubmit,
+  ComponentPropTypes,
+  ErrorsType,
+  IFieldsToSubmit,
+  FormBuilderPropTypes,
+} from 'rc-form-pure';
 
-const TextField = props => {
+type MyExtraPropTypes = {
+  extraProps: boolean,
+};
+const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
   const { error, onChange } = props;
 
   return (
-    <div>
+    <div className={styles.textFieldContainer}>
       <input {...props} onChange={e => onChange(e.target.value)} />
       {error}
     </div>
@@ -42,13 +55,15 @@ const onSubmit = values => {
 const onChangeFields = updates => {
   console.log('onChangeFields', updates);
 };
+// example
+const errors: ErrorsType = {
+  firstName: 'asd',
+};
 
-const TestFrom = () => {
-  const [errors, setErrors] = useState(null);
-
+const TestFrom = (props: FormBuilderPropTypes) => {
   return (
     <React.Fragment>
-      <FormBuilder onSubmit={onSubmit} errors={errors} withForm={true} onChangeFields={onChangeFields}>
+      <FormBuilder onSubmit={onSubmit} errors={props.errors} withForm={true} onChangeFields={onChangeFields}>
         <FormItem
           name={'firstName'}
           component={TextField}

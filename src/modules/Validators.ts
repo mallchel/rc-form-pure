@@ -1,4 +1,5 @@
-export type ValidatorType<T> = (value: T, message: string | string[]) => null | string | string[];
+export type ReturnTypeValidator = null | string | string[];
+export type ValidatorType<T> = (value: T, message: string | string[]) => ReturnTypeValidator;
 
 export default class Validators {
   static required: ValidatorType<any> = (value, message) => (!!value ? null : message);

@@ -1,24 +1,23 @@
 import React, { SyntheticEvent } from 'react';
 import _set from 'lodash.set';
 
-import Form from './Form';
+import Form from '../Form';
 import {
   IField,
   IFields,
-  PropTypes,
+  FormBuilderPropTypes,
   StateTypes,
   IFormContext,
   IFieldsToSubmit,
   OnChangeType,
   RegisterFieldType,
-} from './types';
-import { checkUnTouchedFields, checkValidFieldsAndForm } from './helpers';
+} from '../types';
+import { checkUnTouchedFields, checkValidFieldsAndForm } from '../helpers';
 
 export const FormContext = React.createContext<IFormContext>({} as IFormContext);
 
-export default class FormBuilder extends React.Component<PropTypes, StateTypes> {
+export default class FormBuilder extends React.Component<FormBuilderPropTypes, StateTypes> {
   static defaultProps = {
-    onChangeFields: () => {},
     validateOnBlur: false,
   };
 

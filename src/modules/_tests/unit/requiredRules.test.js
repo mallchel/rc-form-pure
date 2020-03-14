@@ -1,6 +1,3 @@
-import parseRules from '../../FormItem/parseRules';
-import validateItem from '../../FormItem/validateItem';
-
 test('required check', (...args) => {
   //   const type = 'firstName';
   //   const rules = [{ required: true, message: 'Please fill firstName' }];

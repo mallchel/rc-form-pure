@@ -1,23 +1,25 @@
-import React, { ReactType, ReactElement, useEffect, useContext, useCallback } from 'react';
+import React, { useEffect, useContext, useCallback, AllHTMLAttributes } from 'react';
 
 import { FormContext } from '../FormBuilder';
-import { IField, OnChangeType, RegisterFieldType } from '../types';
+import { IField, OnChangeType, RegisterFieldType, ValidateType, ErrorMessageType, ComponentPropTypes } from '../types';
 import { callValidateFunctions } from '../helpers';
 
-type PropTypes = IField & {
-  component: ReactType<any>;
-  children: ReactElement;
-  formatter: (value: any) => any;
-  validateOnBlur: boolean;
+type WrapperPropTypes = AllHTMLAttributes<any> & {
+  name: string;
+  component: ComponentPropTypes<any>;
+  formatter?: (value: any) => any;
+  validateOnBlur?: boolean;
+  validate?: ValidateType;
+  errorMessage?: ErrorMessageType;
 };
 
-type PropTypesFormItem = PropTypes & {
+type PropTypesFormItem = Omit<WrapperPropTypes, 'onChange'> & {
   registerField: (field: RegisterFieldType) => void;
-  onChange: (field: OnChangeType) => void;
   field: IField;
+  onChange: (field: OnChangeType) => void;
 };
 
-const WrapperItem = (props: PropTypes) => {
+const WrapperItem = (props: WrapperPropTypes) => {
   const context = useContext(FormContext);
 
   if (!context.fields) {
@@ -36,7 +38,18 @@ const WrapperItem = (props: PropTypes) => {
   );
 };
 
-const FormItem = (props: PropTypesFormItem) => {
+const defaultProps: PropTypesFormItem = {
+  name: 'q',
+  component: () => {
+    throw new Error('Component is required');
+  },
+  validate: (value: any, message: string | string[]) => '',
+  formatter: (i: any) => i,
+  registerField: (field: RegisterFieldType) => undefined,
+  onChange: (field: OnChangeType) => undefined,
+  field: {} as IField,
+};
+const FormItem = (props: PropTypesFormItem = defaultProps) => {
   const {
     component: Component,
     formatter,
@@ -63,11 +76,11 @@ const FormItem = (props: PropTypesFormItem) => {
 
   const onChange = useCallback(
     (newValue: any, onBlurCall: boolean = false) => {
-      const formattedValue = formatter(newValue);
+      const formattedValue = formatter && formatter(newValue);
 
       let error;
       if (!validateOnBlur || onBlurCall) {
-        error = callValidateFunctions(validate, formattedValue, errorMessage);
+        error = callValidateFunctions({ validate, value: formattedValue, errorMessage });
       }
 
       onChangeFromContext({
@@ -93,14 +106,6 @@ const FormItem = (props: PropTypesFormItem) => {
       onBlur={validateOnBlur ? onBlur : undefined}
     />
   );
-};
-
-FormItem.defaultProps = {
-  component: () => {
-    throw new Error('Component is required');
-  },
-  validate: () => undefined,
-  formatter: (i: any) => i,
 };
 
 const FormItemMemo = React.memo(FormItem);
