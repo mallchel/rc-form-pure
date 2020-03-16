@@ -102,10 +102,13 @@ const TestFrom = (props: FormBuilderPropTypes) => {
 | withForm       | Specifies whether the form tag in the DOM                                        | boolean                                               | Function({ onSubmit, children }) => <form onSubmit={onSubmit}>{children}</form> |
 | onChangeFields | Specify a function that will be called when the value of the field gets changed. | Function(updates) or { [nameField]: (updates) => {} } | -                                                                               |
 
-## Validation Rules
+## Built-in Validators
 
-| Property  | Description                                  | Type                            | Default |
-| --------- | -------------------------------------------- | ------------------------------- | ------- |
-| len       | validate an exact length of a field          | number                          | -       |
-| type      | built-in validation type ('email', 'number') | string                          | -       |
-| validator | custom validate function                     | function(rule, value, callback) | -       |
+| type              | Description                                    | Input type | Default |
+| ----------------- | ---------------------------------------------- | ---------- | ------- |
+| required          | check that value exist                         |            | -       |
+| email             | check valid emails                             | string     | -       |
+| number            | check value type                               | any        | -       |
+| len               | validate an exact length of a field            | number     | -       |
+| min               | validate a min number                          | number     | -       |
+| composeValidators | compose your validators (custom and built-ins) | function[] | -       |
