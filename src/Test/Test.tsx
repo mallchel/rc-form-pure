@@ -109,7 +109,6 @@ const TestFrom = () => {
           component={TextField}
           validate={Validators.required}
           errorMessage={'Please fill this field'}
-          formatter={newValue => newValue.toUpperCase()}
           placeholder="Your country"
         />
 
