@@ -86,7 +86,7 @@ const FormItem = (props: PropTypesFormItem = defaultProps) => {
 
   const onChange = useCallback(
     (newValue: any, onBlurCall: boolean = false) => {
-      const formattedValue = formatter && formatter(newValue);
+      const formattedValue = formatter ? formatter(newValue) : newValue;
 
       let error;
       if (!validateOnBlur || onBlurCall) {
