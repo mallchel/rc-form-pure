@@ -5,7 +5,12 @@
   height: 100%;
 }
 
+.label {
+  color: #636363;
+}
+
 .textFieldContainer {
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
 }

@@ -15,6 +15,7 @@ type WrapperPropTypes = AllHTMLAttributes<any> & {
 
 type PropTypesFormItem = Omit<WrapperPropTypes, 'onChange'> & {
   registerField: (field: RegisterFieldType) => void;
+  unregister: ({ name }: { name: string }) => void;
   field: IField;
   onChange: (field: OnChangeType) => void;
 };
@@ -26,7 +27,7 @@ const WrapperItem = (props: WrapperPropTypes) => {
     throw new Error('The FormItem must be inside the Form');
   }
 
-  const { registerField, onChange, fields } = context;
+  const { registerField, unregister, onChange, fields } = context;
 
   return (
     <FormItemMemo
@@ -34,6 +35,7 @@ const WrapperItem = (props: WrapperPropTypes) => {
       field={fields[props.name] || ({ value: props.value } as IField)}
       onChange={onChange}
       registerField={registerField}
+      unregister={unregister}
     />
   );
 };
@@ -46,6 +48,7 @@ const defaultProps: PropTypesFormItem = {
   validate: (value: any, message: string | string[]) => '',
   formatter: (i: any) => i,
   registerField: (field: RegisterFieldType) => undefined,
+  unregister: ({ name }) => undefined,
   onChange: (field: OnChangeType) => undefined,
   field: {} as IField,
 };
@@ -56,6 +59,7 @@ const FormItem = (props: PropTypesFormItem = defaultProps) => {
     validate,
     validateOnBlur,
     registerField,
+    unregister,
     onChange: onChangeFromContext,
     field,
     errorMessage,
@@ -71,6 +75,12 @@ const FormItem = (props: PropTypesFormItem = defaultProps) => {
       validate,
       errorMessage,
     });
+
+    return () => {
+      unregister({
+        name,
+      });
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

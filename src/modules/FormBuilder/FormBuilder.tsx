@@ -97,6 +97,17 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     }));
   };
 
+  unregister = ({ name }: { name: string }) => {
+    this.setState(state => {
+      const { [name]: removed, ...restFields } = state.fields;
+
+      return {
+        fields: { ...restFields },
+        valid: true,
+      };
+    });
+  };
+
   private onChange = ({ name, ...updates }: OnChangeType) => {
     const prevField: IField = this.state.fields[name];
     const nextField = { ...prevField, ...updates, touched: true };
@@ -136,6 +147,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
       <FormContext.Provider
         value={{
           registerField: this.registerField,
+          unregister: this.unregister,
           onChange: this.onChange,
           onSubmit: this.onSubmit,
           fields: this.state.fields,

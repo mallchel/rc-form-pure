@@ -23,6 +23,7 @@ export type StateTypes = {
 
 export interface IFormContext {
   registerField: (field: RegisterFieldType) => void;
+  unregister: (args: { name: string }) => void;
   onChange: (field: OnChangeType) => void;
   onSubmit: (event: any) => void;
   fields: IFields;
