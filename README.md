@@ -100,7 +100,9 @@ const TestFrom = (props: FormBuilderPropTypes) => {
 | errors         | You can specify errors                                                           | object                                                | -                                                                               |
 | renderForm     | You can specify a function that can return a custom form tag                     | Function({ onSubmit, children }) => ReactNode         | Function({ children }) => children                                              |
 | withForm       | Specifies whether the form tag in the DOM                                        | boolean                                               | Function({ onSubmit, children }) => <form onSubmit={onSubmit}>{children}</form> |
-| onChangeFields | Specify a function that will be called when the value of the field gets changed. | Function(updates) or { [nameField]: (updates) => {} } | -                                                                               |
+| onChangeFields | Specify a function that will be called when the value of the field gets changed. | Function(updates) or { [nameField]: (updates) => {} } | -        
+| formRef.setFields | set any data to your fields config | formBuilderRef.setFields({ fieldKey: { value: 'new' } })
+| formRef.getFieldsValue | get values from your fields config | formBuilderRef.getFieldsValue() to get all  values or use formBuilderRef.getFieldsValue(fieldKey) to get the value of a specific field
 
 ## Built-in Validators
 
