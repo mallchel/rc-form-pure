@@ -9,7 +9,7 @@ export type FormBuilderPropTypes = {
   renderForm?: Function;
   children?: React.ReactNode;
   onSubmit: (values: IFieldsToSubmit) => Promise<any> | void;
-  onChangeFields?: ((updates: { [name: string]: any }) => void) | { [name: string]: (args: any) => void };
+  onChangeFields?: ((updates: { [name: string]: IField }) => void) | { [name: string]: (args: IField) => void };
   validateOnBlur?: boolean;
 };
 
