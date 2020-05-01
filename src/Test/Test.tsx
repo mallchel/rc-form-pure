@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   FormBuilder,
   FormItem,
@@ -100,10 +100,11 @@ const props: FormBuilderPropTypes = {
 const TestFrom = () => {
   const [currentStep, changeStep] = useState('first');
   const FormFields = formBySteps[currentStep];
+  const formRef = useRef<FormBuilder>(null);
 
   return (
     <div className={styles.container}>
-      <FormBuilder {...props}>
+      <FormBuilder ref={formRef} {...props}>
         <FormItem
           name={'country'}
           component={TextField}
@@ -116,6 +117,12 @@ const TestFrom = () => {
 
         <button type="button" onClick={() => changeStep(currentStep === 'first' ? 'finalStep' : 'first')}>
           Change form fields
+        </button>
+        <button type="button" onClick={() => console.log(formRef.current?.getFieldsValue())}>
+          getFieldsValue: all fields
+        </button>
+        <button type="button" onClick={() => console.log(formRef.current?.getFieldsValue('country'))}>
+          getFieldsValue: country field
         </button>
         <button>onSubmit</button>
         <ButtonSubmit>Button submit without form tag</ButtonSubmit>

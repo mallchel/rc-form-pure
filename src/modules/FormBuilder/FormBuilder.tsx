@@ -30,9 +30,16 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
   };
 
   // /* helpers for external API
-  setFields = (updates: IFields) => {
+
+  setFields = (updates: { [key: string]: object }) => {
     this.setState(state => {
-      const nextFields = { ...state.fields, ...updates };
+      const nextFields = { ...state.fields };
+
+      Object.keys(updates).forEach(fieldKey => {
+        if (nextFields[fieldKey]) {
+          nextFields[fieldKey] = { ...nextFields[fieldKey], ...updates[fieldKey] };
+        }
+      });
       return {
         fields: nextFields,
         ...checkValidFieldsAndForm(nextFields, state.invalidFields),
@@ -40,9 +47,14 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     });
   };
 
-  getFieldsValue = () => {
-    const values: IFieldsToSubmit = {} as IFieldsToSubmit;
+  getFieldsValue = (fieldKey?: string): IFieldsToSubmit | any => {
     const { fields } = this.state;
+
+    if (fieldKey) {
+      return fields[fieldKey]?.value;
+    }
+
+    const values: IFieldsToSubmit = {} as IFieldsToSubmit;
     Object.keys(fields).forEach(name => (values[name] = fields[name].value));
 
     return values;
