@@ -12,6 +12,7 @@ import {
 } from '../modules';
 
 import styles from './styles.module.css';
+import useFieldsValue from '../modules/hooks/useFieldsValue';
 
 type MyExtraPropTypes = {
   extraProps: boolean;
@@ -45,6 +46,9 @@ const withForm = true;
 const validateOnBlur = true;
 
 const FirstStepForm = () => {
+  const countryValue = useFieldsValue('country');
+  console.log('countryValue', countryValue);
+
   return (
     <>
       <FormItem

@@ -11,6 +11,7 @@ import {
   IFieldsToSubmit,
   OnChangeType,
   RegisterFieldType,
+  OnChangeFieldsType,
 } from '../types';
 import { checkUnTouchedFields, checkValidFieldsAndForm } from '../helpers';
 
@@ -59,6 +60,19 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
     return values;
   };
+
+  internalsOnChanges = new Map();
+  setInternalOnChanges = (config: object) => {
+    this.internalsOnChanges.set(config, config);
+  };
+
+  unsetInternalOnChanges = (config: object) => {
+    this.internalsOnChanges.delete(config);
+  };
+
+  // getInternalOnChanges = () => {
+  //   return this.internalsOnChanges.values();
+  // };
   // */
 
   onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
@@ -120,6 +134,27 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     });
   };
 
+  private invokeOnChangeCallbacks = ({
+    configOnChange,
+    nextFields,
+    name,
+  }: {
+    configOnChange: OnChangeFieldsType;
+    nextFields: IFields;
+    name: string;
+  }) => {
+    if (configOnChange) {
+      if (typeof configOnChange === 'function') {
+        return configOnChange(nextFields);
+      }
+
+      const onChangeCallback = configOnChange[name];
+      if (onChangeCallback) {
+        onChangeCallback(nextField);
+      }
+    }
+  };
+
   private onChange = ({ name, ...updates }: OnChangeType) => {
     const prevField: IField = this.state.fields[name];
     const nextField = { ...prevField, ...updates, touched: true };
@@ -136,17 +171,10 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     });
 
     const { onChangeFields } = this.props;
+    const internalsOnChanges = [...this.internalsOnChanges.values()];
 
-    if (onChangeFields) {
-      if (typeof onChangeFields === 'function') {
-        return onChangeFields(nextFields);
-      }
-
-      const onChangeCallback = onChangeFields[name];
-      if (onChangeCallback) {
-        onChangeCallback(nextField);
-      }
-    }
+    this.invokeOnChangeCallbacks({ configOnChange: onChangeFields, nextFields, name });
+    internalsOnChanges.forEach(config => this.invokeOnChangeCallbacks({ configOnChange: config, nextFields, name }));
   };
 
   render() {
@@ -164,6 +192,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
           onSubmit: this.onSubmit,
           fields: this.state.fields,
           isFieldsTouched: this.state.isFieldsTouched,
+          setInternalOnChanges: this.setInternalOnChanges,
         }}
       >
         {renderForm({

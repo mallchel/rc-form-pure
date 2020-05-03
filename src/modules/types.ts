@@ -3,13 +3,16 @@ import { FocusEvent } from 'react';
 import { ValidatorType } from './Validators';
 
 export type ErrorsType = { [name: string]: string } | null;
+export type OnChangeFieldsType =
+  | ((updates: { [name: string]: IField }) => void)
+  | { [name: string]: (args: IField) => void };
 export type FormBuilderPropTypes = {
   errors?: ErrorsType;
   withForm?: boolean;
   renderForm?: Function;
   children?: React.ReactNode;
   onSubmit: (values: IFieldsToSubmit) => Promise<any> | void;
-  onChangeFields?: ((updates: { [name: string]: IField }) => void) | { [name: string]: (args: IField) => void };
+  onChangeFields?: OnChangeFieldsType;
   validateOnBlur?: boolean;
 };
 
@@ -28,6 +31,9 @@ export interface IFormContext {
   onSubmit: (event: any) => void;
   fields: IFields;
   isFieldsTouched: boolean;
+  // setFields: Function;
+  // getFieldsValue: Function;
+  setInternalOnChanges: Function;
 }
 
 export type IFieldsToSubmit = {
