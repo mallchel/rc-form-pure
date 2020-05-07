@@ -139,12 +139,12 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
     if (onChangeFields) {
       if (typeof onChangeFields === 'function') {
-        return onChangeFields(nextFields);
+        return onChangeFields(nextFields, { [name]: nextField });
       }
 
       const onChangeCallback = onChangeFields[name];
       if (onChangeCallback) {
-        onChangeCallback(nextField);
+        onChangeCallback(nextField, nextFields);
       }
     }
   };
