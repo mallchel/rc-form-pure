@@ -28,15 +28,15 @@ const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
   );
 };
 
-const onSubmit = (formData: IFieldsToSubmit) => {
-  console.log('onSubmit', formData);
+const onSubmit = (formData: IFieldsToSubmit, fieldWithError: IFieldsToSubmit) => {
+  console.log('onSubmit', formData, fieldWithError);
 };
 
 const renderForm = ({ onSubmit, children, values, errors, isFieldsTouched }: any) => {
   return <form onSubmit={onSubmit}>{children}</form>;
 };
-const onChangeFields = (updates: any) => {
-  console.log('onChangeFields', updates);
+const onChangeFields = (allFields: any, updatedFields: any) => {
+  console.log('onChangeFields', allFields, updatedFields);
 };
 const errors: ErrorsType = {
   firstName: 'asd',

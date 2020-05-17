@@ -12,7 +12,7 @@ export type FormBuilderPropTypes = {
   withForm?: boolean;
   renderForm?: Function;
   children?: React.ReactNode;
-  onSubmit: (values: IFieldsToSubmit) => Promise<any> | void;
+  onSubmit: (values: IFieldsToSubmit, fieldsWithError: IFields) => Promise<any> | void;
   onChangeFields?: OnChangeFieldsType;
   validateOnBlur?: boolean;
 };
@@ -63,6 +63,7 @@ export type RegisterFieldType = {
   validate?: ValidateType;
   errorMessage?: ErrorMessageType;
   error?: any;
+  componentProps: object;
 };
 
 export type ValidateType = ValidatorType<any> | Array<ValidatorType<any>>;

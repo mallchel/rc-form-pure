@@ -1,5 +1,4 @@
 import React, { SyntheticEvent } from 'react';
-import _set from 'lodash.set';
 
 import Form from '../Form';
 import {
@@ -74,21 +73,17 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     const { fieldsToSubmit, fieldsWithError, validFormAfterValidateUntouchedFields } = checkUnTouchedFields(fields);
 
     if (!validFormAfterValidateUntouchedFields) {
-      return this.setState({
+      this.setState(state => ({
         valid: validFormAfterValidateUntouchedFields,
         fields: {
-          ...this.state.fields,
+          ...state.fields,
           ...fieldsWithError,
         },
         submitting: false,
-      });
+      }));
     }
 
-    const formattedFields = {};
-    Object.keys(fieldsToSubmit).forEach(key => {
-      _set(formattedFields, key, fieldsToSubmit[key]);
-    });
-    const promise = this.props.onSubmit(formattedFields);
+    const promise = this.props.onSubmit(fieldsToSubmit, fieldsWithError);
 
     return promise && promise.finally(() => this.toggleSubmitting(false));
   };
