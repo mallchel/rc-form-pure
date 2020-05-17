@@ -40,19 +40,7 @@ const WrapperItem = (props: WrapperPropTypes) => {
   );
 };
 
-const defaultProps: PropTypesFormItem = {
-  name: 'q',
-  component: () => {
-    throw new Error('Component is required');
-  },
-  validate: (value: any, message: string | string[]) => '',
-  formatter: (i: any) => i,
-  registerField: (field: RegisterFieldType) => undefined,
-  unregister: ({ name }) => undefined,
-  onChange: (field: OnChangeType) => undefined,
-  field: {} as IField,
-};
-const FormItem = (props: PropTypesFormItem = defaultProps) => {
+const FormItem = (props: PropTypesFormItem) => {
   const {
     component: Component,
     formatter,
@@ -70,6 +58,7 @@ const FormItem = (props: PropTypesFormItem = defaultProps) => {
 
   useEffect(() => {
     registerField({
+      componentProps: nonServiceProps,
       name,
       value,
       validate,
@@ -118,6 +107,12 @@ const FormItem = (props: PropTypesFormItem = defaultProps) => {
   );
 };
 
+FormItem.defaultProps = {
+  component: () => {
+    throw new Error('Component is required');
+  },
+  errorMessage: 'Error',
+};
 const FormItemMemo = React.memo(FormItem);
 
 export default WrapperItem;
