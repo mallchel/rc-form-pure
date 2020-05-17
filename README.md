@@ -1,6 +1,6 @@
 # rc-form-pure
 
-library for creating forms that allows you to make your components pure
+Performant, flexible, lightweight and abstract library for creating React forms
 
 ```
 npm i rc-form-pure
