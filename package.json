@@ -1,6 +1,6 @@
 {
   "name": "rc-form-pure",
-  "main": "lib",
+  "main": "lib/index.js",
   "version": "2.1.8",
   "keywords": [
     "react-component",
