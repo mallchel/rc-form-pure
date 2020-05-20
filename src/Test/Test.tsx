@@ -64,16 +64,20 @@ const FirstStepForm = () => {
         placeholder="Last Name"
         value="Leukhin"
       />
-      <FormItem
-        name={'my-profile-group.age'}
-        component={TextField}
-        validate={useValidators([Validators.required, Validators.min(18)])}
-        // You can OVERRIDE global "validateOnBlur"
-        validateOnBlur={false}
-        placeholder="my-profile-group.age"
-        errorMessage={['Field is required', 'Value is not valid']}
-      />
-      <FormItem name={'my-profile-group.someField'} component={TextField} />
+
+      <FormItem name={'my-profile-group'}>
+        <FormItem
+          name={'age'}
+          component={TextField}
+          validate={useValidators([Validators.required, Validators.min(18)])}
+          type="number"
+          // You can OVERRIDE global "validateOnBlur"
+          validateOnBlur={false}
+          placeholder="my-profile-group.age"
+          errorMessage={['Field is required', 'Value should be more than 18']}
+        />
+        <FormItem name={'someField'} component={TextField} />
+      </FormItem>
     </>
   );
 };
