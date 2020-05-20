@@ -1,38 +1,41 @@
-import React, { useEffect, useContext, useCallback, AllHTMLAttributes } from 'react';
+import React, { useEffect, useContext, useCallback, useMemo } from 'react';
 
 import { FormContext } from '../FormBuilder';
-import { IField, OnChangeType, RegisterFieldType, ValidateType, ErrorMessageType, ComponentPropTypes } from '../types';
+import { IField } from '../types';
 import { callValidateFunctions } from '../helpers';
 
-type WrapperPropTypes = AllHTMLAttributes<any> & {
-  name: string;
-  component: ComponentPropTypes<any>;
-  formatter?: (value: any) => any;
-  validateOnBlur?: boolean;
-  validate?: ValidateType;
-  errorMessage?: ErrorMessageType;
-};
+import { WrapperPropTypes, PropTypesFormItem, FormItemContextType } from './types';
 
-type PropTypesFormItem = Omit<WrapperPropTypes, 'onChange'> & {
-  registerField: (field: RegisterFieldType) => void;
-  unregister: ({ name }: { name: string }) => void;
-  field: IField;
-  onChange: (field: OnChangeType) => void;
-};
+const FormItemContext = React.createContext<FormItemContextType>({} as FormItemContextType);
 
 const WrapperItem = (props: WrapperPropTypes) => {
   const context = useContext(FormContext);
+  const formItemContext = useContext(FormItemContext);
 
   if (!context.fields) {
     throw new Error('The FormItem must be inside the Form');
   }
 
+  const { name: parentName } = formItemContext;
   const { registerField, unregister, onChange, fields } = context;
+  const { name: localName } = props;
+
+  const localProps = useMemo(() => {
+    const extraPropsLocal: { name: string } = { name: localName };
+
+    if (parentName) {
+      extraPropsLocal.name = `${parentName}.${localName}`;
+    }
+
+    return extraPropsLocal;
+  }, [parentName, localName]);
 
   return (
     <FormItemMemo
       {...props}
-      field={fields[props.name] || ({ value: props.value } as IField)}
+      // overrides parent props
+      {...localProps}
+      field={fields[localProps.name] || ({ value: props.value } as IField)}
       onChange={onChange}
       registerField={registerField}
       unregister={unregister}
@@ -53,23 +56,26 @@ const FormItem = (props: PropTypesFormItem) => {
     errorMessage,
     name,
     value,
+    children,
     ...nonServiceProps
   } = props;
 
   useEffect(() => {
-    registerField({
-      componentProps: nonServiceProps,
-      name,
-      value,
-      validate,
-      errorMessage,
-    });
-
-    return () => {
-      unregister({
+    if (Component) {
+      registerField({
+        componentProps: nonServiceProps,
         name,
+        value,
+        validate,
+        errorMessage,
       });
-    };
+
+      return () => {
+        unregister({
+          name,
+        });
+      };
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -95,22 +101,31 @@ const FormItem = (props: PropTypesFormItem) => {
     onChange(field.value, true);
   }, [field.value, onChange]);
 
+  const valueContext = useMemo(() => {
+    return {
+      name,
+    };
+  }, [name]);
+
   return (
-    <Component
-      {...nonServiceProps}
-      name={name}
-      value={field.value || ''}
-      onChange={onChange}
-      error={field.error}
-      onBlur={validateOnBlur ? onBlur : undefined}
-    />
+    <FormItemContext.Provider value={valueContext}>
+      {Component ? (
+        <Component
+          {...nonServiceProps}
+          name={name}
+          value={field.value || ''}
+          onChange={onChange}
+          error={field.error}
+          onBlur={validateOnBlur ? onBlur : undefined}
+        />
+      ) : (
+        children
+      )}
+    </FormItemContext.Provider>
   );
 };
 
 FormItem.defaultProps = {
-  component: () => {
-    throw new Error('Component is required');
-  },
   errorMessage: 'Error',
 };
 const FormItemMemo = React.memo(FormItem);
