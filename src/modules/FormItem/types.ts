@@ -9,6 +9,7 @@ export type WrapperPropTypes = AllHTMLAttributes<any> & {
   validateOnBlur?: boolean;
   validate?: ValidateType;
   errorMessage?: ErrorMessageType;
+  initialValue?: any;
 };
 
 export type PropTypesFormItem = Omit<WrapperPropTypes, 'onChange'> & {
