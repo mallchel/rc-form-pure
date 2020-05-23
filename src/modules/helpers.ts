@@ -3,7 +3,7 @@ import Validators, { ValidatorType, ReturnTypeValidator } from './Validators';
 
 export const checkUnTouchedFields = (fields: IFields) => {
   const fieldsToSubmit: IFieldsToSubmit = {};
-  const fieldsWithError: IFields = {};
+  let fieldsWithError: IFields | null = null;
   let validForm = true;
 
   Object.keys(fields).forEach(name => {
@@ -17,6 +17,11 @@ export const checkUnTouchedFields = (fields: IFields) => {
 
       if (invalidField(error)) {
         validForm = false;
+        // initiate fieldsWithError
+        if (!fieldsWithError) {
+          fieldsWithError = {};
+        }
+
         fieldsWithError[name] = {
           ...field,
           error,

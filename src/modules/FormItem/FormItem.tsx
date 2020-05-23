@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useCallback, useMemo } from 'react';
 
 import { FormContext } from '../FormBuilder';
-import { IField } from '../types';
 import { callValidateFunctions } from '../helpers';
 
 import { WrapperPropTypes, PropTypesFormItem, FormItemContextType } from './types';
@@ -35,7 +34,7 @@ const WrapperItem = (props: WrapperPropTypes) => {
       {...props}
       // overrides parent props
       {...localProps}
-      field={fields[localProps.name] || ({ value: props.value } as IField)}
+      field={fields[localProps.name]}
       onChange={onChange}
       registerField={registerField}
       unregister={unregister}
@@ -52,10 +51,10 @@ const FormItem = (props: PropTypesFormItem) => {
     registerField,
     unregister,
     onChange: onChangeFromContext,
-    field,
+    field = { value: props.initialValue, error: null },
     errorMessage,
     name,
-    value,
+    initialValue,
     children,
     ...nonServiceProps
   } = props;
@@ -65,7 +64,7 @@ const FormItem = (props: PropTypesFormItem) => {
       registerField({
         componentProps: nonServiceProps,
         name,
-        value,
+        value: initialValue,
         validate,
         errorMessage,
       });

@@ -30,7 +30,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
   // /* helpers for external API
 
-  setFields = (updates: { [key: string]: object }) => {
+  setFields = (updates: Record<string, Partial<IField>>) => {
     this.setState(state => {
       const nextFields = { ...state.fields };
 
@@ -46,6 +46,14 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     });
   };
 
+  setFieldsValue = (updates: Record<string, any>) => {
+    const data = Object.keys(updates).reduce((acc, key) => {
+      acc[key] = { value: updates[key] };
+      return acc;
+    }, {} as Record<string, Pick<IField, 'value'>>);
+    this.setFields(data);
+  };
+
   getFieldsValue = (fieldKey?: string): IFieldsToSubmit | any => {
     const { fields } = this.state;
 
@@ -58,6 +66,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
     return values;
   };
+
   // */
 
   onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
@@ -77,7 +86,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
         valid: validFormAfterValidateUntouchedFields,
         fields: {
           ...state.fields,
-          ...fieldsWithError,
+          ...(fieldsWithError || {}),
         },
         submitting: false,
       }));
@@ -97,6 +106,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
         [name]: {
           name,
           ...field,
+          value: this.props.initialValues?.[name] || field.value,
           touched: false,
           error: this.props.errors ? this.props.errors[name] : null,
         },

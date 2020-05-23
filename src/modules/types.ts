@@ -12,9 +12,10 @@ export type FormBuilderPropTypes = {
   withForm?: boolean;
   renderForm?: Function;
   children?: React.ReactNode;
-  onSubmit: (values: IFieldsToSubmit, fieldsWithError: IFields) => Promise<any> | void;
+  onSubmit: (values: IFieldsToSubmit, fieldsWithError: IFields | null) => Promise<any> | void;
   onChangeFields?: OnChangeFieldsType;
   validateOnBlur?: boolean;
+  initialValues?: Record<string, any>;
 };
 
 export type StateTypes = {

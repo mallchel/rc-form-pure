@@ -28,7 +28,7 @@ const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
   );
 };
 
-const onSubmit = (formData: IFieldsToSubmit, fieldWithError: IFieldsToSubmit) => {
+const onSubmit = (formData: IFieldsToSubmit, fieldWithError: IFieldsToSubmit | null) => {
   console.log('onSubmit', formData, fieldWithError);
 };
 
@@ -62,7 +62,7 @@ const FirstStepForm = () => {
         validate={Validators.required}
         formatter={newValue => newValue.toUpperCase()}
         placeholder="Last Name"
-        value="Leukhin"
+        initialValue="Leukhin"
       />
 
       <FormItem name={'my-profile-group'}>
@@ -108,7 +108,7 @@ const TestFrom = () => {
 
   return (
     <div className={styles.container}>
-      <FormBuilder ref={formRef} {...props}>
+      <FormBuilder ref={formRef} {...props} initialValues={{ country: 'initial value from FromBuilder' }}>
         <FormItem
           name={'country'}
           component={TextField}
@@ -127,6 +127,19 @@ const TestFrom = () => {
         </button>
         <button type="button" onClick={() => console.log(formRef.current?.getFieldsValue('country'))}>
           getFieldsValue: country field
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            console.log(
+              formRef.current?.setFieldsValue({
+                fullName: 'set Full Name!!!!!!!!!!!!!!!!!!!',
+                lastName: 'set new lastName',
+              })
+            )
+          }
+        >
+          setFieldsValue to fullName and lastName
         </button>
         <button>onSubmit</button>
         <ButtonSubmit>Button submit without form tag</ButtonSubmit>
