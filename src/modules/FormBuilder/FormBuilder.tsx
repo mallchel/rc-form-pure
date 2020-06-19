@@ -133,25 +133,28 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
       [name]: nextField,
     };
 
-    this.setState(state => {
-      return {
-        fields: nextFields,
-        ...checkValidFieldsAndForm(nextFields, state.invalidFields),
-      };
-    });
+    this.setState(
+      state => {
+        return {
+          fields: nextFields,
+          ...checkValidFieldsAndForm(nextFields, state.invalidFields),
+        };
+      },
+      () => {
+        const { onChangeFields } = this.props;
 
-    const { onChangeFields } = this.props;
+        if (onChangeFields) {
+          if (typeof onChangeFields === 'function') {
+            return onChangeFields(nextFields, { [name]: nextField });
+          }
 
-    if (onChangeFields) {
-      if (typeof onChangeFields === 'function') {
-        return onChangeFields(nextFields, { [name]: nextField });
+          const onChangeCallback = onChangeFields[name];
+          if (onChangeCallback) {
+            onChangeCallback(nextField, nextFields);
+          }
+        }
       }
-
-      const onChangeCallback = onChangeFields[name];
-      if (onChangeCallback) {
-        onChangeCallback(nextField, nextFields);
-      }
-    }
+    );
   };
 
   render() {
