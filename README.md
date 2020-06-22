@@ -32,6 +32,7 @@ import {
   ComponentPropTypes,
   ErrorsType,
   IFieldsToSubmit,
+  OnChangeFieldsType,
   FormBuilderPropTypes,
 } from 'rc-form-pure';
 
@@ -52,7 +53,7 @@ const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
 const onSubmit = values => {
   console.log('onSubmit', values);
 };
-const onChangeFields = updates => {
+const onChangeFields: OnChangeFieldsType = updates => {
   console.log('onChangeFields', updates);
 };
 // example

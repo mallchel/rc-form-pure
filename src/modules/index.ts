@@ -2,11 +2,13 @@ import {
   ComponentPropTypes as ComponentPropTypesBase,
   ErrorsType as ErrorsTypeBase,
   IFieldsToSubmit as IFieldsToSubmitBase,
+  OnChangeFieldsType as OnChangeFieldsTypeBase,
   FormBuilderPropTypes as FormBuilderPropTypesBase,
 } from './types';
 export type ComponentPropTypes<T> = ComponentPropTypesBase<T>;
 export type ErrorsType = ErrorsTypeBase;
 export type IFieldsToSubmit = IFieldsToSubmitBase;
+export type OnChangeFieldsType = OnChangeFieldsTypeBase;
 export type FormBuilderPropTypes = FormBuilderPropTypesBase;
 
 export { default as FormBuilder } from './FormBuilder/FormBuilder';
