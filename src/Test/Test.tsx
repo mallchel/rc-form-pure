@@ -9,6 +9,7 @@ import {
   ErrorsType,
   IFieldsToSubmit,
   FormBuilderPropTypes,
+  OnChangeFieldsType,
 } from '../modules';
 
 import styles from './styles.module.css';
@@ -45,6 +46,10 @@ const withForm = true;
 const validateOnBlur = true;
 
 const FirstStepForm = () => {
+  const onChangeFields: OnChangeFieldsType = (...args) => {
+    console.log('My nested onChangeField callback on FormItem', ...args);
+  };
+
   return (
     <>
       <FormItem
@@ -54,6 +59,7 @@ const FirstStepForm = () => {
         errorMessage={'Please fill this field'}
         formatter={(newValue: string) => newValue.toUpperCase()}
         placeholder="Full Name"
+        onChangeFields={onChangeFields}
       />
 
       <FormItem

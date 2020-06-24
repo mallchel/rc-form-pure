@@ -2,10 +2,12 @@ import { FocusEvent } from 'react';
 
 import { ValidatorType } from './Validators';
 
+type PickPropType<T, K extends keyof T> = T[K];
+
 export type ErrorsType = { [name: string]: string } | null;
 export type OnChangeFieldsType =
   | ((updates: { [name: string]: IField }, updatedField: { [name: string]: IField }) => void)
-  | { [name: string]: (args: IField, allFields: IFields) => void };
+  | { [name: string]: (field: IField, allFields: IFields) => void };
 
 export type FormBuilderPropTypes = {
   errors?: ErrorsType;
@@ -56,6 +58,7 @@ export type OnChangeType = {
   name: string;
   value: any;
   error?: any;
+  onChangeFields?: OnChangeFieldsType;
 };
 
 export type RegisterFieldType = {
@@ -79,3 +82,21 @@ type ComponentBasePropTypes = {
 };
 
 export type ComponentPropTypes<T> = React.ComponentType<T & ComponentBasePropTypes>;
+
+export type CallValidateFunctionsType = {
+  value: any;
+  errorMessage?: string | string[];
+  validate?: ValidatorType<any> | Array<ValidatorType<any>>;
+};
+
+export type CallSubscriptionsType = ({
+  onChangeCallback,
+  nextFields,
+  nextField,
+  name,
+}: {
+  onChangeCallback?: OnChangeFieldsType;
+  nextFields: IFields;
+  nextField: IField;
+  name: PickPropType<IField, 'name'>;
+}) => void;

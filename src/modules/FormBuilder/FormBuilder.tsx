@@ -11,7 +11,7 @@ import {
   OnChangeType,
   RegisterFieldType,
 } from '../types';
-import { checkUnTouchedFields, checkValidFieldsAndForm, callValidateFunctions } from '../helpers';
+import { checkUnTouchedFields, checkValidFieldsAndForm, callValidateFunctions, callSubscriptions } from '../helpers';
 
 export const FormContext = React.createContext<IFormContext>({} as IFormContext);
 
@@ -132,7 +132,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     });
   };
 
-  private onChange = ({ name, ...updates }: OnChangeType) => {
+  private onChange = ({ name, onChangeFields: formItemOnChangeFields, ...updates }: OnChangeType) => {
     const prevField: IField = this.state.fields[name];
     const nextField = { ...prevField, ...updates, touched: true };
     const nextFields: IFields = {
@@ -148,18 +148,13 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
         };
       },
       () => {
-        const { onChangeFields } = this.props;
+        // subscriptions from FormItem props
+        callSubscriptions({ onChangeCallback: formItemOnChangeFields, nextFields, nextField, name });
 
-        if (onChangeFields) {
-          if (typeof onChangeFields === 'function') {
-            return onChangeFields(nextFields, { [name]: nextField });
-          }
+        const { onChangeFields: formBuilderOnChangeFields } = this.props;
 
-          const onChangeCallback = onChangeFields[name];
-          if (onChangeCallback) {
-            onChangeCallback(nextField, nextFields);
-          }
-        }
+        // subscriptions from FromBuilder props
+        callSubscriptions({ onChangeCallback: formBuilderOnChangeFields, nextFields, nextField, name });
       }
     );
   };
