@@ -11,7 +11,7 @@ import {
   OnChangeType,
   RegisterFieldType,
 } from '../types';
-import { checkUnTouchedFields, checkValidFieldsAndForm } from '../helpers';
+import { checkUnTouchedFields, checkValidFieldsAndForm, callValidateFunctions } from '../helpers';
 
 export const FormContext = React.createContext<IFormContext>({} as IFormContext);
 
@@ -36,7 +36,14 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
       Object.keys(updates).forEach(fieldKey => {
         if (nextFields[fieldKey]) {
-          nextFields[fieldKey] = { ...nextFields[fieldKey], ...updates[fieldKey] };
+          const { validate, errorMessage } = nextFields[fieldKey];
+          const { value } = updates[fieldKey];
+
+          nextFields[fieldKey] = {
+            ...nextFields[fieldKey],
+            error: callValidateFunctions({ value, validate, errorMessage }),
+            ...updates[fieldKey],
+          };
         }
       });
       return {

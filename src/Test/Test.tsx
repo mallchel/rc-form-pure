@@ -23,7 +23,7 @@ const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
     <div className={styles.textFieldContainer}>
       <label className={styles.label}>{name}</label>
       <input {...props} onChange={e => onChange(e.target.value)} />
-      {error}
+      {error && <span className={styles.error}>{error}</span>}
     </div>
   );
 };
@@ -52,7 +52,7 @@ const FirstStepForm = () => {
         component={TextField}
         validate={Validators.required}
         errorMessage={'Please fill this field'}
-        formatter={newValue => newValue.toUpperCase()}
+        formatter={(newValue: string) => newValue.toUpperCase()}
         placeholder="Full Name"
       />
 
@@ -60,7 +60,7 @@ const FirstStepForm = () => {
         name={'lastName'}
         component={TextField}
         validate={Validators.required}
-        formatter={newValue => newValue.toUpperCase()}
+        formatter={(newValue: string) => newValue.toUpperCase()}
         placeholder="Last Name"
         initialValue="Leukhin"
       />
