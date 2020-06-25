@@ -10,6 +10,9 @@ import {
   IFieldsToSubmit,
   OnChangeType,
   RegisterFieldType,
+  SetFieldsType,
+  SetFieldsValueType,
+  GetFieldsValueType,
 } from '../types';
 import { checkUnTouchedFields, checkValidFieldsAndForm, callValidateFunctions, callSubscriptions } from '../helpers';
 
@@ -30,7 +33,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
   // /* helpers for external API
 
-  setFields = (updates: Record<string, Partial<IField>>) => {
+  setFields: SetFieldsType = updates => {
     this.setState(state => {
       const nextFields = { ...state.fields };
 
@@ -53,7 +56,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     });
   };
 
-  setFieldsValue = (updates: Record<string, any>) => {
+  setFieldsValue: SetFieldsValueType = updates => {
     const data = Object.keys(updates).reduce((acc, key) => {
       acc[key] = { value: updates[key] };
       return acc;
@@ -61,7 +64,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     this.setFields(data);
   };
 
-  getFieldsValue = (fieldKey?: string): IFieldsToSubmit | any => {
+  getFieldsValue: GetFieldsValueType = fieldKey => {
     const { fields } = this.state;
 
     if (fieldKey) {
@@ -174,6 +177,10 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
           onSubmit: this.onSubmit,
           fields: this.state.fields,
           isFieldsTouched: this.state.isFieldsTouched,
+          // external FromBuilder API
+          setFields: this.setFields,
+          setFieldsValue: this.setFieldsValue,
+          getFieldsValue: this.getFieldsValue,
         }}
       >
         {renderForm({
