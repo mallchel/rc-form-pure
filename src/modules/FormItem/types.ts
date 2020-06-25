@@ -1,9 +1,17 @@
 import { AllHTMLAttributes } from 'react';
 
-import { OnChangeType, RegisterFieldType, ValidateType, ErrorMessageType, ComponentPropTypes, IField } from '../types';
+import {
+  OnChangeType,
+  RegisterFieldType,
+  ValidateType,
+  ErrorMessageType,
+  ComponentPropTypes,
+  IField,
+  OnChangeFieldsType,
+} from '../types';
 
 export type WrapperPropTypes = AllHTMLAttributes<any> &
-  any & {
+  Record<string, any> & {
     name: string;
     component?: ComponentPropTypes<any>;
     formatter?: (value: any) => any;
@@ -11,6 +19,7 @@ export type WrapperPropTypes = AllHTMLAttributes<any> &
     validate?: ValidateType;
     errorMessage?: ErrorMessageType;
     initialValue?: any;
+    onChangeFields?: OnChangeFieldsType;
   };
 
 export type PropTypesFormItem = Omit<WrapperPropTypes, 'onChange'> & {
