@@ -6,8 +6,8 @@ type PickPropType<T, K extends keyof T> = T[K];
 
 export type ErrorsType = { [name: string]: string } | null;
 export type OnChangeFieldsType =
-  | ((updates: { [name: string]: IField }, updatedField: { [name: string]: IField }) => void)
-  | { [name: string]: (field: IField, allFields: IFields) => void };
+  | ((allFields: Record<PickPropType<IField, 'name'>, IField>, updatedField: Record<string, IField>) => void)
+  | Record<PickPropType<IField, 'name'>, (field: IField, allFields: IFields) => void>;
 
 export type FormBuilderPropTypes = {
   errors?: ErrorsType;
@@ -28,6 +28,10 @@ export type StateTypes = {
   submitting: boolean;
 };
 
+export type SetFieldsType = (updates: Record<string, Partial<IField>>) => void;
+export type SetFieldsValueType = (updates: Record<string, any>) => void;
+export type GetFieldsValueType = (fieldKey?: string) => IFieldsToSubmit | PickPropType<IField, 'value'>;
+
 export interface IFormContext {
   registerField: (field: RegisterFieldType) => void;
   unregister: (args: { name: string }) => void;
@@ -35,11 +39,12 @@ export interface IFormContext {
   onSubmit: (event: any) => void;
   fields: IFields;
   isFieldsTouched: boolean;
+  setFields: SetFieldsType;
+  setFieldsValue: SetFieldsValueType;
+  getFieldsValue: GetFieldsValueType;
 }
 
-export type IFieldsToSubmit = {
-  [name: string]: any;
-};
+export type IFieldsToSubmit = Record<PickPropType<IField, 'name'>, PickPropType<IField, 'value'>>;
 
 export interface IFields {
   [name: string]: IField;

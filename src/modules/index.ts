@@ -16,3 +16,4 @@ export { default as FormItem } from './FormItem';
 export { default as Validators } from './Validators';
 export { default as useValidators } from './hooks/useValidators';
 export { default as ButtonSubmit } from './ButtonSubmit';
+export { useFormApi } from './hooks/useFormApi';

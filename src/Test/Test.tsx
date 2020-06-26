@@ -10,6 +10,7 @@ import {
   IFieldsToSubmit,
   FormBuilderPropTypes,
   OnChangeFieldsType,
+  useFormApi,
 } from '../modules';
 
 import styles from './styles.module.css';
@@ -49,6 +50,10 @@ const FirstStepForm = () => {
   const onChangeFields: OnChangeFieldsType = (...args) => {
     console.log('My nested onChangeField callback on FormItem', ...args);
   };
+
+  const { setFields, setFieldsValue, getFieldsValue } = useFormApi();
+
+  console.log('External FormBuilder API', { setFields, setFieldsValue, getFieldsValue });
 
   return (
     <>
