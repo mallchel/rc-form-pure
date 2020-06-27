@@ -9,10 +9,11 @@ import {
   ErrorsType,
   IFieldsToSubmit,
   FormBuilderPropTypes,
+  OnChangeFieldsType,
+  useFormApi,
 } from '../modules';
 
 import styles from './styles.module.css';
-import useFieldsValue from '../modules/hooks/useFieldsValue';
 
 type MyExtraPropTypes = {
   extraProps: boolean;
@@ -24,20 +25,20 @@ const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
     <div className={styles.textFieldContainer}>
       <label className={styles.label}>{name}</label>
       <input {...props} onChange={e => onChange(e.target.value)} />
-      {error}
+      {error && <span className={styles.error}>{error}</span>}
     </div>
   );
 };
 
-const onSubmit = (formData: IFieldsToSubmit) => {
-  console.log('onSubmit', formData);
+const onSubmit = (formData: IFieldsToSubmit, fieldWithError: IFieldsToSubmit | null) => {
+  console.log('onSubmit', formData, fieldWithError);
 };
 
 const renderForm = ({ onSubmit, children, values, errors, isFieldsTouched }: any) => {
   return <form onSubmit={onSubmit}>{children}</form>;
 };
-const onChangeFields = (updates: any) => {
-  console.log('onChangeFields', updates);
+const onChangeFields = (allFields: any, updatedFields: any) => {
+  console.log('onChangeFields', allFields, updatedFields);
 };
 const errors: ErrorsType = {
   firstName: 'asd',
@@ -46,8 +47,15 @@ const withForm = true;
 const validateOnBlur = true;
 
 const FirstStepForm = () => {
-  const countryValue = useFieldsValue('country');
+  const onChangeFields: OnChangeFieldsType = (...args) => {
+    console.log('My nested onChangeField callback on FormItem', ...args);
+  };
+
+  const { setFields, setFieldsValue, getFieldsValue, useWatchFields } = useFormApi();
+  const [countryValue, allFields] = useWatchFields('country');
+
   console.log('countryValue', countryValue);
+  console.log('External FormBuilder API', { setFields, setFieldsValue, getFieldsValue });
 
   return (
     <>
@@ -56,28 +64,33 @@ const FirstStepForm = () => {
         component={TextField}
         validate={Validators.required}
         errorMessage={'Please fill this field'}
-        formatter={newValue => newValue.toUpperCase()}
+        formatter={(newValue: string) => newValue.toUpperCase()}
         placeholder="Full Name"
+        onChangeFields={onChangeFields}
       />
 
       <FormItem
         name={'lastName'}
         component={TextField}
         validate={Validators.required}
-        formatter={newValue => newValue.toUpperCase()}
+        formatter={(newValue: string) => newValue.toUpperCase()}
         placeholder="Last Name"
-        value="Leukhin"
+        initialValue="Leukhin"
       />
-      <FormItem
-        name={'my-profile-group.age'}
-        component={TextField}
-        validate={useValidators([Validators.required, Validators.min(18)])}
-        // You can OVERRIDE global "validateOnBlur"
-        validateOnBlur={false}
-        placeholder="my-profile-group.age"
-        errorMessage={['Field is required', 'Value is not valid']}
-      />
-      <FormItem name={'my-profile-group.someField'} component={TextField} />
+
+      <FormItem name={'my-profile-group'}>
+        <FormItem
+          name={'age'}
+          component={TextField}
+          validate={useValidators([Validators.required, Validators.min(18)])}
+          type="number"
+          // You can OVERRIDE global "validateOnBlur"
+          validateOnBlur={false}
+          placeholder="my-profile-group.age"
+          errorMessage={['Field is required', 'Value should be more than 18']}
+        />
+        <FormItem name={'someField'} component={TextField} />
+      </FormItem>
     </>
   );
 };
@@ -108,7 +121,7 @@ const TestFrom = () => {
 
   return (
     <div className={styles.container}>
-      <FormBuilder ref={formRef} {...props}>
+      <FormBuilder ref={formRef} {...props} initialValues={{ country: 'initial value from FromBuilder' }}>
         <FormItem
           name={'country'}
           component={TextField}
@@ -127,6 +140,19 @@ const TestFrom = () => {
         </button>
         <button type="button" onClick={() => console.log(formRef.current?.getFieldsValue('country'))}>
           getFieldsValue: country field
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            console.log(
+              formRef.current?.setFieldsValue({
+                fullName: 'set Full Name!!!!!!!!!!!!!!!!!!!',
+                lastName: 'set new lastName',
+              })
+            )
+          }
+        >
+          setFieldsValue to fullName and lastName
         </button>
         <button>onSubmit</button>
         <ButtonSubmit>Button submit without form tag</ButtonSubmit>

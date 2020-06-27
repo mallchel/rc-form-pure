@@ -2,18 +2,22 @@ import { FocusEvent } from 'react';
 
 import { ValidatorType } from './Validators';
 
+type PickPropType<T, K extends keyof T> = T[K];
+
 export type ErrorsType = { [name: string]: string } | null;
 export type OnChangeFieldsType =
-  | ((updates: { [name: string]: IField }) => void)
-  | { [name: string]: (args: IField) => void };
+  | ((allFields: Record<PickPropType<IField, 'name'>, IField>, updatedField: Record<string, IField>) => void)
+  | Record<PickPropType<IField, 'name'>, (field: IField, allFields: IFields) => void>;
+
 export type FormBuilderPropTypes = {
   errors?: ErrorsType;
   withForm?: boolean;
   renderForm?: Function;
   children?: React.ReactNode;
-  onSubmit: (values: IFieldsToSubmit) => Promise<any> | void;
+  onSubmit: (values: IFieldsToSubmit, fieldsWithError: IFields | null) => Promise<any> | void;
   onChangeFields?: OnChangeFieldsType;
   validateOnBlur?: boolean;
+  initialValues?: Record<string, any>;
 };
 
 export type StateTypes = {
@@ -24,6 +28,10 @@ export type StateTypes = {
   submitting: boolean;
 };
 
+export type SetFieldsType = (updates: Record<string, Partial<IField>>) => void;
+export type SetFieldsValueType = (updates: Record<string, any>) => void;
+export type GetFieldsValueType = (fieldKey?: string) => IFieldsToSubmit | PickPropType<IField, 'value'>;
+
 export interface IFormContext {
   registerField: (field: RegisterFieldType) => void;
   unregister: (args: { name: string }) => void;
@@ -31,14 +39,18 @@ export interface IFormContext {
   onSubmit: (event: any) => void;
   fields: IFields;
   isFieldsTouched: boolean;
-  // setFields: Function;
-  // getFieldsValue: Function;
-  setInternalOnChanges: Function;
 }
 
-export type IFieldsToSubmit = {
-  [name: string]: any;
-};
+export interface IFormContextApi {
+  setInternalOnChanges: Function;
+  unsetInternalOnChanges: Function;
+  // external FromBuilder API
+  setFields: SetFieldsType;
+  setFieldsValue: SetFieldsValueType;
+  getFieldsValue: GetFieldsValueType;
+}
+
+export type IFieldsToSubmit = Record<PickPropType<IField, 'name'>, PickPropType<IField, 'value'>>;
 
 export interface IFields {
   [name: string]: IField;
@@ -57,6 +69,7 @@ export type OnChangeType = {
   name: string;
   value: any;
   error?: any;
+  onChangeFields?: OnChangeFieldsType;
 };
 
 export type RegisterFieldType = {
@@ -65,6 +78,7 @@ export type RegisterFieldType = {
   validate?: ValidateType;
   errorMessage?: ErrorMessageType;
   error?: any;
+  componentProps: object;
 };
 
 export type ValidateType = ValidatorType<any> | Array<ValidatorType<any>>;
@@ -79,3 +93,21 @@ type ComponentBasePropTypes = {
 };
 
 export type ComponentPropTypes<T> = React.ComponentType<T & ComponentBasePropTypes>;
+
+export type CallValidateFunctionsType = {
+  value: any;
+  errorMessage?: string | string[];
+  validate?: ValidatorType<any> | Array<ValidatorType<any>>;
+};
+
+export type CallSubscriptionsType = ({
+  onChangeCallback,
+  nextFields,
+  nextField,
+  name,
+}: {
+  onChangeCallback?: OnChangeFieldsType;
+  nextFields: IFields;
+  nextField: IField;
+  name: PickPropType<IField, 'name'>;
+}) => void;

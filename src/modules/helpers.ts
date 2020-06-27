@@ -1,9 +1,9 @@
-import { IFields, IFieldsToSubmit } from './types';
-import Validators, { ValidatorType, ReturnTypeValidator } from './Validators';
+import { IFields, IFieldsToSubmit, CallValidateFunctionsType, CallSubscriptionsType } from './types';
+import Validators, { ReturnTypeValidator } from './Validators';
 
 export const checkUnTouchedFields = (fields: IFields) => {
   const fieldsToSubmit: IFieldsToSubmit = {};
-  const fieldsWithError: IFields = {};
+  let fieldsWithError: IFields | null = null;
   let validForm = true;
 
   Object.keys(fields).forEach(name => {
@@ -17,6 +17,11 @@ export const checkUnTouchedFields = (fields: IFields) => {
 
       if (invalidField(error)) {
         validForm = false;
+        // initiate fieldsWithError
+        if (!fieldsWithError) {
+          fieldsWithError = {};
+        }
+
         fieldsWithError[name] = {
           ...field,
           error,
@@ -60,11 +65,6 @@ export const checkValidFieldsAndForm = (
   };
 };
 
-type CallValidateFunctionsType = {
-  value: any;
-  errorMessage?: string | string[];
-  validate?: ValidatorType<any> | Array<ValidatorType<any>>;
-};
 export function callValidateFunctions({
   value,
   errorMessage = '',
@@ -80,3 +80,18 @@ export function callValidateFunctions({
 
   return validate(value, errorMessage);
 }
+
+export const callSubscriptions: CallSubscriptionsType = ({ onChangeCallback, nextFields, nextField, name }): void => {
+  if (onChangeCallback) {
+    if (typeof onChangeCallback === 'function') {
+      onChangeCallback(nextFields, { [name]: nextField });
+      return;
+    }
+
+    const onChangeCallbackPerField = onChangeCallback[name];
+
+    if (onChangeCallbackPerField) {
+      onChangeCallbackPerField(nextField, nextFields);
+    }
+  }
+};
