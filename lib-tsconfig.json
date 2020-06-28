@@ -7,7 +7,8 @@
     "skipLibCheck": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "lib"
+    "outDir": "lib",
+    "downlevelIteration": true
   },
   "include": ["src/modules"],
   "exclude": ["**/_tests/*"]
