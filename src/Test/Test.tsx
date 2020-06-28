@@ -9,7 +9,6 @@ import {
   ErrorsType,
   IFieldsToSubmit,
   FormBuilderPropTypes,
-  OnChangeFieldsType,
   useFormApi,
 } from '../modules';
 
@@ -47,13 +46,10 @@ const withForm = true;
 const validateOnBlur = true;
 
 const FirstStepForm = () => {
-  const onChangeFields: OnChangeFieldsType = (...args) => {
-    console.log('My nested onChangeField callback on FormItem', ...args);
-  };
-
   const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue } = useFormApi();
   const [countryField, allFields] = useWatchFields('country');
-  const [countryValue, allValues] = useWatchValue('country');
+  const countryValue = useWatchValue('country');
+  const allValues = useWatchValue();
 
   console.log('countryField and allFields===>', countryField, allFields);
   console.log('countryValue and allValues===>', countryValue, allValues);
@@ -68,7 +64,6 @@ const FirstStepForm = () => {
         errorMessage={'Please fill this field'}
         formatter={(newValue: string) => newValue.toUpperCase()}
         placeholder="Full Name"
-        onChangeFields={onChangeFields}
       />
 
       <FormItem

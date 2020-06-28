@@ -72,7 +72,6 @@ export type OnChangeType = {
   name: string;
   value: any;
   error?: any;
-  onChangeFields?: OnChangeFieldsType;
 };
 
 export type RegisterFieldType = {
