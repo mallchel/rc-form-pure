@@ -56,7 +56,6 @@ const FormItem = (props: PropTypesFormItem) => {
     name,
     initialValue,
     children,
-    onChangeFields,
     ...nonServiceProps
   } = props;
 
@@ -92,10 +91,9 @@ const FormItem = (props: PropTypesFormItem) => {
         name,
         value: formattedValue,
         error,
-        onChangeFields,
       });
     },
-    [onChangeFromContext, name, formatter, errorMessage, validate, validateOnBlur, onChangeFields]
+    [onChangeFromContext, name, formatter, errorMessage, validate, validateOnBlur]
   );
 
   const onBlur = useCallback(() => {

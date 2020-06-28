@@ -13,11 +13,11 @@ function prepareValues(fields: IFields = {}) {
 }
 
 export const useWatchValue = (fieldKey?: string) => {
-  const [one, two] = useWatchFields(fieldKey);
+  const [fieldOrFields] = useWatchFields(fieldKey);
 
   if (fieldKey) {
-    return [prepareValue(one), prepareValues(two)];
+    return prepareValue(fieldOrFields);
   }
 
-  return [prepareValues(one), prepareValues(two)];
+  return prepareValues(fieldOrFields);
 };

@@ -161,7 +161,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     });
   };
 
-  private onChange = ({ name, onChangeFields: formItemOnChangeFields, ...updates }: OnChangeType) => {
+  private onChange = ({ name, ...updates }: OnChangeType) => {
     const prevField: IField = this.state.fields[name];
     const nextField = { ...prevField, ...updates, touched: true };
     const nextFields: IFields = {
@@ -177,9 +177,6 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
         };
       },
       () => {
-        // subscriptions from FormItem props
-        callSubscriptions({ onChangeCallback: formItemOnChangeFields, nextFields, nextField, name });
-
         const { onChangeFields: formBuilderOnChangeFields } = this.props;
 
         // subscriptions from FromBuilder props
