@@ -6,7 +6,10 @@ type PickPropType<T, K extends keyof T> = T[K];
 
 export type ErrorsType = { [name: string]: string } | null;
 export type OnChangeFieldsType =
-  | ((allFields: Record<PickPropType<IField, 'name'>, IField>, updatedField: Record<string, IField>) => void)
+  | ((
+      allFields: Record<PickPropType<IField, 'name'>, IField>,
+      updatedField: Record<PickPropType<IField, 'name'>, IField>
+    ) => void)
   | Record<PickPropType<IField, 'name'>, (field: IField, allFields: IFields) => void>;
 
 export type FormBuilderPropTypes = {
@@ -39,6 +42,12 @@ export interface IFormContext {
   onSubmit: (event: any) => void;
   fields: IFields;
   isFieldsTouched: boolean;
+}
+
+export interface IFormContextApi {
+  setInternalOnChanges: Function;
+  unsetInternalOnChanges: Function;
+  // external FromBuilder API
   setFields: SetFieldsType;
   setFieldsValue: SetFieldsValueType;
   getFieldsValue: GetFieldsValueType;

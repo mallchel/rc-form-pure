@@ -13,10 +13,12 @@ import {
   SetFieldsType,
   SetFieldsValueType,
   GetFieldsValueType,
+  IFormContextApi,
 } from '../types';
 import { checkUnTouchedFields, checkValidFieldsAndForm, callValidateFunctions, callSubscriptions } from '../helpers';
 
 export const FormContext = React.createContext<IFormContext>({} as IFormContext);
+export const FormContextApi = React.createContext<IFormContextApi>({} as IFormContextApi);
 
 export default class FormBuilder extends React.Component<FormBuilderPropTypes, StateTypes> {
   static defaultProps = {
@@ -30,6 +32,21 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     valid: true,
     submitting: false,
   };
+
+  private formContextApiValue: IFormContextApi = {} as IFormContextApi;
+
+  constructor(props: FormBuilderPropTypes) {
+    super(props);
+
+    this.formContextApiValue = {
+      setInternalOnChanges: this.setInternalOnChanges,
+      unsetInternalOnChanges: this.unsetInternalOnChanges,
+      // external FromBuilder API
+      setFields: this.setFields,
+      setFieldsValue: this.setFieldsValue,
+      getFieldsValue: this.getFieldsValue,
+    };
+  }
 
   // /* helpers for external API
 
@@ -75,6 +92,15 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     Object.keys(fields).forEach(name => (values[name] = fields[name].value));
 
     return values;
+  };
+
+  internalsOnChanges = new Map();
+  setInternalOnChanges = (config: object) => {
+    this.internalsOnChanges.set(config, config);
+  };
+
+  unsetInternalOnChanges = (config: object) => {
+    this.internalsOnChanges.delete(config);
   };
 
   // */
@@ -158,6 +184,12 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
         // subscriptions from FromBuilder props
         callSubscriptions({ onChangeCallback: formBuilderOnChangeFields, nextFields, nextField, name });
+
+        const internalsOnChanges = [...this.internalsOnChanges.values()];
+
+        internalsOnChanges.forEach(onChangeCallback =>
+          callSubscriptions({ onChangeCallback, nextFields, nextField, name })
+        );
       }
     );
   };
@@ -168,6 +200,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
       renderForm = withForm ? Form : ({ children: childrenProp }: { children: React.ReactChild }) => childrenProp,
       children,
     } = this.props;
+
     return (
       <FormContext.Provider
         value={{
@@ -177,16 +210,14 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
           onSubmit: this.onSubmit,
           fields: this.state.fields,
           isFieldsTouched: this.state.isFieldsTouched,
-          // external FromBuilder API
-          setFields: this.setFields,
-          setFieldsValue: this.setFieldsValue,
-          getFieldsValue: this.getFieldsValue,
         }}
       >
-        {renderForm({
-          onSubmit: this.onSubmit,
-          children,
-        })}
+        <FormContextApi.Provider value={this.formContextApiValue}>
+          {renderForm({
+            onSubmit: this.onSubmit,
+            children,
+          })}
+        </FormContextApi.Provider>
       </FormContext.Provider>
     );
   }

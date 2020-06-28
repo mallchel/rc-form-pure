@@ -1,16 +1,19 @@
 import { useContext } from 'react';
 
-import { FormContext } from '../FormBuilder';
+import { FormContextApi } from '../FormBuilder';
+
+import { useWatchFields } from './useWatchFields';
+import { useWatchValue } from './useWatchValue';
 
 export const useFormApi = () => {
-  const context = useContext(FormContext);
+  const context = useContext(FormContextApi);
 
   // TODO: replace with invariant
-  if (!context.fields) {
-    throw new Error('The FormItem must be inside the Form');
+  if (!Object.keys(context).length) {
+    throw new Error('The useFormApi must be inside the Form');
   }
 
   const { setFields, setFieldsValue, getFieldsValue } = context;
 
-  return { setFields, setFieldsValue, getFieldsValue };
+  return { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue };
 };

@@ -51,8 +51,12 @@ const FirstStepForm = () => {
     console.log('My nested onChangeField callback on FormItem', ...args);
   };
 
-  const { setFields, setFieldsValue, getFieldsValue } = useFormApi();
+  const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue } = useFormApi();
+  const [countryField, allFields] = useWatchFields('country');
+  const [countryValue, allValues] = useWatchValue('country');
 
+  console.log('countryField and allFields===>', countryField, allFields);
+  console.log('countryValue and allValues===>', countryValue, allValues);
   console.log('External FormBuilder API', { setFields, setFieldsValue, getFieldsValue });
 
   return (
