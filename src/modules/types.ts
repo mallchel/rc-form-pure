@@ -4,7 +4,7 @@ import { ValidatorType } from './Validators';
 
 type PickPropType<T, K extends keyof T> = T[K];
 
-export type ErrorsType = { [name: string]: string } | null;
+export type ErrorsType = Record<PickPropType<IField, 'name'>, string> | null;
 export type OnChangeFieldsType =
   | ((
       allFields: Record<PickPropType<IField, 'name'>, IField>,
@@ -29,8 +29,10 @@ export type StateTypes = {
   invalidFields: Set<string>;
   valid: boolean;
   submitting: boolean;
+  mirroredErrors: ErrorsType;
 };
 
+export type GetFieldsType = (fieldKey?: string) => IField | IFields;
 export type SetFieldsType = (updates: Record<string, Partial<IField>>) => void;
 export type SetFieldsValueType = (updates: Record<string, any>) => void;
 export type GetFieldsValueType = (fieldKey?: string) => IFieldsToSubmit | PickPropType<IField, 'value'>;
@@ -48,6 +50,7 @@ export interface IFormContextApi {
   setInternalOnChanges: Function;
   unsetInternalOnChanges: Function;
   // external FromBuilder API
+  getFields: GetFieldsType;
   setFields: SetFieldsType;
   setFieldsValue: SetFieldsValueType;
   getFieldsValue: GetFieldsValueType;

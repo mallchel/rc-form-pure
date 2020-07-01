@@ -1,4 +1,4 @@
-import { IFields, IFieldsToSubmit, CallValidateFunctionsType, CallSubscriptionsType } from './types';
+import { IFields, IFieldsToSubmit, CallValidateFunctionsType, CallSubscriptionsType, ErrorsType } from './types';
 import Validators, { ReturnTypeValidator } from './Validators';
 
 export const checkUnTouchedFields = (fields: IFields) => {
@@ -94,4 +94,18 @@ export const callSubscriptions: CallSubscriptionsType = ({ onChangeCallback, nex
       onChangeCallbackPerField(nextField, nextFields);
     }
   }
+};
+
+export const setNewFieldsErrors = (errors: ErrorsType, fields: IFields) => {
+  const nextFields = { ...fields };
+
+  if (!errors) {
+    return nextFields;
+  }
+
+  Object.keys(errors).forEach(fieldKey => {
+    nextFields[fieldKey] = { ...fields[fieldKey], error: errors[fieldKey] };
+  });
+
+  return nextFields;
 };

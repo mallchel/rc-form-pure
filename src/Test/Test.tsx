@@ -39,7 +39,7 @@ const renderForm = ({ onSubmit, children, values, errors, isFieldsTouched }: any
 const onChangeFields = (allFields: any, updatedFields: any) => {
   console.log('onChangeFields', allFields, updatedFields);
 };
-const errors: ErrorsType = {
+const serverErrors: ErrorsType = {
   firstName: 'asd',
 };
 const withForm = true;
@@ -47,7 +47,8 @@ const validateOnBlur = true;
 
 const FirstStepForm = () => {
   const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue } = useFormApi();
-  const [countryField, allFields] = useWatchFields('country');
+  const [countryField] = useWatchFields('country');
+  const [allFields] = useWatchFields();
   const countryValue = useWatchValue('country');
   const allValues = useWatchValue();
 
@@ -64,6 +65,14 @@ const FirstStepForm = () => {
         errorMessage={'Please fill this field'}
         formatter={(newValue: string) => newValue.toUpperCase()}
         placeholder="Full Name"
+      />
+
+      <FormItem
+        name={'firstName'}
+        component={TextField}
+        formatter={(newValue: string) => newValue.toUpperCase()}
+        placeholder="First Name"
+        initialValue="SEBASTIAN"
       />
 
       <FormItem
@@ -107,7 +116,7 @@ const props: FormBuilderPropTypes = {
   // Optional
   renderForm,
   onChangeFields,
-  errors,
+  // errors,
   withForm,
   validateOnBlur,
 };
@@ -115,10 +124,16 @@ const TestFrom = () => {
   const [currentStep, changeStep] = useState('first');
   const FormFields = formBySteps[currentStep];
   const formRef = useRef<FormBuilder>(null);
+  const [errors, setServerErrors] = useState<any>(null);
 
   return (
     <div className={styles.container}>
-      <FormBuilder ref={formRef} {...props} initialValues={{ country: 'initial value from FromBuilder' }}>
+      <FormBuilder
+        ref={formRef}
+        {...props}
+        errors={errors}
+        initialValues={{ country: 'initial value from FromBuilder' }}
+      >
         <FormItem
           name={'country'}
           component={TextField}
@@ -151,6 +166,10 @@ const TestFrom = () => {
         >
           setFieldsValue to fullName and lastName
         </button>
+        <button type="button" onClick={() => setServerErrors(serverErrors)}>
+          set errors from server
+        </button>
+
         <button>onSubmit</button>
         <ButtonSubmit>Button submit without form tag</ButtonSubmit>
       </FormBuilder>
