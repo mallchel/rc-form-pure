@@ -1,4 +1,12 @@
-import { IFields, IFieldsToSubmit, CallValidateFunctionsType, CallSubscriptionsType, ErrorsType } from './types';
+import {
+  IFields,
+  IFieldsToSubmit,
+  CallValidateFunctionsType,
+  CallSubscriptionsType,
+  ErrorsType,
+  PickPropType,
+  FormBuilderPropTypes,
+} from './types';
 import Validators, { ReturnTypeValidator } from './Validators';
 
 export const checkUnTouchedFields = (fields: IFields) => {
@@ -105,6 +113,28 @@ export const setNewFieldsErrors = (errors: ErrorsType, fields: IFields) => {
 
   Object.keys(errors).forEach(fieldKey => {
     nextFields[fieldKey] = { ...fields[fieldKey], error: errors[fieldKey] };
+  });
+
+  return nextFields;
+};
+
+export const setExtraFieldsProps = (
+  extraFieldsProps: PickPropType<FormBuilderPropTypes, 'extraFieldsProps'>,
+  fields: IFields
+) => {
+  const nextFields = { ...fields };
+
+  if (!extraFieldsProps) {
+    return nextFields;
+  }
+
+  Object.keys(extraFieldsProps).forEach(fieldKey => {
+    const { value, ...nonServiceExtraFieldsProps } = extraFieldsProps[fieldKey];
+    nextFields[fieldKey] = {
+      ...fields[fieldKey],
+      value: value || fields[fieldKey]?.value,
+      extraFieldProps: nonServiceExtraFieldsProps,
+    };
   });
 
   return nextFields;

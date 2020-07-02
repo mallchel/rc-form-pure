@@ -39,14 +39,16 @@ import {
 
 type MyExtraPropTypes = {
   extraProps: boolean,
+  disabled: boolean,
+  globalFormReadonly: boolean,
 };
 const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
-  const { name, error, onChange } = props;
+  const { name, error, onChange, disabled, globalFormReadonly, value } = props;
 
   return (
     <div className={styles.textFieldContainer}>
       <label className={styles.label}>{name}</label>
-      <input {...props} onChange={e => onChange(e.target.value)} />
+      <input disabled={disabled || globalFormReadonly} value={value} onChange={e => onChange(e.target.value)} />
       {error && <span className={styles.error}>{error}</span>}
     </div>
   );
@@ -62,7 +64,7 @@ const renderForm = ({ onSubmit, children, values, errors, isFieldsTouched }: any
 const onChangeFields = (allFields: any, updatedFields: any) => {
   console.log('onChangeFields', allFields, updatedFields);
 };
-const errors: ErrorsType = {
+const serverErrors: ErrorsType = {
   firstName: 'asd',
 };
 const withForm = true;
@@ -148,6 +150,7 @@ const TestFrom = () => {
   const FormFields = formBySteps[currentStep];
   const formRef = useRef < FormBuilder > null;
   const [errors, setServerErrors] = useState < any > null;
+  const [extraFieldsProps, setExtraFieldsProps] = useState < Object > {};
 
   return (
     <div className={styles.container}>
@@ -156,6 +159,7 @@ const TestFrom = () => {
         {...props}
         errors={errors}
         initialValues={{ country: 'initial value from FromBuilder' }}
+        extraFieldsProps={extraFieldsProps}
       >
         <FormItem
           name={'country'}
@@ -191,6 +195,19 @@ const TestFrom = () => {
         </button>
         <button type="button" onClick={() => setServerErrors(serverErrors)}>
           set errors from server
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            setExtraFieldsProps({
+              country: {
+                value: 'new value',
+                disabled: true,
+              },
+            })
+          }
+        >
+          set extraFieldsProps
         </button>
 
         <button>onSubmit</button>

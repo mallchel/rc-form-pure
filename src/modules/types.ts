@@ -2,7 +2,7 @@ import { FocusEvent } from 'react';
 
 import { ValidatorType } from './Validators';
 
-type PickPropType<T, K extends keyof T> = T[K];
+export type PickPropType<T, K extends keyof T> = T[K];
 
 export type ErrorsType = Record<PickPropType<IField, 'name'>, string> | null;
 export type OnChangeFieldsType =
@@ -20,7 +20,8 @@ export type FormBuilderPropTypes = {
   onSubmit: (values: IFieldsToSubmit, fieldsWithError: IFields | null) => Promise<any> | void;
   onChangeFields?: OnChangeFieldsType;
   validateOnBlur?: boolean;
-  initialValues?: Record<string, any>;
+  initialValues?: Record<PickPropType<IField, 'name'>, any>;
+  extraFieldsProps?: Record<PickPropType<IField, 'name'>, any>;
 };
 
 export type StateTypes = {
@@ -29,7 +30,8 @@ export type StateTypes = {
   invalidFields: Set<string>;
   valid: boolean;
   submitting: boolean;
-  mirroredErrors: ErrorsType;
+  mirroredErrors: PickPropType<FormBuilderPropTypes, 'errors'>;
+  mirroredExtraFieldsProps?: PickPropType<FormBuilderPropTypes, 'extraFieldsProps'>;
 };
 
 export type GetFieldsType = (fieldKey?: string) => IField | IFields;
@@ -69,6 +71,7 @@ export interface IField {
   validate?: ValidateType;
   touched?: boolean;
   errorMessage?: ErrorMessageType;
+  extraFieldProps?: any;
 }
 
 export type OnChangeType = {
