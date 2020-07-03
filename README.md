@@ -10,7 +10,7 @@ npm i rc-form-pure
 
 Bundle size (and comparison with similar other) - https://bundlephobia.com/result?p=rc-form-pure@next
 
-## [Demo](https://codesandbox.io/s/wonderful-cloud-l1utr)
+## [Demo](https://codesandbox.io/s/brave-ritchie-8zwvu)
 
 ## Install
 
