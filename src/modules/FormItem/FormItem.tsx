@@ -2,6 +2,7 @@ import React, { useEffect, useContext, useCallback, useMemo } from 'react';
 
 import { FormContext } from '../FormBuilder';
 import { callValidateFunctions } from '../helpers';
+import { IField } from '../types';
 
 import { WrapperPropTypes, PropTypesFormItem, FormItemContextType } from './types';
 
@@ -51,18 +52,18 @@ const FormItem = (props: PropTypesFormItem) => {
     registerField,
     unregister,
     onChange: onChangeFromContext,
-    field = { value: props.initialValue, error: null },
+    field = { value: props.initialValue, error: null } as IField,
     errorMessage,
     name,
     initialValue,
     children,
-    ...nonServiceProps
+    ...nonServiceOwnProps
   } = props;
 
   useEffect(() => {
     if (Component) {
       registerField({
-        componentProps: nonServiceProps,
+        componentProps: nonServiceOwnProps,
         name,
         value: initialValue,
         validate,
@@ -110,7 +111,8 @@ const FormItem = (props: PropTypesFormItem) => {
     <FormItemContext.Provider value={valueContext}>
       {Component ? (
         <Component
-          {...nonServiceProps}
+          {...field.extraFieldProps}
+          {...nonServiceOwnProps}
           name={name}
           value={field.value || ''}
           onChange={onChange}

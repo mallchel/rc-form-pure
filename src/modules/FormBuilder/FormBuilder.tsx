@@ -22,6 +22,7 @@ import {
   callValidateFunctions,
   callSubscriptions,
   setNewFieldsErrors,
+  setExtraFieldsProps,
 } from '../helpers';
 
 export const FormContext = React.createContext<IFormContext>({} as IFormContext);
@@ -61,8 +62,13 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     const nextState = {} as StateTypes;
 
     if (props.errors && props.errors !== state.mirroredErrors) {
-      nextState.fields = setNewFieldsErrors(props.errors, state.fields);
       nextState.mirroredErrors = props.errors;
+      nextState.fields = setNewFieldsErrors(props.errors, state.fields);
+    }
+
+    if (props.extraFieldsProps && props.extraFieldsProps !== state.mirroredExtraFieldsProps) {
+      nextState.mirroredExtraFieldsProps = props.extraFieldsProps;
+      nextState.fields = setExtraFieldsProps(props.extraFieldsProps, state.fields);
     }
 
     return nextState;
@@ -160,7 +166,11 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
     const promise = this.props.onSubmit(fieldsToSubmit, fieldsWithError);
 
-    return promise && promise.finally(() => this.toggleSubmitting(false));
+    if (promise) {
+      return promise.finally(() => this.toggleSubmitting(false));
+    }
+
+    this.toggleSubmitting(false);
   };
 
   toggleSubmitting = (submitting: boolean) => this.setState({ submitting });
@@ -203,6 +213,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
         return {
           fields: nextFields,
+          isFieldsTouched: true,
           ...checkValidFieldsAndForm(nextFields, state.invalidFields),
         };
       },
