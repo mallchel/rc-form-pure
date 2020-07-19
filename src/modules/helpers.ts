@@ -23,7 +23,7 @@ export const checkUnTouchedFields = (fields: IFields) => {
       const { validate, value, errorMessage } = field;
       const error = callValidateFunctions({ validate, value, errorMessage });
 
-      if (invalidField(error)) {
+      if (checkInvalidField(error)) {
         validForm = false;
         // initiate fieldsWithError
         if (!fieldsWithError) {
@@ -43,10 +43,10 @@ export const checkUnTouchedFields = (fields: IFields) => {
   return { fieldsToSubmit, fieldsWithError, validFormAfterValidateUntouchedFields: validForm };
 };
 
-const invalidField = (error: any) => {
+const checkInvalidField = (error: any) => {
   // errorMessage prop isn't requirable
   // so it can be empty string
-  if (error !== null) {
+  if (error !== undefined && error !== null) {
     return true;
   }
 
@@ -60,7 +60,7 @@ export const checkValidFieldsAndForm = (
   const nextInvalidFields = new Set(invalidFields);
 
   Object.keys(nextFields).forEach(name => {
-    if (invalidField(nextFields[name].error)) {
+    if (checkInvalidField(nextFields[name].error)) {
       return nextInvalidFields.add(name);
     }
 
@@ -128,11 +128,13 @@ export const setExtraFieldsProps = (
     return nextFields;
   }
 
-  Object.keys(extraFieldsProps).forEach(fieldKey => {
-    const { value, ...nonServiceExtraFieldsProps } = extraFieldsProps[fieldKey];
+  // prepare only fields that already exist in the form
+  Object.keys(nextFields).forEach(fieldKey => {
+    const { value, ...nonServiceExtraFieldsProps } = extraFieldsProps[fieldKey] || {};
+
     nextFields[fieldKey] = {
-      ...fields[fieldKey],
-      value: value || fields[fieldKey]?.value,
+      ...nextFields[fieldKey],
+      value: value || nextFields[fieldKey]?.value,
       extraFieldProps: nonServiceExtraFieldsProps,
     };
   });
