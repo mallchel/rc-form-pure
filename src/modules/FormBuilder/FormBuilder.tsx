@@ -102,6 +102,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
           };
         }
       });
+
       return {
         fields: nextFields,
         ...checkValidFieldsAndForm(nextFields, state.invalidFields),
@@ -144,11 +145,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
   onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event && event.preventDefault && event.preventDefault();
 
-    const { fields, valid } = this.state;
-
-    if (!valid) {
-      return;
-    }
+    const { fields } = this.state;
 
     this.toggleSubmitting(true);
     const { fieldsToSubmit, fieldsWithError, validFormAfterValidateUntouchedFields } = checkUnTouchedFields(fields);
