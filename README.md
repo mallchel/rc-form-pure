@@ -8,7 +8,7 @@ npm i rc-form-pure
 
 [![npm](https://img.shields.io/npm/v/rc-form-pure.svg?style=flat-square)](https://www.npmjs.com/package/rc-form-pure)
 
-Bundle size (and comparison with similar other) - https://bundlephobia.com/result?p=rc-form-pure@next
+Bundle size (and comparison with similar other) - https://bundlephobia.com/result?p=rc-form-pure
 
 ## [Demo](https://codesandbox.io/s/brave-ritchie-8zwvu)
 
