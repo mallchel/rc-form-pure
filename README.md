@@ -1,12 +1,27 @@
+<p align="center">
+  <a href="https://github.com/mallchel/rc-form-pure/" target="blank">
+    <img src="https://i.ibb.co/XkTNDRS/rc-form-pure-logo.png" width="100" alt="rc-form-pure logo">
+  </a>
+</p>
+
+<h3 align="center">
+  RC FORM PURE
+</h3>
+
+<p align="center">
+  Declarative forms for <a href="https://facebook.github.io/react">React</a>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/rc-form-pure"><img src="https://img.shields.io/npm/v/rc-form-pure?style=flat-square"></a>
+  <a href="https://www.npmjs.com/package/rc-form-pure"><img src="https://img.shields.io/npm/dm/rc-form-pure?style=flat-square"></a>
+  <a href="https://www.npmjs.com/package/rc-form-pure"><img src="https://img.shields.io/github/stars/mallchel/rc-form-pure?style=flat-square"></a>
+  <a href="https://github.com/mallchel/rc-form-pure/actions"><img src="https://github.com/mallchel/rc-form-pure/workflows/CI/badge.svg?style=flat-square"></a>
+</p>
+
 # rc-form-pure
 
 Performant, flexible, lightweight and abstract library for creating React forms
-
-```
-npm i rc-form-pure
-```
-
-[![npm](https://img.shields.io/npm/v/rc-form-pure.svg?style=flat-square)](https://www.npmjs.com/package/rc-form-pure)
 
 Bundle size (and comparison with similar other) - https://bundlephobia.com/result?p=rc-form-pure
 
@@ -15,220 +30,195 @@ Bundle size (and comparison with similar other) - https://bundlephobia.com/resul
 ## Install
 
 ```
-  npm i rc-form-pure
+npm i rc-form-pure
 ```
 
 ## Usage
 
-### Simple
+### Example
 
-```js
-import {
-  FormBuilder,
-  FormItem,
-  Validators,
-  useValidators,
-  ButtonSubmit,
-  ComponentPropTypes,
-  ErrorsType,
-  IFieldsToSubmit,
-  OnChangeFieldsType,
-  FormBuilderPropTypes,
-  useFormApi,
-} from 'rc-form-pure';
+```ts
+import React from 'react';
+import { FormBuilder, FormItem, Validators, ComponentPropTypes, IFieldsToSubmit } from 'rc-form-pure';
 
-type MyExtraPropTypes = {
-  extraProps: boolean,
-  disabled: boolean,
-  globalFormReadonly: boolean,
-};
-const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
-  const { name, error, onChange, disabled, globalFormReadonly, value } = props;
-
-  return (
-    <div className={styles.textFieldContainer}>
-      <label className={styles.label}>{name}</label>
-      <input disabled={disabled || globalFormReadonly} value={value} onChange={e => onChange(e.target.value)} />
-      {error && <span className={styles.error}>{error}</span>}
-    </div>
-  );
-};
-
-const onSubmit = (formData: IFieldsToSubmit, fieldWithError: IFieldsToSubmit | null) => {
-  console.log('onSubmit', formData, fieldWithError);
-};
-
-const renderForm = ({ onSubmit, children, values, errors, isFieldsTouched }: any) => {
-  return <form onSubmit={onSubmit}>{children}</form>;
-};
-const onChangeFields = (allFields: any, updatedFields: any) => {
-  console.log('onChangeFields', allFields, updatedFields);
-};
-const serverErrors: ErrorsType = {
-  firstName: 'asd',
-};
-const withForm = true;
-const validateOnBlur = true;
-
-const FirstStepForm = () => {
-  const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue } = useFormApi();
-  const [countryField] = useWatchFields('country');
-  const [allFields] = useWatchFields();
-  const countryValue = useWatchValue('country');
-  const allValues = useWatchValue();
-
-  console.log('countryField and allFields===>', countryField, allFields);
-  console.log('countryValue and allValues===>', countryValue, allValues);
-  console.log('External FormBuilder API', { setFields, setFieldsValue, getFieldsValue });
+const TextField: ComponentPropTypes<{}> = props => {
+  const { name, onChange, error, value } = props;
 
   return (
     <>
+      <label>{name}</label>
+      <input value={value} onChange={e => onChange(e.target.value)} />
+      {error}
+    </>
+  );
+};
+
+const TestFrom = () => {
+  const onSubmit = (formData: IFieldsToSubmit, fieldWithError: IFieldsToSubmit | null) => {
+    console.log('onSubmit', formData, fieldWithError);
+  };
+
+  return (
+    <FormBuilder onSubmit={onSubmit} withForm>
+      <FormItem name="country" component={TextField} />
+
       <FormItem
-        name={'fullName'}
-        component={TextField}
+        name="required-field"
         validate={Validators.required}
         errorMessage={'Please fill this field'}
-        formatter={(newValue: string) => newValue.toUpperCase()}
-        placeholder="Full Name"
-      />
-
-      <FormItem
-        name={'firstName'}
         component={TextField}
-        formatter={(newValue: string) => newValue.toUpperCase()}
-        placeholder="First Name"
-        initialValue="SEBASTIAN"
       />
 
-      <FormItem
-        name={'lastName'}
-        component={TextField}
-        validate={Validators.required}
-        formatter={(newValue: string) => newValue.toUpperCase()}
-        placeholder="Last Name"
-        initialValue="Leukhin"
-      />
-
-      <FormItem name={'my-profile-group'}>
-        <FormItem
-          name={'age'}
-          component={TextField}
-          validate={useValidators([Validators.required, Validators.min(18)])}
-          type="number"
-          // You can OVERRIDE global "validateOnBlur"
-          validateOnBlur={false}
-          placeholder="my-profile-group.age"
-          errorMessage={['Field is required', 'Value should be more than 18']}
-        />
-        <FormItem name={'someField'} component={TextField} />
-      </FormItem>
-    </>
+      <button>onSubmit</button>
+    </FormBuilder>
   );
 };
-const FinalStepForm = () => {
-  return (
-    <>
-      <FormItem name={'my-profile-group.extraField'} component={TextField} />
-    </>
-  );
-};
-const formBySteps: { [key: string]: React.FunctionComponent } = {
-  first: FirstStepForm,
-  finalStep: FinalStepForm,
-};
-const props: FormBuilderPropTypes = {
-  onSubmit,
-  // Optional
-  renderForm,
-  onChangeFields,
-  // errors,
-  withForm,
-  validateOnBlur,
-};
-const TestFrom = () => {
-  const [currentStep, changeStep] = useState('first');
-  const FormFields = formBySteps[currentStep];
-  const formRef = useRef < FormBuilder > null;
-  const [errors, setServerErrors] = useState < any > null;
-  const [extraFieldsProps, setExtraFieldsProps] = useState < Object > {};
 
-  return (
-    <div className={styles.container}>
-      <FormBuilder
-        ref={formRef}
-        {...props}
-        errors={errors}
-        initialValues={{ country: 'initial value from FromBuilder' }}
-        extraFieldsProps={extraFieldsProps}
-      >
-        <FormItem
-          name={'country'}
-          component={TextField}
-          validate={Validators.required}
-          errorMessage={'Please fill this field'}
-          placeholder="Your country"
-        />
+export default TestFrom;
+```
 
-        <FormFields />
+## FormBuilder Props
 
-        <button type="button" onClick={() => changeStep(currentStep === 'first' ? 'finalStep' : 'first')}>
-          Change form fields
-        </button>
-        <button type="button" onClick={() => console.log(formRef.current?.getFieldsValue())}>
-          getFieldsValue: all fields
-        </button>
-        <button type="button" onClick={() => console.log(formRef.current?.getFieldsValue('country'))}>
-          getFieldsValue: country field
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            console.log(
-              formRef.current?.setFieldsValue({
-                fullName: 'set Full Name!!!!!!!!!!!!!!!!!!!',
-                lastName: 'set new lastName',
-              })
-            )
-          }
-        >
-          setFieldsValue to fullName and lastName
-        </button>
-        <button type="button" onClick={() => setServerErrors(serverErrors)}>
-          set errors from server
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            setExtraFieldsProps({
-              country: {
-                value: 'new value',
-                disabled: true,
-              },
-            })
-          }
-        >
-          set extraFieldsProps
-        </button>
+```ts
+type FormBuilderPropTypes = {
+  // Object schema: { currency: 'Your error text' }
+  errors?: Record<string, string | null>;
 
-        <button>onSubmit</button>
-        <ButtonSubmit>Button submit without form tag</ButtonSubmit>
-      </FormBuilder>
-    </div>
-  );
+  // Determines if the form tag will be in the DOM
+  withForm?: boolean;
+
+  // You can specify a function that returns a custom wrapper of form
+  renderForm?: Function;
+
+  // Submit function will get values and errors
+  onSubmit: (values: IFieldsToSubmit, fieldsWithError: IFields | null) => Promise<any> | void;
+
+  // The top level listener for fields changes Function(allFields, updatedFields) or { [nameField]: (specificfield, allFields) => {}
+  onChangeFields?: OnChangeFieldsType;
+
+  // Validate after onBlur or after every change can be overridden in the FormItem props
+  validateOnBlur?: boolean;
+
+  // initial values
+  initialValues?: Record<PickPropType<IField, 'name'>, any>;
+
+  // extra props will be mixed with service IField properties
+  extraFieldsProps?: Record<PickPropType<IField, 'name'>, any>;
 };
 ```
 
+## FormItem Props
+
+```ts
+type FormItemTypes = {
+  // The field name in the FormBuilder state
+  name: string;
+
+  // Your component
+  component?: ComponentPropTypes<any>;
+
+  // The formatter will be called before being saved to the FormBuilder state
+  formatter?: (value: any) => any;
+
+  // Override global validateOnBlur for some field
+  validateOnBlur?: boolean;
+
+  // function type of (value: any, message: string | string[]) => null | string | string[]
+  validate?: ValidateType;
+
+  // The error message that will appear when validation fails
+  errorMessage?: ErrorMessageType;
+
+  // Override global initialValue
+  initialValue?: any;
+};
+```
+
+There are several [built-in Validators](#built-in-validators) for convenience
+
 ## API
 
-| Property               | Description                                                                      | Type                                                                                                                                  | Default                                                                         |
-| ---------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| onSubmit               | Called when the form is submitted                                                | Function(formValues, fieldsWithErrors)                                                                                                | -                                                                               |
-| errors                 | You can specify errors                                                           | object                                                                                                                                | -                                                                               |
-| renderForm             | You can specify a function that can return a custom form tag                     | Function({ onSubmit, children }) => ReactNode                                                                                         | Function({ children }) => children                                              |
-| withForm               | Specifies whether the form tag in the DOM                                        | boolean                                                                                                                               | Function({ onSubmit, children }) => <form onSubmit={onSubmit}>{children}</form> |
-| onChangeFields         | Specify a function that will be called when the value of the field gets changed. | Function(updates) or { [nameField]: (updates) => {} }                                                                                 | -                                                                               |
-| formRef.setFields      | set any data to your fields config                                               | formBuilderRef.setFields({ fieldKey: { value: 'new' } })                                                                              |
-| formRef.getFieldsValue | get values from your fields config                                               | formBuilderRef.getFieldsValue() to get all values or use formBuilderRef.getFieldsValue(fieldKey) to get the value of a specific field |
+### useFormApi
+
+```ts
+const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue } = useFormApi();
+```
+
+#### setFields
+```ts
+(updates: Record<string, Partial<IField>>) => void
+
+// resetting value and error:
+setFields({
+  [FIELDS_CONFIG.currency.key]: { value: '', error: null },
+});
+```
+
+#### setFieldsValue
+```ts
+(updates: Record<string, any>) => void
+
+// setting a new value:
+setFieldsValue({ [FIELDS_CONFIG.currency.key]: '$' });
+```
+
+#### getFieldsValue
+```ts
+(fieldKey?: string) => IFieldsToSubmit | PickPropType<IField, 'value'>
+
+// get all values:
+const formFields: IFieldsToSubmit = getFieldsValue();
+
+// get the value of a specific field:
+const formFields: any = getFieldsValue(FIELDS_CONFIG.currency.key);
+```
+
+#### useWatchFields
+```ts
+(fieldKey?: string) => Array<specificField, allFields> | Array<allFields, updatedFields>
+
+// invoked when a specific field changes
+const [countryField, allFields] = useWatchFields('country');
+
+// invoked on any fields changes
+const [allFields, updatedFields] = useWatchFields();
+```
+
+#### useWatchValue
+```ts
+(fieldKey?: string) => Record<string, any> | any
+
+// watch a specific field value
+const countryValue = useWatchValue('country');
+
+// watch all values
+const allValues = useWatchValue();
+```
+
+### formRef
+
+You can get the form external API on the form level via useRef
+
+```ts
+const formRef = useRef<FormBuilder>(null);
+
+formRef.current?.setFields;
+formRef.current?.setFieldsValue;
+formRef.current?.getFields;
+formRef.current?.getFieldsValue;
+```
+
+## ButtonSubmit component
+
+If you don't have a \<form\> tag, put the ButtonSubmit component in the FormBuilder tag to trigger your form submission
+
+```ts
+<FormBuilder>
+  <FormItem name={'country'} component={TextField} />
+
+  <ButtonSubmit>Button submit without form tag</ButtonSubmit>
+</FormBuilder>
+```
 
 ## Built-in Validators
 
