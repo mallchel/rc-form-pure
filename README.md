@@ -144,25 +144,28 @@ There are several [built-in Validators](#built-in-validators) for convenience
 const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue } = useFormApi();
 ```
 
-#### setFields `(updates: Record<string, Partial<IField>>) => void`
-
+#### setFields
 ```ts
+(updates: Record<string, Partial<IField>>) => void
+
 // resetting value and error:
 setFields({
   [FIELDS_CONFIG.currency.key]: { value: '', error: null },
 });
 ```
 
-#### setFieldsValue `(updates: Record<string, any>) => void`
-
+#### setFieldsValue
 ```ts
+(updates: Record<string, any>) => void
+
 // setting a new value:
 setFieldsValue({ [FIELDS_CONFIG.currency.key]: '$' });
 ```
 
-#### getFieldsValue `(fieldKey?: string) => IFieldsToSubmit | PickPropType<IField, 'value'>`
-
+#### getFieldsValue
 ```ts
+(fieldKey?: string) => IFieldsToSubmit | PickPropType<IField, 'value'>
+
 // get all values:
 const formFields: IFieldsToSubmit = getFieldsValue();
 
@@ -170,9 +173,10 @@ const formFields: IFieldsToSubmit = getFieldsValue();
 const formFields: any = getFieldsValue(FIELDS_CONFIG.currency.key);
 ```
 
-#### useWatchFields `(fieldKey?: string) => Array<specificField, allFields> | Array<allFields, updatedFields>`
-
+#### useWatchFields
 ```ts
+(fieldKey?: string) => Array<specificField, allFields> | Array<allFields, updatedFields>
+
 // invoked when a specific field changes
 const [countryField, allFields] = useWatchFields('country');
 
@@ -180,9 +184,10 @@ const [countryField, allFields] = useWatchFields('country');
 const [allFields, updatedFields] = useWatchFields();
 ```
 
-#### useWatchValue `(fieldKey?: string) => Record<string, any> | any`
-
+#### useWatchValue
 ```ts
+(fieldKey?: string) => Record<string, any> | any
+
 // watch a specific field value
 const countryValue = useWatchValue('country');
 
