@@ -158,6 +158,14 @@ my-nested-group.country
 const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue } = useFormApi();
 ```
 
+#### setFieldsValue
+```ts
+(updates: Record<string, any>) => void
+
+// setting a new value:
+setFieldsValue({ [FIELDS_CONFIG.currency.key]: '$' });
+```
+
 #### setFields
 ```ts
 (updates: Record<string, Partial<IField>>) => void
@@ -166,14 +174,6 @@ const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue
 setFields({
   [FIELDS_CONFIG.currency.key]: { value: '', error: null },
 });
-```
-
-#### setFieldsValue
-```ts
-(updates: Record<string, any>) => void
-
-// setting a new value:
-setFieldsValue({ [FIELDS_CONFIG.currency.key]: '$' });
 ```
 
 #### getFieldsValue
@@ -187,17 +187,6 @@ const formFields: IFieldsToSubmit = getFieldsValue();
 const formFields: any = getFieldsValue(FIELDS_CONFIG.currency.key);
 ```
 
-#### useWatchFields
-```ts
-(fieldKey?: string) => Array<specificField, allFields> | Array<allFields, updatedFields>
-
-// invoked when a specific field changes
-const [countryField, allFields] = useWatchFields('country');
-
-// invoked on any fields changes
-const [allFields, updatedFields] = useWatchFields();
-```
-
 #### useWatchValue
 ```ts
 (fieldKey?: string) => Record<string, any> | any
@@ -207,6 +196,17 @@ const countryValue = useWatchValue('country');
 
 // watch all values
 const allValues = useWatchValue();
+```
+
+#### useWatchFields
+```ts
+(fieldKey?: string) => Array<specificField, allFields> | Array<allFields, updatedFields>
+
+// invoked when a specific field changes
+const [countryField, allFields] = useWatchFields('country');
+
+// invoked on any fields changes
+const [allFields, updatedFields] = useWatchFields();
 ```
 
 ### formRef
