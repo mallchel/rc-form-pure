@@ -136,6 +136,20 @@ type FormItemTypes = {
 
 There are several [built-in Validators](#built-in-validators) for convenience
 
+## FormItem nested fields
+You can nest your fields by easily wrapping FromItem components in each other
+```ts
+<FormItem name="my-nested-group">
+  <FormItem name="age" component={TextField} />
+  <FormItem name="country" component={TextField} />
+</FormItem>
+```
+The FormBuilder state will have the following properties:
+```ts
+my-nested-group.age
+my-nested-group.country
+```
+
 ## API
 
 ### useFormApi
@@ -218,6 +232,61 @@ If you don't have a \<form\> tag, put the ButtonSubmit component in the FormBuil
 
   <ButtonSubmit>Button submit without form tag</ButtonSubmit>
 </FormBuilder>
+```
+
+## Types
+
+### ComponentPropTypes
+Extend your component prop types
+```ts
+type MyExtraPropTypes = {
+  extraProps: boolean;
+  disabled: boolean;
+  globalFormReadonly: boolean;
+};
+const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
+  const { name, error, onChange, disabled, globalFormReadonly, value } = props;
+
+  return (
+    <div>
+      <label>{name}</label>
+      <input disabled={disabled || globalFormReadonly} value={value} onChange={e => onChange(e.target.value)} />
+      {error}
+    </div>
+  );
+};
+```
+
+### ErrorsType
+FormBuilder "errors" prop type
+```ts
+const serverErrors: ErrorsType = {
+  firstName: 'asd',
+};
+
+const [errors, setServerErrors] = useState<ErrorsType>(null);
+```
+
+### IFieldsToSubmit
+FormBuilder value types
+```ts
+const onSubmit = (formData: IFieldsToSubmit, fieldWithError: IFieldsToSubmit | null) => {
+  console.log('onSubmit', formData, fieldWithError);
+};
+```
+
+### OnChangeFieldsType
+FormBuilder "onChangeFields" prop type
+```ts
+const onChangeFields: OnChangeFieldsType = (allFields, updatedFields) => {
+  console.log('onChangeFields', allFields, updatedFields);
+};
+
+const onChangeFields: OnChangeFieldsType = {
+  country: (field, allFields) => {
+    console.log('onChangeFields', field, allFields);
+  },
+};
 ```
 
 ## Built-in Validators
