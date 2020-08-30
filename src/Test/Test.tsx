@@ -10,6 +10,7 @@ import {
   IFieldsToSubmit,
   FormBuilderPropTypes,
   useFormApi,
+  OnChangeFieldsType,
 } from '../modules';
 
 import styles from './styles.module.css';
@@ -38,7 +39,7 @@ const onSubmit = (formData: IFieldsToSubmit, fieldWithError: IFieldsToSubmit | n
 const renderForm = ({ onSubmit, children, values, errors, isFieldsTouched }: any) => {
   return <form onSubmit={onSubmit}>{children}</form>;
 };
-const onChangeFields = (allFields: any, updatedFields: any) => {
+const onChangeFields: OnChangeFieldsType = (allFields, updatedFields) => {
   console.log('onChangeFields', allFields, updatedFields);
 };
 const serverErrors: ErrorsType = {
@@ -126,7 +127,7 @@ const TestFrom = () => {
   const [currentStep, changeStep] = useState('first');
   const FormFields = formBySteps[currentStep];
   const formRef = useRef<FormBuilder>(null);
-  const [errors, setServerErrors] = useState<any>(null);
+  const [errors, setServerErrors] = useState<ErrorsType>(null);
   const [extraFieldsProps, setExtraFieldsProps] = useState<Object>({});
 
   return (
