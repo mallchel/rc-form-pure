@@ -1,55 +1,39 @@
-// import parseRules from '../../FormItem/parseRules';
-// import validateItem from '../../FormItem/validateItem';
+import { callValidateFunctions } from '../../helpers';
 
-test('test required field with validator', () => {
-  // const name = 'firstName';
-  // const rules = [
-  //   { required: true, message: 'Please fill firstName' },
-  //   { type: 'email', message: 'Email incorrect' },
-  //   {
-  //     validator: (rules, value, callback) => {
-  //       if (Number(value)) {
-  //         callback(rules.message);
-  //       }
-  //     },
-  //     message: 'Value must be a string',
-  //   },
-  // ];
-  // const requiredMessage = rules[0].message;
-  // const typeMessage = rules[1].message;
-  // const validatorMessage = rules[2].message;
-  // const formattedRules = parseRules(rules);
-  // let nextError = null;
-  // let resolver;
-  // const callback = new Promise(resolve => {
-  //   resolver = resolve;
-  // });
-  // // for required
-  // validateItem({
-  //   rules: formattedRules,
-  //   type,
-  //   value: '',
-  //   error: null,
-  //   onChangeError: error => (nextError = error),
-  // });
-  // expect(nextError.error).toBe(requiredMessage);
-  // // for type
-  // validateItem({
-  //   rules: formattedRules,
-  //   type,
-  //   value: 'my@m.r',
-  //   error: null,
-  //   onChangeError: error => (nextError = error),
-  // });
-  // expect(nextError.error).toBe(typeMessage);
-  // // for validator (async validator)
-  // validateItem({
-  //   rules: formattedRules,
-  //   type,
-  //   value: 1,
-  //   callback: error => resolver(error),
-  //   error: null,
-  //   onChangeError: error => (nextError = error),
-  // });
-  // return callback.then(errorMessage => expect(errorMessage).toBe(validatorMessage));
+describe('call callValidateFunctions', () => {
+  test('empty validate', () => {
+    const result = callValidateFunctions({ value: '' });
+
+    expect(result).toBe(null);
+  });
+
+  test('validate is fn', () => {
+    const errorMessage = 'error';
+    const result = callValidateFunctions({ value: '', validate: () => errorMessage });
+
+    expect(result).toBe(errorMessage);
+  });
+
+  test('validate is array of fn', () => {
+    const errorMessage = 'error';
+
+    const result1 = callValidateFunctions({ value: '', validate: [() => null] });
+    const result2 = callValidateFunctions({ value: '', validate: [() => errorMessage, () => null] });
+    const result3 = callValidateFunctions({ value: '', validate: [() => null, () => errorMessage] });
+    const result4 = callValidateFunctions({ value: '', validate: [() => null, () => errorMessage, () => null] });
+
+    expect(result1).toBe(null);
+    expect(result2).toBe(errorMessage);
+    expect(result3).toBe(errorMessage);
+    expect(result4).toBe(errorMessage);
+  });
+
+  test('validate is array, check error message', () => {
+    const errorMessages = ['required', 'error'];
+    const validators = [() => null, (value, error) => error];
+
+    const result = callValidateFunctions({ value: '', validate: validators, errorMessage: errorMessages });
+
+    expect(result).toBe(errorMessages[1]);
+  });
 });

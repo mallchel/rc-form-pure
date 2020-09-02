@@ -1,5 +1,7 @@
-export type ReturnTypeValidator = null | string | string[];
-export type ValidatorType<T> = (value: T, message: string | string[]) => ReturnTypeValidator;
+import { ErrorMessageType } from './types';
+
+export type ReturnTypeValidator = null | ErrorMessageType;
+export type ValidatorType<T> = (value: T, message: ErrorMessageType) => ReturnTypeValidator;
 
 export default class Validators {
   static required: ValidatorType<any> = (value, message) => (!!value ? null : message);
@@ -20,23 +22,26 @@ export default class Validators {
     return typeof value === 'number' ? null : message;
   };
 
-  static len = (length: number): ValidatorType<any> => (value, message) =>
-    typeof length === 'number' && String(value).length === length ? null : message;
+  static len = (length: number): ValidatorType<any> => (value, message) => {
+    const isNumber = !Validators.number(value, message);
+    return isNumber && String(value).length === length ? null : message;
+  };
 
   static min = (min: number): ValidatorType<number> => (value, message) => {
     return min <= value ? null : message;
   };
 
-  static composeValidators = (args: Array<ValidatorType<any>>): ValidatorType<any> => (
+  static composeValidators = (validators: Array<ValidatorType<any>>): ValidatorType<any> => (
     value,
     message
-  ): null | string | string[] => {
-    const errorIndex = args.findIndex((validator, index) => validator(value, message[index]));
+  ): ReturnTypeValidator => {
+    let result = null;
 
-    if (errorIndex > -1) {
-      return message[errorIndex];
-    }
+    validators.find((validator, index) => {
+      result = validator(value, message[index]);
+      return result;
+    });
 
-    return null;
+    return result;
   };
 }
