@@ -37,11 +37,13 @@ describe('Render the FormBuilder', () => {
 
   test('test withForm', () => {
     const mockOnSubmit = jest.fn(() => {});
+
     const result = TestRenderer.create(
       <FormBuilder withForm onSubmit={mockOnSubmit}>
         <FormItem name={'someField'} component={TextField} />
       </FormBuilder>
     );
+
     const form = result.root.findByType('form');
     form.props.onSubmit();
     expect(mockOnSubmit.mock.calls.length).toBe(1);
