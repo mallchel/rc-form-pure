@@ -23,6 +23,16 @@
 
 Performant, flexible, lightweight and abstract library for creating React forms
 
+## Features
+- The convenience of handling dependent fields
+- Configuring fields at the FormItem level, as well as at the level FormBuilder via extraFieldsProps
+- Out of the box, FormItem is a pure component (better performance for large forms)
+- Independent from state managers
+- Can be used in React Native
+- Small size
+- Zero dependencies
+- Written on the Typescripts
+
 Bundle size (and comparison with similar other) - https://bundlephobia.com/result?p=rc-form-pure
 
 ## [Demo](https://codesandbox.io/s/brave-ritchie-8zwvu)
