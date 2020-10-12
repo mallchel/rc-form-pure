@@ -24,6 +24,7 @@
 Performant, flexible, lightweight and abstract library for creating React forms
 
 ## Features
+
 - The convenience of handling dependent fields
 - Configuring fields at the FormItem level, as well as at the level FormBuilder via extraFieldsProps
 - Out of the box, FormItem is a pure component (better performance for large forms)
@@ -101,7 +102,7 @@ type FormBuilderPropTypes = {
   renderForm?: Function;
 
   // Submit function will get values and errors
-  onSubmit: (values: IFieldsToSubmit, fieldsWithError: IFields | null) => Promise<any> | void;
+  onSubmit: (values: IFieldsToSubmit, fieldsWithError: FieldsWithErrorType) => Promise<any> | void;
 
   // The top level listener for fields changes Function(allFields, updatedFields) or { [nameField]: (specificfield, allFields) => {}
   onChangeFields?: OnChangeFieldsType;
@@ -147,17 +148,21 @@ type FormItemTypes = {
 There are several [built-in Validators](#built-in-validators) for convenience
 
 ## FormItem nested fields
+
 You can nest your fields by easily wrapping FromItem components in each other
+
 ```ts
 <FormItem name="my-nested-group">
   <FormItem name="age" component={TextField} />
   <FormItem name="country" component={TextField} />
 </FormItem>
 ```
+
 The FormBuilder state will have the following properties:
+
 ```ts
-my-nested-group.age
-my-nested-group.country
+my - nested - group.age;
+my - nested - group.country;
 ```
 
 ## API
@@ -169,24 +174,29 @@ const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue
 ```
 
 #### setFieldsValue
-```ts
-(updates: Record<string, any>) => void
 
-// setting a new value:
-setFieldsValue({ [FIELDS_CONFIG.currency.key]: '$' });
+```ts
+(updates: Record<string, any>) =>
+  void (
+    // setting a new value:
+    setFieldsValue({ [FIELDS_CONFIG.currency.key]: '$' })
+  );
 ```
 
 #### setFields
-```ts
-(updates: Record<string, Partial<IField>>) => void
 
-// resetting value and error:
-setFields({
-  [FIELDS_CONFIG.currency.key]: { value: '', error: null },
-});
+```ts
+(updates: Record<string, Partial<IField>>) =>
+  void (
+    // resetting value and error:
+    setFields({
+      [FIELDS_CONFIG.currency.key]: { value: '', error: null },
+    })
+  );
 ```
 
 #### getFieldsValue
+
 ```ts
 (fieldKey?: string) => IFieldsToSubmit | PickPropType<IField, 'value'>
 
@@ -198,6 +208,7 @@ const formFields: any = getFieldsValue(FIELDS_CONFIG.currency.key);
 ```
 
 #### useWatchValue
+
 ```ts
 (fieldKey?: string) => Record<string, any> | any
 
@@ -209,6 +220,7 @@ const allValues = useWatchValue();
 ```
 
 #### useWatchFields
+
 ```ts
 (fieldKey?: string) => Array<specificField, allFields> | Array<allFields, updatedFields>
 
@@ -247,7 +259,9 @@ If you don't have a \<form\> tag, put the ButtonSubmit component in the FormBuil
 ## Types
 
 ### ComponentPropTypes
+
 Extend your component prop types
+
 ```ts
 type MyExtraPropTypes = {
   extraProps: boolean;
@@ -268,7 +282,9 @@ const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
 ```
 
 ### ErrorsType
+
 FormBuilder "errors" prop type
+
 ```ts
 const serverErrors: ErrorsType = {
   firstName: 'asd',
@@ -278,7 +294,9 @@ const [errors, setServerErrors] = useState<ErrorsType>(null);
 ```
 
 ### IFieldsToSubmit
+
 FormBuilder value types
+
 ```ts
 const onSubmit = (formData: IFieldsToSubmit, fieldWithError: IFieldsToSubmit | null) => {
   console.log('onSubmit', formData, fieldWithError);
@@ -286,7 +304,9 @@ const onSubmit = (formData: IFieldsToSubmit, fieldWithError: IFieldsToSubmit | n
 ```
 
 ### OnChangeFieldsType
+
 FormBuilder "onChangeFields" prop type
+
 ```ts
 const onChangeFields: OnChangeFieldsType = (allFields, updatedFields) => {
   console.log('onChangeFields', allFields, updatedFields);

@@ -12,12 +12,14 @@ export type OnChangeFieldsType =
     ) => void)
   | Record<PickPropType<IField, 'name'>, (field: IField, allFields: IFields) => void>;
 
+export type FieldsWithErrorType = IFields | null;
+
 export type FormBuilderPropTypes = {
   errors?: ErrorsType;
   withForm?: boolean;
   renderForm?: Function;
   children?: React.ReactNode;
-  onSubmit: (values: IFieldsToSubmit, fieldsWithError: IFields | null) => Promise<any> | void;
+  onSubmit: (values: IFieldsToSubmit, fieldsWithError: FieldsWithErrorType) => Promise<any> | void;
   onChangeFields?: OnChangeFieldsType;
   validateOnBlur?: boolean;
   initialValues?: Record<PickPropType<IField, 'name'>, any>;

@@ -6,12 +6,13 @@ import {
   ErrorsType,
   PickPropType,
   FormBuilderPropTypes,
+  FieldsWithErrorType,
 } from './types';
 import Validators, { ReturnTypeValidator } from './Validators';
 
 export const checkUnTouchedFields = (fields: IFields) => {
   const fieldsToSubmit: IFieldsToSubmit = {};
-  let fieldsWithError: IFields | null = null;
+  let fieldsWithError: FieldsWithErrorType = null;
   let validForm = true;
 
   Object.keys(fields).forEach(name => {

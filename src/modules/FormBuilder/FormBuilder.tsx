@@ -15,6 +15,7 @@ import {
   GetFieldsValueType,
   IFormContextApi,
   GetFieldsType,
+  FieldsWithErrorType,
 } from '../types';
 import {
   checkUnTouchedFields,
@@ -149,10 +150,14 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
     this.toggleSubmitting(true);
     const { fieldsToSubmit, fieldsWithError, validFormAfterValidateUntouchedFields } = checkUnTouchedFields(fields);
-    const fullFieldsWithErrors = { ...(fieldsWithError || ({} as IFields)) };
+    let mergedFieldsWithErrors: FieldsWithErrorType = fieldsWithError;
 
     this.state.invalidFields.forEach(fieldKey => {
-      fullFieldsWithErrors[fieldKey] = fields[fieldKey];
+      if (!mergedFieldsWithErrors) {
+        mergedFieldsWithErrors = {};
+      }
+
+      mergedFieldsWithErrors[fieldKey] = fields[fieldKey];
     });
 
     if (!validFormAfterValidateUntouchedFields) {
@@ -160,13 +165,13 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
         valid: validFormAfterValidateUntouchedFields,
         fields: {
           ...state.fields,
-          ...(fullFieldsWithErrors || {}),
+          ...(mergedFieldsWithErrors || {}),
         },
         submitting: false,
       }));
     }
 
-    const promise = this.props.onSubmit(fieldsToSubmit, fullFieldsWithErrors);
+    const promise = this.props.onSubmit(fieldsToSubmit, mergedFieldsWithErrors);
 
     if (promise) {
       return promise.finally(() => this.toggleSubmitting(false));
