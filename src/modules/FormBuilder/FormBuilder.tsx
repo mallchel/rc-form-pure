@@ -41,6 +41,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     submitting: false,
     mirroredErrors: null,
   };
+  internalsOnChanges = new Map();
 
   private formContextApiValue: IFormContextApi = {} as IFormContextApi;
 
@@ -131,7 +132,6 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     return values;
   };
 
-  internalsOnChanges = new Map();
   setInternalOnChanges = (config: object) => {
     this.internalsOnChanges.set(config, config);
   };
@@ -149,19 +149,24 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
     this.toggleSubmitting(true);
     const { fieldsToSubmit, fieldsWithError, validFormAfterValidateUntouchedFields } = checkUnTouchedFields(fields);
+    const fullFieldsWithErrors = { ...(fieldsWithError || ({} as IFields)) };
+
+    this.state.invalidFields.forEach(fieldKey => {
+      fullFieldsWithErrors[fieldKey] = fields[fieldKey];
+    });
 
     if (!validFormAfterValidateUntouchedFields) {
       this.setState(state => ({
         valid: validFormAfterValidateUntouchedFields,
         fields: {
           ...state.fields,
-          ...(fieldsWithError || {}),
+          ...(fullFieldsWithErrors || {}),
         },
         submitting: false,
       }));
     }
 
-    const promise = this.props.onSubmit(fieldsToSubmit, fieldsWithError);
+    const promise = this.props.onSubmit(fieldsToSubmit, fullFieldsWithErrors);
 
     if (promise) {
       return promise.finally(() => this.toggleSubmitting(false));
