@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { IField, IFields } from '../types';
 
 import { useWatchFields } from './useWatchFields';
@@ -15,9 +16,13 @@ function prepareValues(fields: IFields = {}) {
 export const useWatchValue = (fieldKey?: string) => {
   const [fieldOrFields] = useWatchFields(fieldKey);
 
-  if (fieldKey) {
-    return prepareValue(fieldOrFields);
-  }
+  const parsedResult = useMemo(() => {
+    if (fieldKey) {
+      return prepareValue(fieldOrFields);
+    }
 
-  return prepareValues(fieldOrFields);
+    return prepareValues(fieldOrFields);
+  }, [fieldKey, fieldOrFields]);
+
+  return parsedResult;
 };
