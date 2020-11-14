@@ -7,6 +7,7 @@ import { IField } from '../types';
 import { WrapperPropTypes, PropTypesFormItem, FormItemContextType } from './types';
 
 const FormItemContext = React.createContext<FormItemContextType>({} as FormItemContextType);
+const UNCONTROLLED_VALUES = [null, undefined];
 
 const WrapperItem = (props: WrapperPropTypes) => {
   const context = useContext(FormContext);
@@ -107,6 +108,10 @@ const FormItem = (props: PropTypesFormItem) => {
     };
   }, [name]);
 
+  const value = useMemo(() => {
+    return UNCONTROLLED_VALUES.includes(field.value) ? '' : field.value;
+  }, [field.value]);
+
   return (
     <FormItemContext.Provider value={valueContext}>
       {Component ? (
@@ -114,7 +119,7 @@ const FormItem = (props: PropTypesFormItem) => {
           {...field.extraFieldProps}
           {...nonServiceOwnProps}
           name={name}
-          value={field.value || ''}
+          value={value}
           onChange={onChange}
           error={field.error}
           onBlur={validateOnBlur ? onBlur : undefined}
