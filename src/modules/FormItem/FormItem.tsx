@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useCallback, useMemo } from 'react';
 
+import { UNCONTROLLED_VALUES } from '../constants';
 import { FormContext } from '../FormBuilder';
 import { callValidateFunctions } from '../helpers';
 import { IField } from '../types';
@@ -107,6 +108,10 @@ const FormItem = (props: PropTypesFormItem) => {
     };
   }, [name]);
 
+  const value = useMemo(() => {
+    return UNCONTROLLED_VALUES.includes(field.value) ? '' : field.value;
+  }, [field.value]);
+
   return (
     <FormItemContext.Provider value={valueContext}>
       {Component ? (
@@ -114,7 +119,7 @@ const FormItem = (props: PropTypesFormItem) => {
           {...field.extraFieldProps}
           {...nonServiceOwnProps}
           name={name}
-          value={field.value || ''}
+          value={value}
           onChange={onChange}
           error={field.error}
           onBlur={validateOnBlur ? onBlur : undefined}

@@ -3,7 +3,6 @@ import { useContext, useEffect, useState } from 'react';
 import { OnChangeFieldsType } from '../types';
 import { FormContextApi } from '../FormBuilder';
 
-// TODO: pass a second parameter to use a default value
 export const useWatchFields = (fieldKey?: string) => {
   const context = useContext(FormContextApi);
 
