@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useCallback, useMemo } from 'react';
 
+import { UNCONTROLLED_VALUES } from '../constants';
 import { FormContext } from '../FormBuilder';
 import { callValidateFunctions } from '../helpers';
 import { IField } from '../types';
@@ -7,7 +8,6 @@ import { IField } from '../types';
 import { WrapperPropTypes, PropTypesFormItem, FormItemContextType } from './types';
 
 const FormItemContext = React.createContext<FormItemContextType>({} as FormItemContextType);
-const UNCONTROLLED_VALUES = [null, undefined];
 
 const WrapperItem = (props: WrapperPropTypes) => {
   const context = useContext(FormContext);

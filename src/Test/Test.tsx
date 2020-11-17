@@ -21,12 +21,17 @@ type MyExtraPropTypes = {
   globalFormReadonly: boolean;
 };
 const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
-  const { name, error, onChange, disabled, globalFormReadonly, value } = props;
+  const { name, error, onChange, disabled, globalFormReadonly, value, ...restProps } = props;
 
   return (
     <div className={styles.textFieldContainer}>
       <label className={styles.label}>{name}</label>
-      <input disabled={disabled || globalFormReadonly} value={value} onChange={e => onChange(e.target.value)} />
+      <input
+        {...restProps}
+        disabled={disabled || globalFormReadonly}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+      />
       {error && <span className={styles.error}>{error}</span>}
     </div>
   );
