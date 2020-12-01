@@ -183,13 +183,16 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
   toggleSubmitting = (submitting: boolean) => this.setState({ submitting });
 
   registerField = ({ name, ...field }: RegisterFieldType) => {
+    const { initialValues } = this.props;
+    const value = initialValues && name in initialValues ? initialValues[name] : field.value;
+
     this.setState(state => ({
       fields: {
         ...state.fields,
         [name]: {
           name,
           ...field,
-          value: this.props.initialValues?.[name] || field.value,
+          value,
           touched: false,
           error: this.props.errors ? this.props.errors[name] : null,
         },
