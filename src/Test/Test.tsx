@@ -95,13 +95,13 @@ const FirstStepForm = () => {
       <FormItem name={'my-profile-group'}>
         <FormItem
           name={'age'}
-          component={TextField}
           validate={useValidators([Validators.required, Validators.min(18)])}
           type="number"
           // You can OVERRIDE global "validateOnBlur"
           validateOnBlur={false}
           placeholder="my-profile-group.age"
           errorMessage={['Field is required', 'Value should be more than 18']}
+          component={TextField}
         />
         <FormItem name={'someField'} component={TextField} />
       </FormItem>
@@ -141,7 +141,7 @@ const TestFrom = () => {
         ref={formRef}
         {...props}
         errors={errors}
-        initialValues={{ country: 'initial value from FromBuilder' }}
+        initialValues={{ country: 'initial value from FromBuilder', 'my-profile-group.age': 0 }}
         extraFieldsProps={extraFieldsProps}
       >
         <FormItem
