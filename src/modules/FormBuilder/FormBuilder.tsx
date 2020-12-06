@@ -24,6 +24,7 @@ import {
   callSubscriptions,
   setNewFieldsErrors,
   setExtraFieldsProps,
+  setExtraFieldProps,
 } from '../helpers';
 
 export const FormContext = React.createContext<IFormContext>({} as IFormContext);
@@ -186,18 +187,22 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     const { initialValues } = this.props;
     const value = initialValues && name in initialValues ? initialValues[name] : field.value;
 
-    this.setState(state => ({
-      fields: {
-        ...state.fields,
-        [name]: {
-          name,
-          ...field,
-          value,
-          touched: false,
-          error: this.props.errors ? this.props.errors[name] : null,
+    this.setState(state => {
+      const nextField = setExtraFieldProps(this.state.mirroredExtraFieldsProps, {
+        name,
+        ...field,
+        value,
+        touched: false,
+        error: this.props.errors ? this.props.errors[name] : null,
+      });
+
+      return {
+        fields: {
+          ...state.fields,
+          [name]: nextField,
         },
-      },
-    }));
+      };
+    });
   };
 
   unregister = ({ name }: { name: string }) => {

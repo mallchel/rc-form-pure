@@ -7,6 +7,7 @@ import {
   PickPropType,
   FormBuilderPropTypes,
   FieldsWithErrorType,
+  IField,
 } from './types';
 import Validators, { ReturnTypeValidator } from './Validators';
 
@@ -129,16 +130,26 @@ export const setExtraFieldsProps = (
     return nextFields;
   }
 
-  // prepare only fields that already exist in the form
+  // Prepare only fields that already exist in the form
+  // It doesn't miss configs set before mounting field,
+  // Because registerField will call the setExtraFieldProps
   Object.keys(nextFields).forEach(fieldKey => {
-    const { value, ...nonServiceExtraFieldsProps } = extraFieldsProps[fieldKey] || {};
-
-    nextFields[fieldKey] = {
-      ...nextFields[fieldKey],
-      value: value || nextFields[fieldKey]?.value,
-      extraFieldProps: nonServiceExtraFieldsProps,
-    };
+    nextFields[fieldKey] = setExtraFieldProps(extraFieldsProps, nextFields[fieldKey]);
   });
 
   return nextFields;
+};
+
+export const setExtraFieldProps = (
+  extraFieldsProps: PickPropType<FormBuilderPropTypes, 'extraFieldsProps'> = {},
+  field: IField
+) => {
+  const commonGlobalConfig = extraFieldsProps.$all;
+  const { value, ...nonServiceExtraFieldsProps } = extraFieldsProps?.[field.name] || {};
+
+  return {
+    ...field,
+    value: value !== null && value !== undefined ? value : field?.value,
+    extraFieldProps: { commonGlobalConfig, ...nonServiceExtraFieldsProps },
+  };
 };
