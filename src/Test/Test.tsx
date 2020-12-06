@@ -16,19 +16,17 @@ import {
 import styles from './styles.module.css';
 
 type MyExtraPropTypes = {
-  extraProps: boolean;
   disabled: boolean;
-  globalFormReadonly: boolean;
 };
 const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
-  const { name, error, onChange, disabled, globalFormReadonly, value, ...restProps } = props;
+  const { name, error, onChange, disabled, value, commonGlobalConfig, ...restProps } = props;
 
   return (
     <div className={styles.textFieldContainer}>
       <label className={styles.label}>{name}</label>
       <input
         {...restProps}
-        disabled={disabled || globalFormReadonly}
+        disabled={disabled || commonGlobalConfig?.globalFormReadonly}
         value={value}
         onChange={e => onChange(e.target.value)}
       />
@@ -183,6 +181,9 @@ const TestFrom = () => {
           type="button"
           onClick={() =>
             setExtraFieldsProps({
+              $all: {
+                globalFormReadonly: true,
+              },
               country: {
                 value: 'new value',
                 disabled: true,

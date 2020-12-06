@@ -100,6 +100,7 @@ type ComponentBasePropTypes = {
   onChange: (value: string) => void;
   error: any;
   onBlur?: (event: FocusEvent<any>) => void;
+  commonGlobalConfig: any;
 };
 
 export type ComponentPropTypes<T> = React.ComponentType<T & ComponentBasePropTypes>;

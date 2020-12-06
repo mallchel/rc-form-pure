@@ -115,6 +115,9 @@ type FormBuilderPropTypes = {
 
   // extra props will be mixed with service IField properties
   extraFieldsProps?: Record<PickPropType<IField, 'name'>, any>;
+  or;
+  // Pass the base config to all fields
+  extraFieldsProps?: Record<'$all', any>;
 };
 ```
 
