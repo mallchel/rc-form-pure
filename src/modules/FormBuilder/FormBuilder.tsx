@@ -16,6 +16,7 @@ import {
   IFormContextApi,
   GetFieldsType,
   FieldsWithErrorType,
+  FieldNameType,
 } from '../types';
 import {
   checkUnTouchedFields,
@@ -58,6 +59,7 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
       getFields: this.getFields,
       setFieldsValue: this.setFieldsValue,
       getFieldsValue: this.getFieldsValue,
+      getInitialValues: this.getInitialValues,
     };
   }
 
@@ -140,6 +142,10 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
 
   unsetInternalOnChanges = (config: object) => {
     this.internalsOnChanges.delete(config);
+  };
+
+  getInitialValues = (fieldKey?: FieldNameType) => {
+    return fieldKey ? this.props.initialValues?.[fieldKey] : this.props.initialValues;
   };
 
   // */

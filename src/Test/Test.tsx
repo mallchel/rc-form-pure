@@ -52,14 +52,16 @@ const withForm = true;
 const validateOnBlur = true;
 
 const FirstStepForm = () => {
-  const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue } = useFormApi();
+  const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue, useInitialValues } = useFormApi();
   const [countryField] = useWatchFields('country');
   const [allFields] = useWatchFields();
-  const countryValue = useWatchValue('country');
+  const countryInitialValue = useInitialValues('country');
+  // for async initialize or nested forms
+  const countryValue = useWatchValue('country', countryInitialValue);
   const allValues = useWatchValue();
 
-  console.log('countryField and allFields===>', countryField, allFields);
-  console.log('countryValue and allValues===>', countryValue, allValues);
+  console.log('countryField and allFields===>', { countryField, allFields });
+  console.log('countryValue and allValues===>', { countryValue, allValues, countryInitialValue });
   console.log('External FormBuilder API', { setFields, setFieldsValue, getFieldsValue });
 
   return (

@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 
 import { FormContextApi } from '../FormBuilder';
+import { useInitialValues } from './useInitialValues';
 
 import { useWatchFields } from './useWatchFields';
 import { useWatchValue } from './useWatchValue';
@@ -15,5 +16,5 @@ export const useFormApi = () => {
 
   const { setFields, setFieldsValue, getFieldsValue } = context;
 
-  return { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue };
+  return { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue, useInitialValues };
 };
