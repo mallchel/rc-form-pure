@@ -111,10 +111,10 @@ type FormBuilderPropTypes = {
   validateOnBlur?: boolean;
 
   // initial values
-  initialValues?: Record<PickPropType<IField, 'name'>, any>;
+  initialValues?: Record<FieldNameType, any>;
 
   // extra props will be mixed with service IField properties
-  extraFieldsProps?: Record<PickPropType<IField, 'name'>, any>;
+  extraFieldsProps?: Record<FieldNameType, any>;
   or;
   // Pass the base config to all fields
   extraFieldsProps?: Record<'$all', any>;
@@ -173,7 +173,7 @@ my - nested - group.country;
 ### useFormApi
 
 ```ts
-const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue } = useFormApi();
+const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue, useInitialValues } = useFormApi();
 ```
 
 #### setFieldsValue
@@ -218,8 +218,23 @@ const formFields: any = getFieldsValue(FIELDS_CONFIG.currency.key);
 // watch a specific field value
 const countryValue = useWatchValue('country');
 
+// watch a specific field value with a default value
+const countryValue = useWatchValue('country', 'Russia');
+
 // watch all values
 const allValues = useWatchValue();
+```
+
+#### useInitialValues
+
+```ts
+(fieldKey?: string) => any;
+
+// get a specific field initial value from FormBuilder
+const countryInitialValue = useInitialValues('country');
+
+// for example, you can use with useWatchValue
+const countryValue = useWatchValue('country', countryInitialValue);
 ```
 
 #### useWatchFields

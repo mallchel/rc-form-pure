@@ -4,16 +4,16 @@ import { ValidatorType } from './Validators';
 
 export type PickPropType<T, K extends keyof T> = T[K];
 
-export type ErrorsType = Record<PickPropType<IField, 'name'>, string> | null;
+export type FieldNameType = PickPropType<IField, 'name'>;
+
+export type ErrorsType = Record<FieldNameType, string> | null;
 export type OnChangeFieldsType =
-  | ((
-      allFields: Record<PickPropType<IField, 'name'>, IField>,
-      updatedField: Record<PickPropType<IField, 'name'>, IField>
-    ) => void)
-  | Record<PickPropType<IField, 'name'>, (field: IField, allFields: IFields) => void>;
+  | ((allFields: Record<FieldNameType, IField>, updatedField: Record<FieldNameType, IField>) => void)
+  | Record<FieldNameType, (field: IField, allFields: IFields) => void>;
 
 export type FieldsWithErrorType = IFields | null;
 
+type InitialValuesType = Record<FieldNameType, any>;
 export type FormBuilderPropTypes = {
   errors?: ErrorsType;
   withForm?: boolean;
@@ -22,8 +22,8 @@ export type FormBuilderPropTypes = {
   onSubmit: (values: IFieldsToSubmit, fieldsWithError: FieldsWithErrorType) => Promise<any> | void;
   onChangeFields?: OnChangeFieldsType;
   validateOnBlur?: boolean;
-  initialValues?: Record<PickPropType<IField, 'name'>, any>;
-  extraFieldsProps?: Record<PickPropType<IField, 'name'>, any>;
+  initialValues?: InitialValuesType;
+  extraFieldsProps?: Record<FieldNameType, any>;
 };
 
 export type StateTypes = {
@@ -36,10 +36,11 @@ export type StateTypes = {
   mirroredExtraFieldsProps?: PickPropType<FormBuilderPropTypes, 'extraFieldsProps'>;
 };
 
-export type GetFieldsType = (fieldKey?: string) => IField | IFields;
-export type SetFieldsType = (updates: Record<string, Partial<IField>>) => void;
-export type SetFieldsValueType = (updates: Record<string, any>) => void;
-export type GetFieldsValueType = (fieldKey?: string) => IFieldsToSubmit | PickPropType<IField, 'value'>;
+export type GetFieldsType = (fieldKey?: FieldNameType) => IField | IFields;
+export type SetFieldsType = (updates: Record<FieldNameType, Partial<IField>>) => void;
+export type SetFieldsValueType = (updates: Record<FieldNameType, any>) => void;
+export type GetFieldsValueType = (fieldKey?: FieldNameType) => IFieldsToSubmit | PickPropType<IField, 'value'>;
+export type GetInitialValuesType = (fieldKey?: FieldNameType) => any;
 
 export interface IFormContext {
   registerField: (field: RegisterFieldType) => void;
@@ -58,9 +59,10 @@ export interface IFormContextApi {
   setFields: SetFieldsType;
   setFieldsValue: SetFieldsValueType;
   getFieldsValue: GetFieldsValueType;
+  getInitialValues: GetInitialValuesType;
 }
 
-export type IFieldsToSubmit = Record<PickPropType<IField, 'name'>, PickPropType<IField, 'value'>>;
+export type IFieldsToSubmit = Record<FieldNameType, PickPropType<IField, 'value'>>;
 
 export interface IFields {
   [name: string]: IField;
@@ -120,5 +122,5 @@ export type CallSubscriptionsType = ({
   onChangeCallback?: OnChangeFieldsType;
   nextFields: IFields;
   nextField: IField;
-  name: PickPropType<IField, 'name'>;
+  name: FieldNameType;
 }) => void;
