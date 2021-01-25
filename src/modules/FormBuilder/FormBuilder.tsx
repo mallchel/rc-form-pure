@@ -214,9 +214,12 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
   unregister = ({ name }: { name: string }) => {
     this.setState(state => {
       const { [name]: removed, ...restFields } = state.fields;
+      // clear non-existing fields from invalidFields state
+      state.invalidFields.delete(removed.name);
 
       return {
         fields: { ...restFields },
+        // replace with shouldValidation variable instead
         valid: true,
       };
     });
