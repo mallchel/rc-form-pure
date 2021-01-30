@@ -179,23 +179,21 @@ const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue
 #### setFieldsValue
 
 ```ts
-(updates: Record<string, any>) =>
-  void (
-    // setting a new value:
-    setFieldsValue({ [FIELDS_CONFIG.currency.key]: '$' })
-  );
+(updates: Record<string, any>, options: { changeEvent: boolean }) => void;
+// changeEvent option has "true" value by default
+// setting a new value:
+setFieldsValue({ [FIELDS_CONFIG.currency.key]: '$' });
 ```
 
 #### setFields
 
 ```ts
-(updates: Record<string, Partial<IField>>) =>
-  void (
-    // resetting value and error:
-    setFields({
-      [FIELDS_CONFIG.currency.key]: { value: '', error: null },
-    })
-  );
+(updates: Record<string, Partial<IField>>, options: { changeEvent: boolean }) => void;
+// changeEvent option has "true" value by default
+// resetting value and error:
+setFields({
+  [FIELDS_CONFIG.currency.key]: { value: '', error: null },
+});
 ```
 
 #### getFieldsValue

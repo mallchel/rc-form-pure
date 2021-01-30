@@ -91,36 +91,45 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
     return fields;
   };
 
-  setFields: SetFieldsType = updates => {
-    this.setState(state => {
-      const nextFields = { ...state.fields };
+  setFields: SetFieldsType = (updates, options) => {
+    const updatedFieldsName = Object.keys(updates);
 
-      Object.keys(updates).forEach(fieldKey => {
-        if (nextFields[fieldKey]) {
-          const { validate, errorMessage } = nextFields[fieldKey];
-          const { value } = updates[fieldKey];
+    this.setState(
+      state => {
+        const nextFields = { ...state.fields };
 
-          nextFields[fieldKey] = {
-            ...nextFields[fieldKey],
-            error: callValidateFunctions({ value, validate, errorMessage }),
-            ...updates[fieldKey],
-          };
+        updatedFieldsName.forEach(fieldKey => {
+          if (nextFields[fieldKey]) {
+            const { validate, errorMessage } = nextFields[fieldKey];
+            const { value } = updates[fieldKey];
+
+            nextFields[fieldKey] = {
+              ...nextFields[fieldKey],
+              error: callValidateFunctions({ value, validate, errorMessage }),
+              ...updates[fieldKey],
+            };
+          }
+        });
+
+        return {
+          fields: nextFields,
+          ...checkValidFieldsAndForm(nextFields, state.invalidFields),
+        };
+      },
+      () => {
+        if (options?.changeEvent !== false) {
+          this.triggerOnChangeEvents({ name: updatedFieldsName });
         }
-      });
-
-      return {
-        fields: nextFields,
-        ...checkValidFieldsAndForm(nextFields, state.invalidFields),
-      };
-    });
+      }
+    );
   };
 
-  setFieldsValue: SetFieldsValueType = updates => {
+  setFieldsValue: SetFieldsValueType = (updates, options) => {
     const data = Object.keys(updates).reduce((acc, key) => {
       acc[key] = { value: updates[key] };
       return acc;
     }, {} as Record<string, Pick<IField, 'value'>>);
-    this.setFields(data);
+    this.setFields(data, options);
   };
 
   getFieldsValue: GetFieldsValueType = fieldKey => {
@@ -242,20 +251,21 @@ export default class FormBuilder extends React.Component<FormBuilderPropTypes, S
         };
       },
       () => {
-        const { onChangeFields: formBuilderOnChangeFields } = this.props;
-        const nextFields = this.state.fields;
-        const nextField = nextFields[name];
-
-        // subscriptions from FromBuilder props
-        callSubscriptions({ onChangeCallback: formBuilderOnChangeFields, nextFields, nextField, name });
-
-        const internalsOnChanges = [...this.internalsOnChanges.values()];
-
-        internalsOnChanges.forEach(onChangeCallback =>
-          callSubscriptions({ onChangeCallback, nextFields, nextField, name })
-        );
+        this.triggerOnChangeEvents({ name });
       }
     );
+  };
+
+  private triggerOnChangeEvents = ({ name }: { name: FieldNameType | FieldNameType[] }) => {
+    const { onChangeFields: formBuilderOnChangeFields } = this.props;
+    const nextFields = this.state.fields;
+
+    // subscriptions from FromBuilder props
+    callSubscriptions({ onChangeCallback: formBuilderOnChangeFields, nextFields, name });
+
+    const internalsOnChanges = [...this.internalsOnChanges.values()];
+
+    internalsOnChanges.forEach(onChangeCallback => callSubscriptions({ onChangeCallback, nextFields, name }));
   };
 
   render() {
