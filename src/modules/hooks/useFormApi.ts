@@ -14,7 +14,7 @@ export const useFormApi = () => {
     throw new Error('The useFormApi must be inside the Form');
   }
 
-  const { setFields, setFieldsValue, getFieldsValue } = context;
+  const { setFields, setFieldsValue, getFieldsValue, getFields } = context;
 
-  return { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue, useInitialValues };
+  return { setFields, setFieldsValue, getFields, getFieldsValue, useWatchFields, useWatchValue, useInitialValues };
 };

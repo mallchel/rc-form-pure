@@ -8,6 +8,7 @@ import {
   FormBuilderPropTypes,
   FieldsWithErrorType,
   IField,
+  FieldNameType,
 } from './types';
 import Validators, { ReturnTypeValidator } from './Validators';
 
@@ -91,18 +92,40 @@ export function callValidateFunctions({
   return validate(value, errorMessage);
 }
 
-export const callSubscriptions: CallSubscriptionsType = ({ onChangeCallback, nextFields, nextField, name }): void => {
-  if (onChangeCallback) {
-    if (typeof onChangeCallback === 'function') {
-      onChangeCallback(nextFields, { [name]: nextField });
-      return;
-    }
+export const callSubscriptions: CallSubscriptionsType = ({ onChangeCallback, nextFields, name }): void => {
+  if (!onChangeCallback) {
+    return;
+  }
 
+  const changedFields = {} as IFields;
+
+  if (Array.isArray(name)) {
+    name.forEach(n => {
+      changedFields[n] = nextFields[n];
+    });
+  } else {
+    changedFields[name] = nextFields[name];
+  }
+
+  if (typeof onChangeCallback === 'function') {
+    onChangeCallback(nextFields, changedFields);
+    return;
+  }
+
+  const callChangeCallbackByName = (name: FieldNameType) => {
     const onChangeCallbackPerField = onChangeCallback[name];
 
     if (onChangeCallbackPerField) {
-      onChangeCallbackPerField(nextField, nextFields);
+      onChangeCallbackPerField(nextFields[name], nextFields);
     }
+  };
+
+  if (Array.isArray(name)) {
+    name.forEach(n => {
+      callChangeCallbackByName(n);
+    });
+  } else {
+    callChangeCallbackByName(name);
   }
 };
 
