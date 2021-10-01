@@ -164,8 +164,8 @@ You can nest your fields by easily wrapping FromItem components in each other
 The FormBuilder state will have the following properties:
 
 ```ts
-my - nested - group.age;
-my - nested - group.country;
+my-nested-group.age
+my-nested-group.country
 ```
 
 ## API
