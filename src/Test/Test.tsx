@@ -4,7 +4,6 @@ import {
   FormItem,
   Validators,
   useValidators,
-  ButtonSubmit,
   ComponentPropTypes,
   ErrorsType,
   IFieldsToSubmit,
@@ -23,8 +22,11 @@ const TextField: ComponentPropTypes<MyExtraPropTypes> = props => {
 
   return (
     <div className={styles.textFieldContainer}>
-      <label className={styles.label}>{name}</label>
+      <label htmlFor={name} className={styles.label}>
+        {name}
+      </label>
       <input
+        id={name}
         {...restProps}
         disabled={disabled || commonGlobalConfig?.globalFormReadonly}
         value={value}
@@ -130,7 +132,7 @@ const props: FormBuilderPropTypes = {
 };
 const TestFrom = () => {
   const [currentStep, changeStep] = useState('first');
-  const FormFields = formBySteps[currentStep];
+  const FieldsFromCurrentStep = formBySteps[currentStep];
   const formRef = useRef<FormBuilder>(null);
   const [errors, setServerErrors] = useState<ErrorsType>(null);
   const [extraFieldsProps, setExtraFieldsProps] = useState<Object>({});
@@ -145,59 +147,79 @@ const TestFrom = () => {
         extraFieldsProps={extraFieldsProps}
       >
         <FormItem
-          name={'country'}
+          name="country"
           component={TextField}
           validate={Validators.required}
-          errorMessage={'Please fill this field'}
+          errorMessage="Please fill this field"
           placeholder="Your country"
         />
 
-        <FormFields />
+        <FieldsFromCurrentStep />
 
-        <button type="button" onClick={() => changeStep(currentStep === 'first' ? 'finalStep' : 'first')}>
-          Change form fields
-        </button>
-        <button type="button" onClick={() => console.log(formRef.current?.getFieldsValue())}>
-          getFieldsValue: all fields
-        </button>
-        <button type="button" onClick={() => console.log(formRef.current?.getFieldsValue('country'))}>
-          getFieldsValue: country field
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            console.log(
-              formRef.current?.setFieldsValue({
-                fullName: 'set Full Name!!!!!!!!!!!!!!!!!!!',
-                lastName: 'set new lastName',
+        <fieldset>
+          <legend>Actions</legend>
+
+          <button type="button" onClick={() => changeStep(currentStep === 'first' ? 'finalStep' : 'first')}>
+            Change form fields
+          </button>
+
+          <br />
+
+          <button type="button" onClick={() => console.log(formRef.current?.getFieldsValue())}>
+            getFieldsValue: all fields
+          </button>
+
+          <br />
+
+          <button type="button" onClick={() => console.log(formRef.current?.getFieldsValue('country'))}>
+            getFieldsValue: country field
+          </button>
+
+          <br />
+
+          <button
+            type="button"
+            onClick={() =>
+              console.log(
+                formRef.current?.setFieldsValue({
+                  fullName: 'set Full Name!!!!!!!!!!!!!!!!!!!',
+                  lastName: 'set new lastName',
+                })
+              )
+            }
+          >
+            setFieldsValue to fullName and lastName
+          </button>
+
+          <br />
+
+          <button type="button" onClick={() => setServerErrors(serverErrors)}>
+            set errors from server
+          </button>
+
+          <br />
+
+          <button
+            type="button"
+            onClick={() =>
+              setExtraFieldsProps({
+                $all: {
+                  globalFormReadonly: true,
+                },
+                country: {
+                  value: 'new value',
+                  disabled: true,
+                },
               })
-            )
-          }
-        >
-          setFieldsValue to fullName and lastName
-        </button>
-        <button type="button" onClick={() => setServerErrors(serverErrors)}>
-          set errors from server
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            setExtraFieldsProps({
-              $all: {
-                globalFormReadonly: true,
-              },
-              country: {
-                value: 'new value',
-                disabled: true,
-              },
-            })
-          }
-        >
-          set extraFieldsProps
-        </button>
+            }
+          >
+            set extraFieldsProps
+          </button>
 
-        <button>onSubmit</button>
-        <ButtonSubmit>Button submit without form tag</ButtonSubmit>
+          <br />
+
+          <button>onSubmit</button>
+        </fieldset>
       </FormBuilder>
     </div>
   );

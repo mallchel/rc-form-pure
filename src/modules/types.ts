@@ -38,8 +38,8 @@ export type StateTypes = {
 
 type SetFieldsOptionsType = { changeEvent: boolean };
 export type GetFieldsType = (fieldKey?: FieldNameType) => IField | IFields;
-export type SetFieldsType = (updates: Record<FieldNameType, Partial<IField>>, options: SetFieldsOptionsType) => void;
-export type SetFieldsValueType = (updates: Record<FieldNameType, any>, options: SetFieldsOptionsType) => void;
+export type SetFieldsType = (updates: Record<FieldNameType, Partial<IField>>, options?: SetFieldsOptionsType) => void;
+export type SetFieldsValueType = (updates: Record<FieldNameType, any>, options?: SetFieldsOptionsType) => void;
 export type GetFieldsValueType = (fieldKey?: FieldNameType) => IFieldsToSubmit | PickPropType<IField, 'value'>;
 export type GetInitialValuesType = (fieldKey?: FieldNameType) => any;
 

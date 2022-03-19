@@ -7,7 +7,7 @@ export const useInitialValues = (fieldKey: FieldNameType) => {
   const context = useContext(FormContextApi);
 
   if (!Object.keys(context).length) {
-    throw new Error('The useFieldsValue must be inside the Form');
+    throw new Error('The useFieldsValue must be inside the FormBuilder');
   }
 
   const nextValue = useMemo(() => {

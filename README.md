@@ -164,8 +164,8 @@ You can nest your fields by easily wrapping FromItem components in each other
 The FormBuilder state will have the following properties:
 
 ```ts
-my-nested-group.age
-my-nested-group.country
+my - nested - group.age;
+my - nested - group.country;
 ```
 
 ## API
@@ -173,7 +173,20 @@ my-nested-group.country
 ### useFormApi
 
 ```ts
-const { setFields, setFieldsValue, getFieldsValue, useWatchFields, useWatchValue, useInitialValues } = useFormApi();
+import { useFormApi } from 'rc-form-pure';
+
+const {
+  setFields,
+  setFieldsValue,
+  getFieldsValue,
+  useWatchFields,
+  useWatchValue,
+  useInitialValues,
+  useSubmit,
+} = useFormApi();
+
+// also you can import each hook independently (without useFormApi)
+import { useWatchFields, useWatchValue, useInitialValues, useSubmit } from 'rc-form-pure';
 ```
 
 #### setFieldsValue
@@ -247,6 +260,17 @@ const [countryField, allFields] = useWatchFields('country');
 const [allFields, updatedFields] = useWatchFields();
 ```
 
+#### useSubmit
+
+```ts
+(event?: any) => void
+
+const { onSubmit } = useSubmit();
+
+// call it when you want, and it will trigger onSubmit event on the FormBuilder
+onSubmit();
+```
+
 ### formRef
 
 You can get the form external API on the form level via useRef
@@ -258,18 +282,6 @@ formRef.current?.setFields;
 formRef.current?.setFieldsValue;
 formRef.current?.getFields;
 formRef.current?.getFieldsValue;
-```
-
-## ButtonSubmit component
-
-If you don't have a \<form\> tag, put the ButtonSubmit component in the FormBuilder tag to trigger your form submission
-
-```ts
-<FormBuilder>
-  <FormItem name={'country'} component={TextField} />
-
-  <ButtonSubmit>Button submit without form tag</ButtonSubmit>
-</FormBuilder>
 ```
 
 ## Types

@@ -1,7 +1,7 @@
 {
   "name": "rc-form-pure",
   "main": "lib/index.js",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Declarative forms for React",
   "license": "MIT",
   "keywords": [
@@ -39,7 +39,7 @@
     "prepublishOnly": "yarn lib"
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.0",
+    "@babel/cli": "^7.17.6",
     "@babel/core": "^7.7.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.6.2",
     "@babel/preset-env": "^7.7.1",
@@ -63,7 +63,7 @@
     "prop-types": "^15.6.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^5.0.0",
     "react-test-renderer": "^16.13.0",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",

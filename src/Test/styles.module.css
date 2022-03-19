@@ -5,6 +5,10 @@
   height: 100%;
 }
 
+.container button {
+  margin-bottom: 12px;
+}
+
 .label {
   color: #636363;
 }
