@@ -1,7 +1,7 @@
 {
   "name": "rc-form-pure",
   "main": "lib/index.js",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Declarative forms for React",
   "license": "MIT",
   "keywords": [
