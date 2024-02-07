@@ -1,7 +1,7 @@
 {
   "name": "rc-form-pure",
   "main": "lib/index.js",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Declarative forms for React",
   "keywords": [
     "react-component",
