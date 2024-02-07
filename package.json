@@ -13,6 +13,7 @@
   "files": [
     "lib"
   ],
+  "license": "GPL-3.0-only",
   "homepage": "https://github.com/mallchel/rc-form-pure",
   "author": "sebastianalfabc@gmail.com",
   "repository": {
